@@ -6,7 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: 'https://gighub.ru',
       lastModified: new Date(),
       changeFrequency: 'daily',
-      priority: 1,
+      priority: 1.0,
     },
     {
       url: 'https://gighub.ru/ai-services',
