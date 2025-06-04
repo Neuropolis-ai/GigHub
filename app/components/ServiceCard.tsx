@@ -110,11 +110,11 @@ export default function ServiceCard({
       className={`group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-accent-primary/30 cursor-pointer ${className} flex flex-col`}
     >
       <Link href={`/ai-services/${id}`} className="block flex-1 flex flex-col">
-        {/* Price Badge (вместо категории) */}
-        {price && (
+        {/* Category Badge (обратно наверх) */}
+        {categories && (
           <div className="absolute top-4 left-4 z-20">
-            <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-semibold shadow-lg">
-              {price}
+            <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r ${badgeColor} text-white text-xs font-semibold shadow-lg`}>
+              {categories.name}
             </div>
           </div>
         )}
@@ -189,8 +189,8 @@ export default function ServiceCard({
               <h3 className="text-xl font-semibold text-text-primary group-hover:text-accent-primary transition-colors line-clamp-2 mb-1">
                 {title}
               </h3>
-              {categories && (
-                <span className="text-sm text-accent-primary font-medium">{categories.name}</span>
+              {price && (
+                <span className="text-sm text-green-600 font-semibold">{price}</span>
               )}
             </div>
           </div>
