@@ -203,7 +203,7 @@ export default function ServiceCard({
           {/* Stats */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3 text-sm text-gray-500">
-              {rating && rating > 0 && (
+              {rating && rating >= 0.1 && (
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                   <span>{rating.toFixed(1)}</span>
