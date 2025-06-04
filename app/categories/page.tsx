@@ -160,7 +160,7 @@ export default function CategoriesPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-accent-primary/5 via-white to-accent-secondary/5">
+      <section className="relative overflow-hidden bg-gradient-to-br from-accent-primary/5 via-white to-accent-secondary/5 pt-8">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         <div className="relative container mx-auto px-6 py-20">
           <motion.div
@@ -204,9 +204,14 @@ export default function CategoriesPage() {
       </section>
 
       {/* Categories Grid */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+          >
             {categories.map((category, index) => {
               const Icon = getCategoryIcon(category.name)
               const gradient = getCategoryGradient(category.name)
@@ -217,45 +222,35 @@ export default function CategoriesPage() {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1, duration: 0.6 }}
-                  whileHover={{ y: -8 }}
+                  whileHover={{ y: -8, scale: 1.02 }}
                   className="group"
                 >
-                  <Link 
-                    href={`/ai-services?category_id=${category.id}`}
-                    className="block h-full"
-                  >
-                    <div className="relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-accent-primary/30 h-full">
-                      {/* Background Pattern */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-white"></div>
-                      <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${gradient} opacity-10 rounded-full -translate-y-8 translate-x-8`}></div>
+                  <Link href={`/ai-services?category_id=${category.id}`}>
+                    <div className="relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-accent-primary/30 overflow-hidden h-full">
+                      {/* Background gradient */}
+                      <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${gradient}`}></div>
                       
-                      <div className="relative z-10 p-6 h-full flex flex-col">
-                        {/* Icon */}
-                        <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${gradient} p-4 mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                          <Icon className="w-full h-full text-white" />
-                        </div>
-
-                        {/* Content */}
-                        <div className="flex-1">
-                          <h3 className="text-xl font-bold text-text-primary mb-3 group-hover:text-accent-primary transition-colors">
-                            {category.name}
-                          </h3>
-                          
-                          <p className="text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
-                            {category.description || `Откройте для себя лучшие ИИ-инструменты в категории "${category.name}". Проверенные решения для профессионалов и энтузиастов.`}
-                          </p>
-                        </div>
-
-                        {/* Footer */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 text-accent-primary font-semibold">
-                            <Users className="w-4 h-4" />
-                            <span className="text-sm">Исследовать</span>
-                          </div>
-                          
-                          <div className="w-10 h-10 rounded-full bg-accent-primary/10 flex items-center justify-center group-hover:bg-accent-primary group-hover:text-white transition-all duration-300">
-                            <ArrowRight className="w-5 h-5 text-accent-primary group-hover:text-white group-hover:translate-x-1 transition-all duration-300" />
-                          </div>
+                      {/* Icon */}
+                      <div className={`w-16 h-16 bg-gradient-to-br ${gradient} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                        <Icon className="w-8 h-8 text-white" />
+                      </div>
+                      
+                      {/* Content */}
+                      <h3 className="text-xl font-bold text-text-primary mb-3 group-hover:text-accent-primary transition-colors">
+                        {category.name}
+                      </h3>
+                      
+                      <p className="text-text-secondary text-sm leading-relaxed mb-6 line-clamp-3">
+                        {category.description || `Откройте для себя лучшие ИИ-инструменты в категории "${category.name}". Современные решения для ваших задач.`}
+                      </p>
+                      
+                      {/* CTA */}
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-text-secondary font-medium">
+                          Перейти в каталог
+                        </span>
+                        <div className="w-8 h-8 rounded-full bg-accent-primary/10 flex items-center justify-center group-hover:bg-accent-primary group-hover:text-white transition-all duration-300">
+                          <ArrowRight className="w-4 h-4 text-accent-primary group-hover:text-white transition-colors" />
                         </div>
                       </div>
                     </div>
@@ -263,45 +258,35 @@ export default function CategoriesPage() {
                 </motion.div>
               )
             })}
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-accent-primary/5 via-white to-accent-secondary/5">
-        <div className="container mx-auto px-6 text-center">
+      {/* Call to Action */}
+      <section className="py-20 bg-gradient-to-br from-accent-primary/5 to-accent-secondary/5">
+        <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="max-w-3xl mx-auto"
+            className="text-center max-w-3xl mx-auto"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
-              Не нашли нужную категорию?
+            <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6">
+              Готовы найти свой <span className="text-gradient">идеальный ИИ-инструмент</span>?
             </h2>
             <p className="text-xl text-text-secondary mb-8">
-              Исследуйте все доступные ИИ-сервисы или воспользуйтесь умным поиском для поиска идеального решения
+              Исследуйте весь каталог и найдите решение, которое изменит ваш рабочий процесс навсегда.
             </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/ai-services">
-                <button className="group px-8 py-4 bg-accent-primary text-white rounded-2xl font-semibold hover:bg-accent-primary/90 transition-all duration-300 hover:scale-105 shadow-lg">
-                  <span className="flex items-center gap-2">
-                    Все ИИ-сервисы
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </button>
-              </Link>
-              
-              <Link href="/">
-                <button className="group px-8 py-4 bg-white border-2 border-accent-primary text-accent-primary rounded-2xl font-semibold hover:bg-accent-primary hover:text-white transition-all duration-300 hover:scale-105 shadow-lg">
-                  <span className="flex items-center gap-2">
-                    Умный поиск
-                    <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                  </span>
-                </button>
-              </Link>
-            </div>
+            <Link href="/ai-services">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center gap-3 px-8 py-4 bg-accent-primary text-white rounded-2xl font-semibold text-lg hover:bg-accent-primary/90 transition-colors shadow-lg"
+              >
+                Открыть каталог
+                <ArrowRight className="w-5 h-5" />
+              </motion.button>
+            </Link>
           </motion.div>
         </div>
       </section>

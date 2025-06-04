@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Star, Users, ExternalLink } from 'lucide-react'
+import { Users, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -11,7 +11,6 @@ export interface ServiceCardProps {
   short_description_ru?: string
   logo_url?: string
   cover_url?: string
-  rating?: number
   bookmarks_count?: number
   price?: string | null
   service_url?: string
@@ -86,7 +85,6 @@ export default function ServiceCard({
   short_description_ru, 
   logo_url,
   cover_url,
-  rating,
   bookmarks_count,
   categories, 
   price, 
@@ -203,13 +201,6 @@ export default function ServiceCard({
           {/* Stats */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3 text-sm text-gray-500">
-              {rating && rating >= 0.1 && (
-                <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  <span>{rating.toFixed(1)}</span>
-                </div>
-              )}
-              
               {bookmarks_count && bookmarks_count > 0 && (
                 <div className="flex items-center gap-1">
                   <Users className="w-4 h-4" />

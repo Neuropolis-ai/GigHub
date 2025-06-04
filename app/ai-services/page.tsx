@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, Filter, Star, Users, ExternalLink, Grid, List, Sparkles, TrendingUp, Clock } from 'lucide-react'
+import { Search, Filter, CheckCircle, Users, ExternalLink, Grid, List, Sparkles, TrendingUp, Clock } from 'lucide-react'
 import { AIServiceWithCategory, Category } from '@/lib/supabase'
 
 interface PaginationInfo {
@@ -124,7 +124,7 @@ export default function AIServicesPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-accent-primary/5 via-white to-accent-secondary/5">
+      <section className="relative overflow-hidden bg-gradient-to-br from-accent-primary/5 via-white to-accent-secondary/5 pt-8">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         <div className="relative container mx-auto px-6 py-16">
           <motion.div
@@ -162,7 +162,7 @@ export default function AIServicesPage() {
                 <span>Актуальные решения</span>
               </div>
               <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 text-yellow-500" />
+                <CheckCircle className="w-4 h-4 text-yellow-500" />
                 <span>Проверенное качество</span>
               </div>
               <div className="flex items-center gap-2">
@@ -231,7 +231,6 @@ export default function AIServicesPage() {
               >
                 <option value="created_at">По дате добавления</option>
                 <option value="title">По названию</option>
-                <option value="rating">По рейтингу</option>
                 <option value="bookmarks_count">По популярности</option>
               </select>
             </div>
@@ -311,7 +310,6 @@ export default function AIServicesPage() {
                 short_description_ru={service.short_description_ru}
                 logo_url={service.logo_url}
                 cover_url={service.cover_url}
-                rating={service.rating}
                 bookmarks_count={service.bookmarks_count}
                 categories={service.categories}
                 price={service.price}
@@ -415,7 +413,6 @@ function ServiceCard({
   short_description_ru, 
   logo_url, 
   cover_url, 
-  rating, 
   bookmarks_count, 
   categories, 
   price, 
@@ -428,7 +425,6 @@ function ServiceCard({
   short_description_ru: string | null, 
   logo_url: string | null, 
   cover_url: string | null, 
-  rating: number | null, 
   bookmarks_count: number | null, 
   categories: Category | null, 
   price: string | null, 
@@ -518,13 +514,6 @@ function ServiceCard({
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 text-sm text-gray-500">
-                  {rating && rating > 0 && (
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      <span>{rating.toFixed(1)}</span>
-                    </div>
-                  )}
-                  
                   {bookmarks_count && bookmarks_count > 0 && (
                     <div className="flex items-center gap-1">
                       <Users className="w-4 h-4" />
@@ -657,13 +646,6 @@ function ServiceCard({
           {/* Stats */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3 text-sm text-gray-500">
-              {rating && rating > 0 && (
-                <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  <span>{rating.toFixed(1)}</span>
-                </div>
-              )}
-              
               {bookmarks_count && bookmarks_count > 0 && (
                 <div className="flex items-center gap-1">
                   <Users className="w-4 h-4" />

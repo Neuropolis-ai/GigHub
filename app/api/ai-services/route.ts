@@ -23,12 +23,7 @@ export async function GET(request: NextRequest) {
 
     // Добавляем поиск по названию и описанию
     if (search) {
-      query = query.or(`
-        title.ilike.%${search}%,
-        short_description_ru.ilike.%${search}%,
-        full_description_ru.ilike.%${search}%,
-        ai_category.ilike.%${search}%
-      `)
+      query = query.or(`title.ilike.%${search}%,short_description_ru.ilike.%${search}%,full_description_ru.ilike.%${search}%,ai_category.ilike.%${search}%`)
     }
 
     // Фильтрация по категории
@@ -42,7 +37,7 @@ export async function GET(request: NextRequest) {
     // Сортировка
     if (sortBy === 'rating') {
       query = query.order('rating', { ascending: order === 'asc' })
-    } else if (sortBy === 'bookmarks') {
+    } else if (sortBy === 'bookmarks_count') {
       query = query.order('bookmarks_count', { ascending: order === 'asc' })
     } else if (sortBy === 'title') {
       query = query.order('title', { ascending: order === 'asc' })

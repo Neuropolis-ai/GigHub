@@ -8,7 +8,6 @@ import { motion } from 'framer-motion'
 import { 
   ArrowLeft, 
   ExternalLink, 
-  Star, 
   Users, 
   Check, 
   X,
@@ -50,12 +49,18 @@ export default function AIServicePage() {
 
   // Парсинг преимуществ из текста
   const advantages = service?.advantages_ru 
-    ? service.advantages_ru.split('\n').filter(item => item.trim())
+    ? service.advantages_ru.split('\n')
+        .filter(item => item.trim())
+        .map(item => item.trim().replace(/^-+\s*/, ''))
+        .filter(item => item.length > 0)
     : []
 
   // Парсинг недостатков из текста
   const disadvantages = service?.disadvantages_ru 
-    ? service.disadvantages_ru.split('\n').filter(item => item.trim())
+    ? service.disadvantages_ru.split('\n')
+        .filter(item => item.trim())
+        .map(item => item.trim().replace(/^-+\s*/, ''))
+        .filter(item => item.length > 0)
     : []
 
   // Парсинг FAQ из текста
@@ -98,24 +103,8 @@ export default function AIServicePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative bg-white border-b">
+      <section className="relative bg-white border-b pt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Back Button */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-8"
-          >
-            <Link 
-              href="/ai-services"
-              className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Назад к каталогу
-            </Link>
-          </motion.div>
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left: Content */}
             <motion.div
@@ -160,14 +149,6 @@ export default function AIServicePage() {
 
               {/* Stats */}
               <div className="flex items-center gap-6">
-                {service.rating && service.rating > 0 && (
-                  <div className="flex items-center gap-2">
-                    <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                    <span className="font-semibold text-gray-900">{service.rating.toFixed(1)}</span>
-                    <span className="text-gray-500">рейтинг</span>
-                  </div>
-                )}
-                
                 {service.bookmarks_count && service.bookmarks_count > 0 && (
                   <div className="flex items-center gap-2">
                     <Users className="w-5 h-5 text-gray-400" />
@@ -343,16 +324,6 @@ export default function AIServicePage() {
             >
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Информация</h3>
               <div className="space-y-3">
-                {service.rating && service.rating > 0 && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Рейтинг</span>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      <span className="font-semibold">{service.rating.toFixed(1)}</span>
-                    </div>
-                  </div>
-                )}
-                
                 {service.bookmarks_count && service.bookmarks_count > 0 && (
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Закладки</span>
