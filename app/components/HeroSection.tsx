@@ -45,11 +45,11 @@ export default function HeroSection() {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight"
           >
-            <span className="text-text-primary">Платформа, где собраны</span>
+            <span className="text-text-primary">Лучшие</span>
             <br />
-            <span className="text-gradient">лучшие ИИ-инструменты</span>
+            <span className="text-gradient">нейросети</span>
             <br />
-            <span className="text-text-primary">мира</span>
+            <span className="text-text-primary">и ИИ-сервисы мира</span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -59,8 +59,9 @@ export default function HeroSection() {
             transition={{ delay: 0.4, duration: 0.6 }}
             className="text-lg sm:text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed"
           >
-            Откройте для себя более 25 качественных ИИ-сервисов для генерации изображений, 
-            текста, музыки, автоматизации и решения бизнес-задач
+            Найдите идеальную нейросеть среди 2000+ проверенных ИИ-инструментов для генерации 
+            изображений, текста, музыки и автоматизации. Бесплатные и платные сервисы 
+            искусственного интеллекта на русском языке.
           </motion.p>
 
           {/* Search Bar */}

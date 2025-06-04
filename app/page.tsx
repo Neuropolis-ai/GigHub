@@ -5,6 +5,7 @@ import SearchBar from './components/SearchBar'
 import CategoryGrid from './components/CategoryGrid'
 import FeaturedTools from './components/FeaturedTools'
 import UseCasesShowcase from './components/UseCasesShowcase'
+import FAQSection from './components/FAQSection'
 import StatsSection from './components/StatsSection'
 
 export default function HomePage() {
@@ -15,6 +16,7 @@ export default function HomePage() {
       <CategoryGrid />
       <FeaturedTools />
       <UseCasesShowcase />
+      <FAQSection />
       <StatsSection />
     </main>
   )

@@ -8,7 +8,18 @@ import Image from 'next/image'
 import { Search, Filter, CheckCircle, Users, ExternalLink, Grid, List, Sparkles, TrendingUp, Clock } from 'lucide-react'
 import { AIServiceWithCategory, Category } from '@/lib/supabase'
 import ServiceCard from '@/app/components/ServiceCard'
-import ServiceCardList from '@/app/components/ServiceCardList'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Каталог нейросетей — 2000+ ИИ-сервисов для генерации и автоматизации',
+  description: 'Полный каталог нейросетей и ИИ-инструментов. Найдите лучшую нейросеть для генерации изображений, текста, музыки. Бесплатные и платные сервисы с рейтингами и отзывами.',
+  keywords: 'каталог нейросетей, нейросеть для генерации, ии сервисы, искусственный интеллект, нейросеть картинки, нейросеть текст',
+  openGraph: {
+    title: 'Каталог нейросетей — 2000+ ИИ-сервисов',
+    description: 'Полный каталог нейросетей и ИИ-инструментов для генерации и автоматизации',
+    url: 'https://gighub.ru/ai-services',
+  },
+}
 
 interface PaginationInfo {
   page: number
@@ -125,6 +136,21 @@ export default function AIServicesPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Breadcrumbs */}
+      <nav className="container mx-auto px-6 py-4">
+        <ol className="flex items-center space-x-2 text-sm text-text-secondary">
+          <li><Link href="/" className="hover:text-accent-primary">Главная</Link></li>
+          <li className="mx-2">/</li>
+          <li><span className="text-text-primary">Каталог нейросетей</span></li>
+          {selectedCategoryName && (
+            <>
+              <li className="mx-2">/</li>
+              <li><span className="text-text-primary">{selectedCategoryName}</span></li>
+            </>
+          )}
+        </ol>
+      </nav>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-accent-primary/5 via-white to-accent-secondary/5 pt-8">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
@@ -144,9 +170,9 @@ export default function AIServicesPage() {
             
             <h1 className="text-4xl md:text-6xl font-bold text-text-primary mb-6">
               {selectedCategoryName ? (
-                <>Лучшие <span className="text-gradient">{selectedCategoryName.toLowerCase()}</span> инструменты</>
+                <>Нейросети для <span className="text-gradient">{selectedCategoryName.toLowerCase()}</span></>
               ) : (
-                <>Каталог <span className="text-gradient">ИИ-сервисов</span></>
+                <>Каталог <span className="text-gradient">нейросетей</span> и ИИ-сервисов</>
               )}
             </h1>
             
@@ -307,32 +333,21 @@ export default function AIServicesPage() {
           </div>
         )}
 
-        {/* Services Grid/List */}
+        {/* Services Grid */}
         {!loading && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className={viewMode === 'grid' 
-              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" 
-              : "space-y-6"
-            }
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
-            {services.map((service, index) => 
-              viewMode === 'list' ? (
-                <ServiceCardList
-                  key={service.id}
-                  {...service}
-                  index={index}
-                />
-              ) : (
-                <ServiceCard
-                  key={service.id}
-                  {...service}
-                  index={index}
-                />
-              )
-            )}
+            {services.map((service, index) => (
+              <ServiceCard
+                key={service.id}
+                {...service}
+                index={index}
+              />
+            ))}
           </motion.div>
         )}
 
