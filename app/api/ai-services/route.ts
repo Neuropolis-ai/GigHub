@@ -10,7 +10,8 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = (page - 1) * limit
 
-    let query = supabase
+    // Создаем базовый запрос для данных
+    let dataQuery = supabase
       .from('ai_services')
       .select(`
         *,
@@ -21,41 +22,63 @@ export async function GET(request: NextRequest) {
         )
       `)
 
-    // Фильтрация по категории
+    // Создаем запрос для подсчета
+    let countQuery = supabase
+      .from('ai_services')
+      .select('*', { count: 'exact', head: true })
+
+    // Применяем фильтры к обоим запросам
     if (categoryId) {
-      query = query.eq('category_id', categoryId)
+      const categoryIdNum = parseInt(categoryId)
+      dataQuery = dataQuery.eq('category_id', categoryIdNum)
+      countQuery = countQuery.eq('category_id', categoryIdNum)
     }
 
-    // Поиск по названию и описанию
     if (search) {
-      query = query.or(`name.ilike.%${search}%,short_description.ilike.%${search}%`)
+      dataQuery = dataQuery.or(`name.ilike.%${search}%,short_description.ilike.%${search}%`)
+      countQuery = countQuery.or(`name.ilike.%${search}%,short_description.ilike.%${search}%`)
     }
 
     // Только активные сервисы
-    query = query.eq('status', 'active')
+    dataQuery = dataQuery.eq('status', 'active')
+    countQuery = countQuery.eq('status', 'active')
 
-    // Пагинация
-    query = query
+    // Применяем пагинацию и сортировку к запросу данных
+    dataQuery = dataQuery
       .order('name')
       .range(offset, offset + limit - 1)
 
-    const { data: services, error, count } = await query
+    // Выполняем оба запроса параллельно
+    const [dataResult, countResult] = await Promise.all([
+      dataQuery,
+      countQuery
+    ])
 
-    if (error) {
-      console.error('Ошибка при получении ИИ-сервисов:', error)
+    if (dataResult.error) {
+      console.error('Ошибка при получении ИИ-сервисов:', dataResult.error)
       return NextResponse.json(
         { error: 'Не удалось получить ИИ-сервисы' }, 
         { status: 500 }
       )
     }
 
+    if (countResult.error) {
+      console.error('Ошибка при подсчете ИИ-сервисов:', countResult.error)
+      return NextResponse.json(
+        { error: 'Не удалось получить количество сервисов' }, 
+        { status: 500 }
+      )
+    }
+
+    const total = countResult.count || 0
+
     return NextResponse.json({
-      data: services,
+      data: dataResult.data || [],
       pagination: {
         page,
         limit,
-        total: count || 0,
-        totalPages: Math.ceil((count || 0) / limit)
+        total,
+        totalPages: Math.ceil(total / limit)
       }
     })
   } catch (error) {
