@@ -1,20 +1,25 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Star } from 'lucide-react'
+import { Star, Users, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export interface ServiceCardProps {
   id: number
-  name: string
-  short_description: string
-  category?: {
+  title: string
+  short_description_ru?: string
+  logo_url?: string
+  cover_url?: string
+  rating?: number
+  bookmarks_count?: number
+  price?: string | null
+  service_url?: string
+  categories?: {
     id: number
     name: string
     slug: string
   }
-  price?: string | null
-  service_url: string
   index?: number
   className?: string
 }
@@ -41,7 +46,13 @@ const getBadgeColor = (categoryName: string) => {
     'Маркетинг и продажи': 'from-orange-500 to-orange-700',
     'Образ жизни': 'from-teal-400 to-teal-600',
     'Обслуживание и поддержка клиентов': 'from-cyan-500 to-cyan-700',
-    'Обучение, гайды и коучинг': 'from-violet-500 to-violet-700'
+    'Обучение, гайды и коучинг': 'from-violet-500 to-violet-700',
+    'Создание презентаций': 'from-orange-400 to-orange-600',
+    'Разработка и IT': 'from-gray-500 to-gray-700',
+    'Развлечения': 'from-pink-400 to-pink-600',
+    'Инвестиции и финансы': 'from-emerald-500 to-emerald-700',
+    'Создание контента': 'from-violet-400 to-violet-600',
+    'Социальные сети': 'from-blue-400 to-blue-600'
   }
   return colors[categoryName] || 'from-gray-500 to-slate-500'
 }
@@ -53,16 +64,20 @@ const getInitials = (name: string) => {
 
 export default function ServiceCard({ 
   id, 
-  name, 
-  short_description, 
-  category, 
+  title, 
+  short_description_ru, 
+  logo_url,
+  cover_url,
+  rating,
+  bookmarks_count,
+  categories, 
   price, 
   service_url, 
   index = 0, 
   className = '' 
 }: ServiceCardProps) {
-  const badgeColor = category ? getBadgeColor(category.name) : 'from-gray-500 to-slate-500'
-  const initials = getInitials(name)
+  const badgeColor = categories ? getBadgeColor(categories.name) : 'from-gray-500 to-slate-500'
+  const initials = getInitials(title)
 
   return (
     <motion.div
@@ -74,45 +89,126 @@ export default function ServiceCard({
     >
       <Link href={`/ai-services/${id}`} className="block">
         {/* Category Badge */}
-        {category && (
+        {categories && (
           <div className="absolute top-4 left-4 z-20">
             <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r ${badgeColor} text-white text-xs font-semibold shadow-lg`}>
-              {category.name}
+              {categories.name}
             </div>
           </div>
         )}
 
-        {/* Image/Logo Area */}
-        <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
-          <div className={`absolute inset-0 bg-gradient-to-br ${badgeColor} opacity-10`} />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-4xl font-bold text-white bg-gradient-to-br from-accent-primary to-accent-secondary bg-clip-text text-transparent">
-              {initials}
-            </div>
+        {/* Cover Image */}
+        {cover_url && (
+          <div className="aspect-video rounded-t-3xl overflow-hidden">
+            <Image
+              src={cover_url}
+              alt={`${title} cover`}
+              width={400}
+              height={225}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement
+                target.parentElement!.style.display = 'none'
+              }}
+            />
           </div>
-        </div>
+        )}
+
+        {/* Logo Area (если нет обложки) */}
+        {!cover_url && (
+          <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+            <div className={`absolute inset-0 bg-gradient-to-br ${badgeColor} opacity-10`} />
+            {logo_url ? (
+              <div className="absolute inset-0 flex items-center justify-center p-8">
+                <Image
+                  src={logo_url}
+                  alt={`${title} logo`}
+                  width={80}
+                  height={80}
+                  className="max-w-full max-h-full object-contain"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.style.display = 'none'
+                  }}
+                />
+              </div>
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-4xl font-bold text-white bg-gradient-to-br from-accent-primary to-accent-secondary bg-clip-text text-transparent">
+                  {initials}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Content */}
         <div className="p-6">
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex-1">
-              <h3 className="text-xl font-semibold text-text-primary group-hover:text-accent-primary transition-colors line-clamp-2">
-                {name}
+          {/* Header with logo and title */}
+          <div className="flex items-start gap-3 mb-4">
+            {/* Logo (маленький) */}
+            {logo_url && cover_url && (
+              <div className="w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                <Image
+                  src={logo_url}
+                  alt={`${title} logo`}
+                  width={48}
+                  height={48}
+                  className="w-full h-full object-contain"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.parentElement!.innerHTML = `<div class="w-full h-full bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white text-xs font-bold">${initials}</div>`
+                  }}
+                />
+              </div>
+            )}
+            
+            <div className="flex-1 min-w-0">
+              <h3 className="text-xl font-semibold text-text-primary group-hover:text-accent-primary transition-colors line-clamp-2 mb-1">
+                {title}
               </h3>
-              {category && (
-                <span className="text-sm text-accent-primary font-medium">{category.name}</span>
+              {categories && (
+                <span className="text-sm text-accent-primary font-medium">{categories.name}</span>
               )}
             </div>
+
+            {/* Price */}
             {price && (
-              <div className="flex items-center gap-1 bg-green-50 px-2 py-1 rounded-lg ml-2">
+              <div className="flex items-center gap-1 bg-green-50 px-2 py-1 rounded-lg">
                 <span className="text-sm font-semibold text-green-700">{price}</span>
               </div>
             )}
           </div>
 
+          {/* Description */}
           <p className="text-text-secondary text-sm leading-relaxed line-clamp-3 mb-4">
-            {short_description}
+            {short_description_ru || 'Описание сервиса'}
           </p>
+
+          {/* Stats */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3 text-sm text-gray-500">
+              {rating && rating > 0 && (
+                <div className="flex items-center gap-1">
+                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  <span>{rating.toFixed(1)}</span>
+                </div>
+              )}
+              
+              {bookmarks_count && bookmarks_count > 0 && (
+                <div className="flex items-center gap-1">
+                  <Users className="w-4 h-4" />
+                  <span>{bookmarks_count}</span>
+                </div>
+              )}
+            </div>
+
+            {service_url && (
+              <div className="flex items-center text-xs text-gray-400">
+                <ExternalLink className="w-3 h-3" />
+              </div>
+            )}
+          </div>
 
           {/* View Service Link */}
           <div className="flex items-center justify-between">

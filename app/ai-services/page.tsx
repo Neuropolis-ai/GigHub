@@ -221,11 +221,20 @@ export default function AIServicesPage() {
             ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" 
             : "space-y-4"
           }>
-            {services.map((service) => (
-              <ServiceCard 
-                key={service.id} 
-                service={service} 
-                viewMode={viewMode} 
+            {services.map((service, index) => (
+              <ServiceCard
+                key={service.id}
+                id={service.id}
+                title={service.title}
+                short_description_ru={service.short_description_ru}
+                logo_url={service.logo_url}
+                cover_url={service.cover_url}
+                rating={service.rating}
+                bookmarks_count={service.bookmarks_count}
+                categories={service.categories}
+                price={service.price}
+                service_url={service.service_url}
+                index={index}
               />
             ))}
           </div>
@@ -273,105 +282,29 @@ export default function AIServicesPage() {
 }
 
 // Service Card Component
-function ServiceCard({ service, viewMode }: { service: AIServiceWithCategory, viewMode: 'grid' | 'list' }) {
-  const cardClasses = viewMode === 'grid' 
-    ? "bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow duration-200"
-    : "bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow duration-200 flex items-center p-4"
-
-  if (viewMode === 'list') {
-    return (
-      <div className={cardClasses}>
-        {/* Logo */}
-        <div className="flex-shrink-0 w-16 h-16 mr-4">
-          {service.logo_url ? (
-            <Image
-              src={service.logo_url || ''}
-              alt={`${service.title} logo`}
-              width={64}
-              height={64}
-              className="w-full h-full object-contain rounded-lg"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement
-                target.style.display = 'none'
-              }}
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
-              <span className="text-xl font-bold text-blue-600">
-                {service.title.charAt(0)}
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Content */}
-        <div className="flex-grow min-w-0">
-          <div className="flex items-start justify-between">
-            <div className="flex-grow">
-              <Link 
-                href={`/ai-services/${service.id}`}
-                className="block hover:text-blue-600 transition-colors"
-              >
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                  {service.title}
-                </h3>
-              </Link>
-              
-              <p className="text-gray-600 text-sm mb-2 line-clamp-2">
-                {service.short_description_ru || 'Описание недоступно'}
-              </p>
-
-              <div className="flex items-center gap-4 text-sm text-gray-500">
-                {service.categories && (
-                  <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs">
-                    {service.categories.name}
-                  </span>
-                )}
-                
-                {service.rating && service.rating > 0 && (
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    <span>{service.rating.toFixed(1)}</span>
-                  </div>
-                )}
-                
-                {service.bookmarks_count && service.bookmarks_count > 0 && (
-                  <div className="flex items-center gap-1">
-                    <Users className="w-4 h-4" />
-                    <span>{service.bookmarks_count}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="flex items-center gap-2 ml-4">
-              {service.service_url && (
-                <a
-                  href={service.service_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
-                  title="Открыть сервис"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+function ServiceCard({ id, title, short_description_ru, logo_url, cover_url, rating, bookmarks_count, categories, price, service_url, index }: { 
+  id: number, 
+  title: string, 
+  short_description_ru: string | null, 
+  logo_url: string | null, 
+  cover_url: string | null, 
+  rating: number | null, 
+  bookmarks_count: number | null, 
+  categories: Category | null, 
+  price: string | null, 
+  service_url: string | null, 
+  index: number 
+}) {
+  const cardClasses = "bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow duration-200"
 
   return (
     <div className={cardClasses}>
       {/* Cover Image */}
-      {service.cover_url && (
+      {cover_url && (
         <div className="aspect-video rounded-t-xl overflow-hidden">
           <Image
-            src={service.cover_url || ''}
-            alt={`${service.title} cover`}
+            src={cover_url || ''}
+            alt={`${title} cover`}
             width={400}
             height={225}
             className="w-full h-full object-cover"
@@ -386,11 +319,11 @@ function ServiceCard({ service, viewMode }: { service: AIServiceWithCategory, vi
       <div className="p-6">
         {/* Header with Logo */}
         <div className="flex items-start gap-3 mb-4">
-          {service.logo_url && (
+          {logo_url && (
             <div className="flex-shrink-0 w-12 h-12">
               <Image
-                src={service.logo_url || ''}
-                alt={`${service.title} logo`}
+                src={logo_url || ''}
+                alt={`${title} logo`}
                 width={48}
                 height={48}
                 className="w-full h-full object-contain rounded-lg"
@@ -404,17 +337,17 @@ function ServiceCard({ service, viewMode }: { service: AIServiceWithCategory, vi
           
           <div className="flex-grow min-w-0">
             <Link 
-              href={`/ai-services/${service.id}`}
+              href={`/ai-services/${id}`}
               className="block hover:text-blue-600 transition-colors"
             >
               <h3 className="text-lg font-semibold text-gray-900 mb-1 truncate">
-                {service.title}
+                {title}
               </h3>
             </Link>
             
-            {service.categories && (
+            {categories && (
               <span className="inline-block bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs">
-                {service.categories.name}
+                {categories.name}
               </span>
             )}
           </div>
@@ -422,30 +355,30 @@ function ServiceCard({ service, viewMode }: { service: AIServiceWithCategory, vi
 
         {/* Description */}
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-          {service.short_description_ru || 'Описание недоступно'}
+          {short_description_ru || 'Описание недоступно'}
         </p>
 
         {/* Footer */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 text-sm text-gray-500">
-            {service.rating && service.rating > 0 && (
+            {rating && rating > 0 && (
               <div className="flex items-center gap-1">
                 <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                <span>{service.rating.toFixed(1)}</span>
+                <span>{rating.toFixed(1)}</span>
               </div>
             )}
             
-            {service.bookmarks_count && service.bookmarks_count > 0 && (
+            {bookmarks_count && bookmarks_count > 0 && (
               <div className="flex items-center gap-1">
                 <Users className="w-4 h-4" />
-                <span>{service.bookmarks_count}</span>
+                <span>{bookmarks_count}</span>
               </div>
             )}
           </div>
 
-          {service.service_url && (
+          {service_url && (
             <a
-              href={service.service_url}
+              href={service_url}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:text-blue-700 transition-colors"

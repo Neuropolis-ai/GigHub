@@ -1,0 +1,51 @@
+-- Батч 1
+-- Выполните эту команду через mcp_supabase_execute_sql
+-- INSERT INTO ai_services (id, sort_order, date_added, title, ai_category, bookmarks_count, short_description_ru, logo_url, cover_url, full_description_ru, rating, service_url, price, slug, category_id)...
+
+-- Батч 2
+-- Выполните эту команду через mcp_supabase_execute_sql
+-- INSERT INTO ai_services (id, sort_order, date_added, title, ai_category, bookmarks_count, short_description_ru, logo_url, cover_url, full_description_ru, rating, service_url, price, slug, category_id)...
+
+-- Батч 3
+-- Выполните эту команду через mcp_supabase_execute_sql
+-- INSERT INTO ai_services (id, sort_order, date_added, title, ai_category, bookmarks_count, short_description_ru, logo_url, cover_url, full_description_ru, rating, service_url, price, slug, category_id)...
+
+-- Батч 4
+-- Выполните эту команду через mcp_supabase_execute_sql
+-- INSERT INTO ai_services (id, sort_order, date_added, title, ai_category, bookmarks_count, short_description_ru, logo_url, cover_url, full_description_ru, rating, service_url, price, slug, category_id)...
+
+-- Батч 5
+-- Выполните эту команду через mcp_supabase_execute_sql
+-- INSERT INTO ai_services (id, sort_order, date_added, title, ai_category, bookmarks_count, short_description_ru, logo_url, cover_url, full_description_ru, rating, service_url, price, slug, category_id)...
+
+-- Батч 6
+-- Выполните эту команду через mcp_supabase_execute_sql
+-- INSERT INTO ai_services (id, sort_order, date_added, title, ai_category, bookmarks_count, short_description_ru, logo_url, cover_url, full_description_ru, rating, service_url, price, slug, category_id)...
+
+-- Батч 7
+-- Выполните эту команду через mcp_supabase_execute_sql
+-- INSERT INTO ai_services (id, sort_order, date_added, title, ai_category, bookmarks_count, short_description_ru, logo_url, cover_url, full_description_ru, rating, service_url, price, slug, category_id)...
+
+-- Батч 8
+-- Выполните эту команду через mcp_supabase_execute_sql
+-- INSERT INTO ai_services (id, sort_order, date_added, title, ai_category, bookmarks_count, short_description_ru, logo_url, cover_url, full_description_ru, rating, service_url, price, slug, category_id)...
+
+-- Батч 9
+-- Выполните эту команду через mcp_supabase_execute_sql
+-- INSERT INTO ai_services (id, sort_order, date_added, title, ai_category, bookmarks_count, short_description_ru, logo_url, cover_url, full_description_ru, rating, service_url, price, slug, category_id)...
+
+-- Батч 10
+-- Выполните эту команду через mcp_supabase_execute_sql
+-- INSERT INTO ai_services (id, sort_order, date_added, title, ai_category, bookmarks_count, short_description_ru, logo_url, cover_url, full_description_ru, rating, service_url, price, slug, category_id)...
+
+-- Батч 11
+-- Выполните эту команду через mcp_supabase_execute_sql
+-- INSERT INTO ai_services (id, sort_order, date_added, title, ai_category, bookmarks_count, short_description_ru, logo_url, cover_url, full_description_ru, rating, service_url, price, slug, category_id)...
+
+-- Батч 12
+-- Выполните эту команду через mcp_supabase_execute_sql
+-- INSERT INTO ai_services (id, sort_order, date_added, title, ai_category, bookmarks_count, short_description_ru, logo_url, cover_url, full_description_ru, rating, service_url, price, slug, category_id)...
+
+-- Батч 13
+-- Выполните эту команду через mcp_supabase_execute_sql
+-- INSERT INTO ai_services (id, sort_order, date_added, title, ai_category, bookmarks_count, short_description_ru, logo_url, cover_url, full_description_ru, rating, service_url, price, slug, category_id)...
