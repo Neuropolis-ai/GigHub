@@ -62,6 +62,24 @@ const getInitials = (name: string) => {
   return name.split(' ').map(word => word.charAt(0)).join('').slice(0, 2).toUpperCase();
 }
 
+// Функция для нормализации URL изображений
+const normalizeImageUrl = (url: string | undefined | null): string | null => {
+  if (!url || typeof url !== 'string') return null;
+  
+  // Если URL начинается с //, добавляем https:
+  if (url.startsWith('//')) {
+    return `https:${url}`;
+  }
+  
+  // Если URL относительный, возвращаем null (будем использовать fallback)
+  if (url.startsWith('/') && !url.startsWith('//')) {
+    return null;
+  }
+  
+  // Если URL уже полный, возвращаем как есть
+  return url;
+}
+
 export default function ServiceCard({ 
   id, 
   title, 
@@ -78,6 +96,10 @@ export default function ServiceCard({
 }: ServiceCardProps) {
   const badgeColor = categories ? getBadgeColor(categories.name) : 'from-gray-500 to-slate-500'
   const initials = getInitials(title)
+  
+  // Нормализуем URL изображений
+  const normalizedCoverUrl = normalizeImageUrl(cover_url)
+  const normalizedLogoUrl = normalizeImageUrl(logo_url)
 
   return (
     <motion.div
@@ -98,10 +120,10 @@ export default function ServiceCard({
         )}
 
         {/* Cover Image */}
-        {cover_url && (
+        {normalizedCoverUrl && (
           <div className="aspect-video rounded-t-3xl overflow-hidden">
             <Image
-              src={cover_url}
+              src={normalizedCoverUrl}
               alt={`${title} cover`}
               width={400}
               height={225}
@@ -115,13 +137,13 @@ export default function ServiceCard({
         )}
 
         {/* Logo Area (если нет обложки) */}
-        {!cover_url && (
+        {!normalizedCoverUrl && (
           <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
             <div className={`absolute inset-0 bg-gradient-to-br ${badgeColor} opacity-10`} />
-            {logo_url ? (
+            {normalizedLogoUrl ? (
               <div className="absolute inset-0 flex items-center justify-center p-8">
                 <Image
-                  src={logo_url}
+                  src={normalizedLogoUrl}
                   alt={`${title} logo`}
                   width={80}
                   height={80}
@@ -147,10 +169,10 @@ export default function ServiceCard({
           {/* Header with logo and title */}
           <div className="flex items-start gap-3 mb-4">
             {/* Logo (маленький) */}
-            {logo_url && cover_url && (
+            {normalizedLogoUrl && normalizedCoverUrl && (
               <div className="w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
                 <Image
-                  src={logo_url}
+                  src={normalizedLogoUrl}
                   alt={`${title} logo`}
                   width={48}
                   height={48}

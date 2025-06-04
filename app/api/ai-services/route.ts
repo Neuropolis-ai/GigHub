@@ -13,12 +13,12 @@ export async function GET(request: NextRequest) {
 
     const offset = (page - 1) * limit
 
-    // Строим запрос с JOIN для категорий
+    // Строим запрос с LEFT JOIN для категорий (показываем все записи)
     let query = supabase
       .from('ai_services')
       .select(`
         *,
-        categories!inner(*)
+        categories(*)
       `, { count: 'exact' })
 
     // Добавляем поиск по названию и описанию
