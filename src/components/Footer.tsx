@@ -58,7 +58,7 @@ export default function Footer() {
                 <div className="w-10 h-10 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-2xl flex items-center justify-center">
                   <Brain className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-2xl font-bold">AI Horizon</span>
+                <span className="text-2xl font-bold">GigHub</span>
               </div>
 
               <p className="text-gray-300 text-lg leading-relaxed mb-8 max-w-lg">
@@ -185,7 +185,7 @@ export default function Footer() {
           >
             {/* Copyright */}
             <div className="flex items-center gap-2 text-gray-400 text-sm">
-              <span>© 2024 AI Horizon. Создано с</span>
+              <span>© 2024 GigHub. Создано с</span>
               <Heart className="w-4 h-4 text-red-500" />
               <span>для будущего ИИ</span>
             </div>
