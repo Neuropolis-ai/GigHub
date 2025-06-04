@@ -107,14 +107,14 @@ export default function ServiceCard({
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.6 }}
       whileHover={{ y: -8 }}
-      className={`group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-accent-primary/30 cursor-pointer ${className}`}
+      className={`group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-accent-primary/30 cursor-pointer ${className} flex flex-col`}
     >
-      <Link href={`/ai-services/${id}`} className="block">
-        {/* Category Badge */}
-        {categories && (
+      <Link href={`/ai-services/${id}`} className="block flex-1 flex flex-col">
+        {/* Price Badge (вместо категории) */}
+        {price && (
           <div className="absolute top-4 left-4 z-20">
-            <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r ${badgeColor} text-white text-xs font-semibold shadow-lg`}>
-              {categories.name}
+            <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-semibold shadow-lg">
+              {price}
             </div>
           </div>
         )}
@@ -165,7 +165,7 @@ export default function ServiceCard({
         )}
 
         {/* Content */}
-        <div className="p-6">
+        <div className="p-6 flex-1 flex flex-col">
           {/* Header with logo and title */}
           <div className="flex items-start gap-3 mb-4">
             {/* Logo (маленький) */}
@@ -193,17 +193,10 @@ export default function ServiceCard({
                 <span className="text-sm text-accent-primary font-medium">{categories.name}</span>
               )}
             </div>
-
-            {/* Price */}
-            {price && (
-              <div className="flex items-center gap-1 bg-green-50 px-2 py-1 rounded-lg">
-                <span className="text-sm font-semibold text-green-700">{price}</span>
-              </div>
-            )}
           </div>
 
           {/* Description */}
-          <p className="text-text-secondary text-sm leading-relaxed line-clamp-3 mb-4">
+          <p className="text-text-secondary text-sm leading-relaxed line-clamp-3 mb-4 flex-1">
             {short_description_ru || 'Описание сервиса'}
           </p>
 
@@ -231,18 +224,20 @@ export default function ServiceCard({
               </div>
             )}
           </div>
-
-          {/* View Service Link */}
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-text-secondary">
-              Перейти к сервису
-            </span>
-            <div className="w-8 h-8 rounded-full bg-accent-primary/10 flex items-center justify-center group-hover:bg-accent-primary group-hover:text-white transition-all duration-300">
-              <span className="text-accent-primary group-hover:text-white text-sm">→</span>
-            </div>
-          </div>
         </div>
       </Link>
+      
+      {/* View Service Link - закреплена в самом низу */}
+      <div className="px-6 pb-6">
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-text-secondary">
+            Перейти к сервису
+          </span>
+          <div className="w-8 h-8 rounded-full bg-accent-primary/10 flex items-center justify-center group-hover:bg-accent-primary group-hover:text-white transition-all duration-300">
+            <span className="text-accent-primary group-hover:text-white text-sm">→</span>
+          </div>
+        </div>
+      </div>
     </motion.div>
   )
 } 
