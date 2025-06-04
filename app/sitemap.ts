@@ -33,6 +33,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: 'https://gighub.ru/text-neural-networks',
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
       url: 'https://gighub.ru/russian-neural-networks',
       lastModified: new Date(),
       changeFrequency: 'daily',
