@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import ServiceCard, { ServiceCardProps } from '../components/ServiceCard'
 
 interface Category {
   id: number
@@ -264,63 +265,20 @@ function AIServicesContent() {
             <>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
                 {services.map((service, index) => (
-                  <div
+                  <ServiceCard
                     key={service.id}
-                    className="service-card animate-fade-in-up"
-                    style={{animationDelay: `${index * 0.1}s`}}
-                  >
-                    <div className="mb-4">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
-                        {service.name}
-                      </h3>
-                      
-                      {service.categories && (
-                        <span className="category-tag">
-                          {service.categories.name}
-                        </span>
-                      )}
-                    </div>
-
-                    {service.short_description && (
-                      <p className="text-gray-600 mb-4 line-clamp-3">
-                        {service.short_description}
-                      </p>
-                    )}
-
-                    {service.price && (
-                      <div className="mb-4">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                          {service.price}
-                        </span>
-                      </div>
-                    )}
-
-                    <div className="flex justify-between items-center pt-4 border-t border-gray-100">
-                      {service.service_url && (
-                        <a
-                          href={service.service_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-secondary text-sm px-4 py-2"
-                        >
-                          Перейти на сайт
-                          <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </a>
-                      )}
-                      
-                      <Link
-                        href={`/ai-services/${service.id}`}
-                        className="text-blue-600 hover:text-blue-800 font-medium flex items-center"
-                      >
-                        Подробнее
-                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </Link>
-                    </div>
-                  </div>
+                    id={service.id}
+                    name={service.name}
+                    short_description={service.short_description || ''}
+                    category={service.categories ? {
+                      id: service.categories.id,
+                      name: service.categories.name,
+                      slug: service.categories.name.toLowerCase().replace(/\s+/g, '-')
+                    } : undefined}
+                    price={service.price}
+                    service_url={service.service_url || ''}
+                    index={index}
+                  />
                 ))}
               </div>
 

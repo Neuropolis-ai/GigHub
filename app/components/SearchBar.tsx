@@ -3,10 +3,12 @@
 import { motion } from 'framer-motion'
 import { Search, Command } from 'lucide-react'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function SearchBar() {
   const [searchValue, setSearchValue] = useState('')
   const [isFocused, setIsFocused] = useState(false)
+  const router = useRouter()
 
   const suggestions = [
     'Генерация изображений',
@@ -16,6 +18,23 @@ export default function SearchBar() {
     'Автоматизация',
     'Обработка текста'
   ]
+
+  const handleSearch = (query: string) => {
+    if (query.trim()) {
+      router.push(`/ai-services?search=${encodeURIComponent(query)}`)
+    }
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch(searchValue)
+    }
+  }
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setSearchValue(suggestion)
+    handleSearch(suggestion)
+  }
 
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8">
@@ -38,6 +57,7 @@ export default function SearchBar() {
                 onChange={(e) => setSearchValue(e.target.value)}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
+                onKeyPress={handleKeyPress}
                 className="flex-1 text-lg text-text-primary placeholder-text-secondary outline-none bg-transparent"
               />
               <div className="flex items-center gap-1 px-3 py-1 bg-gray-100 rounded-lg text-sm text-text-secondary">
@@ -63,7 +83,7 @@ export default function SearchBar() {
                 transition={{ delay: 0.1 * index, duration: 0.4 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setSearchValue(suggestion)}
+                onClick={() => handleSuggestionClick(suggestion)}
                 className="px-4 py-2 bg-white/80 hover:bg-accent-primary/10 border border-gray-200 hover:border-accent-primary/30 rounded-2xl text-sm text-text-secondary hover:text-accent-primary transition-all duration-200"
               >
                 {suggestion}
