@@ -1,6 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', sans-serif;
+  }
+  
+  body {
+    background-color: #F9FAFB;
+    color: #111827;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: linear-gradient(135deg, #6366F1 0%, #0EA5E9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Дополнительные переменные для компонентов */
+:root {
+  --accent-primary: #6366F1;
+  --accent-secondary: #0EA5E9;
+  --text-primary: #111827;
+  --text-secondary: #6B7280;
+  --background: #F9FAFB;
+}
+
+/* Утилиты для обрезки текста */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Плавные переходы для всех интерактивных элементов */
+button, a, input, select, textarea {
+  transition: all 0.2s ease-in-out;
+}
 
 /* Кастомные CSS переменные */
 :root {
@@ -109,21 +165,6 @@ body {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Кастомные утилиты */
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
 /* Градиентный текст */
 .gradient-text {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -201,11 +242,6 @@ body {
   .service-card {
     @apply bg-slate-800 border-slate-700 hover:border-blue-400;
   }
-}
-
-/* Плавные переходы для всех интерактивных элементов */
-button, a, input, select, textarea {
-  transition: all 0.2s ease-in-out;
 }
 
 /* Улучшенный фокус */
