@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { ArrowLeft, ExternalLink, Star, Users, Calendar, Shield, Zap, Globe, Check, X } from 'lucide-react'
 import { AIService, Category } from '@/lib/supabase'
 
 interface ServiceWithCategory extends AIService {
@@ -41,10 +43,14 @@ export default function AIServicePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mb-4"></div>
-          <p className="text-gray-600">Загружаем информацию о сервисе...</p>
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"
+          />
+          <p className="text-gray-600 text-lg">Загружаем информацию о сервисе...</p>
         </div>
       </div>
     )
@@ -52,222 +58,326 @@ export default function AIServicePage() {
 
   if (error || !service) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-pink-100">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center"
+        >
+          <h2 className="text-3xl font-bold text-red-600 mb-4">
             {error || 'Сервис не найден'}
           </h2>
           <Link
             href="/ai-services"
-            className="text-blue-600 hover:text-blue-800"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
           >
-            ← Вернуться к списку сервисов
+            <ArrowLeft className="w-4 h-4" />
+            Вернуться к списку сервисов
           </Link>
-        </div>
+        </motion.div>
       </div>
     )
   }
 
+  // Парсим FAQ и недостатки для лучшего отображения
+  const faqItems = service.faq_ru ? service.faq_ru.split('\n').filter(item => item.trim()) : []
+  const disadvantageItems = service.disadvantages ? service.disadvantages.split('\n').filter(item => item.trim()) : []
+  const features = service.full_description ? service.full_description.split('.').slice(0, 6).filter(item => item.trim()) : []
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Navigation */}
-        <div className="mb-8">
-          <Link href="/ai-services" className="text-blue-600 hover:text-blue-800 mb-4 inline-block">
-            ← Вернуться к сервисам
-          </Link>
-          {service.categories && (
-            <Link
-              href={`/ai-services?category=${service.categories.id}`}
-              className="text-blue-600 hover:text-blue-800 mb-4 inline-block ml-4"
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <Link 
+              href="/ai-services"
+              className="flex items-center gap-2 text-text-secondary hover:text-accent-primary transition-colors"
             >
-              Другие сервисы в категории "{service.categories.name}"
+              <ArrowLeft className="w-4 h-4" />
+              <span>Вернуться к каталогу</span>
             </Link>
-          )}
-        </div>
-
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-md p-8 mb-8">
-          <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6">
-            <div className="mb-4 md:mb-0">
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                {service.name}
-              </h1>
-              {service.categories && (
-                <span className="inline-block px-4 py-2 bg-blue-100 text-blue-800 text-sm rounded-full">
-                  {service.categories.name}
-                </span>
-              )}
-            </div>
             
-            <div className="flex flex-col sm:flex-row gap-4">
-              {service.service_url && (
-                <a
-                  href={service.service_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Перейти на сайт
-                  <span className="ml-2">↗</span>
-                </a>
-              )}
-              
-              {service.price && (
-                <div className="flex items-center px-4 py-3 bg-green-50 border border-green-200 rounded-lg">
-                  <span className="text-green-700 font-semibold">
-                    {service.price}
-                  </span>
-                </div>
-              )}
-            </div>
+            {service.service_url && (
+              <motion.a
+                href={service.service_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center gap-2 px-6 py-2 bg-accent-primary text-white rounded-xl font-medium hover:bg-accent-primary/90 transition-colors"
+              >
+                Открыть {service.name}
+                <ExternalLink className="w-4 h-4" />
+              </motion.a>
+            )}
           </div>
-
-          {service.short_description && (
-            <p className="text-xl text-gray-600 leading-relaxed">
-              {service.short_description}
-            </p>
-          )}
         </div>
+      </header>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Main Info */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Full Description */}
-            {service.full_description && (
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  Подробное описание
-                </h2>
-                <div className="prose max-w-none">
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                    {service.full_description}
-                  </p>
+      {/* Hero Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-accent-primary/5 via-white to-accent-secondary/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left: Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-6"
+            >
+              <div className="flex items-center gap-3">
+                {service.categories && (
+                  <span className="px-3 py-1 bg-accent-primary/10 text-accent-primary text-sm font-medium rounded-full">
+                    {service.categories.name}
+                  </span>
+                )}
+                <div className="flex items-center gap-1">
+                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  <span className="font-semibold">4.8</span>
+                  <span className="text-text-secondary text-sm">(отзывы)</span>
                 </div>
               </div>
+
+              <h1 className="text-4xl sm:text-5xl font-bold text-text-primary">
+                {service.name}
+              </h1>
+
+              <p className="text-xl text-text-secondary leading-relaxed">
+                {service.short_description || 'Мощный ИИ-инструмент для решения ваших задач'}
+              </p>
+
+              <div className="flex flex-wrap gap-4 text-sm text-text-secondary">
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  <span>Активные пользователи</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  <span>Добавлен {new Date(service.created_at).toLocaleDateString('ru-RU')}</span>
+                </div>
+                {service.price && (
+                  <div className="flex items-center gap-2">
+                    <Zap className="w-4 h-4" />
+                    <span>{service.price}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {service.categories && (
+                  <span className="px-3 py-1 bg-gray-100 text-text-secondary text-sm rounded-lg">
+                    {service.categories.name}
+                  </span>
+                )}
+                <span className="px-3 py-1 bg-gray-100 text-text-secondary text-sm rounded-lg">
+                  ИИ-инструмент
+                </span>
+              </div>
+            </motion.div>
+
+            {/* Right: Image */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden aspect-video">
+                <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-6xl font-bold text-white/30">{service.name.charAt(0)}</div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          {/* Left: Main Content */}
+          <div className="lg:col-span-2 space-y-12">
+            {/* Description */}
+            {service.full_description && (
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="text-3xl font-bold text-text-primary mb-6">О продукте</h2>
+                <p className="text-text-secondary leading-relaxed text-lg whitespace-pre-line">
+                  {service.full_description}
+                </p>
+              </motion.section>
+            )}
+
+            {/* Features */}
+            {features.length > 0 && (
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="text-3xl font-bold text-text-primary mb-6">Основные возможности</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {features.map((feature, index) => (
+                    <div key={index} className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
+                      <div className="w-8 h-8 bg-accent-primary/10 rounded-lg flex items-center justify-center">
+                        <Check className="w-4 h-4 text-accent-primary" />
+                      </div>
+                      <span className="text-text-primary">{feature.trim()}</span>
+                    </div>
+                  ))}
+                </div>
+              </motion.section>
             )}
 
             {/* FAQ */}
             {service.faq_ru && (
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  Часто задаваемые вопросы (RU)
-                </h2>
-                <div className="prose max-w-none">
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                    {service.faq_ru}
-                  </p>
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="text-3xl font-bold text-text-primary mb-6">Часто задаваемые вопросы</h2>
+                <div className="space-y-4">
+                  {faqItems.slice(0, 6).map((item, index) => (
+                    <div key={index} className="p-4 border border-gray-200 rounded-xl hover:border-accent-primary/30 transition-colors">
+                      <span className="text-text-primary">{item}</span>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              </motion.section>
             )}
 
-            {service.faq && !service.faq_ru && (
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  FAQ
-                </h2>
-                <div className="prose max-w-none">
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                    {service.faq}
-                  </p>
+            {/* Disadvantages */}
+            {service.disadvantages && (
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="text-3xl font-bold text-text-primary mb-6">Ограничения</h2>
+                <div className="space-y-3">
+                  {disadvantageItems.map((item, index) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <X className="w-4 h-4 text-red-500 mt-1 flex-shrink-0" />
+                      <span className="text-text-secondary">{item}</span>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              </motion.section>
             )}
           </div>
 
-          {/* Right Column - Sidebar */}
-          <div className="space-y-6">
-            {/* Disadvantages */}
-            {service.disadvantages && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-red-800 mb-3">
-                  Недостатки
-                </h3>
-                <p className="text-red-700 text-sm leading-relaxed whitespace-pre-line">
-                  {service.disadvantages}
+          {/* Right: Sidebar */}
+          <div className="space-y-8">
+            {/* CTA Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
+            >
+              <div className="text-center space-y-4">
+                <h3 className="text-xl font-semibold text-text-primary">Попробовать {service.name}</h3>
+                <p className="text-text-secondary text-sm">
+                  Начните использовать {service.name} уже сегодня
                 </p>
-              </div>
-            )}
-
-            {/* Service Info */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Информация о сервисе
-              </h3>
-              
-              <div className="space-y-3 text-sm">
-                {service.categories && (
-                  <div>
-                    <span className="text-gray-600">Категория:</span>
-                    <span className="ml-2 font-medium text-gray-900">
-                      {service.categories.name}
-                    </span>
-                  </div>
-                )}
-                
-                {service.price && (
-                  <div>
-                    <span className="text-gray-600">Цена:</span>
-                    <span className="ml-2 font-medium text-green-600">
-                      {service.price}
-                    </span>
-                  </div>
-                )}
-                
-                <div>
-                  <span className="text-gray-600">Статус:</span>
-                  <span className="ml-2 font-medium text-green-600">
-                    Активен
-                  </span>
-                </div>
-
-                {service.created_at && (
-                  <div>
-                    <span className="text-gray-600">Добавлен:</span>
-                    <span className="ml-2 font-medium text-gray-900">
-                      {new Date(service.created_at).toLocaleDateString('ru-RU')}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Быстрые действия
-              </h3>
-              
-              <div className="space-y-3">
                 {service.service_url && (
-                  <a
+                  <motion.a
                     href={service.service_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-full text-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-accent-primary text-white rounded-xl font-medium hover:bg-accent-primary/90 transition-colors"
                   >
-                    Открыть сайт
-                  </a>
+                    Перейти на сайт
+                    <ExternalLink className="w-4 h-4" />
+                  </motion.a>
                 )}
-                
+              </div>
+            </motion.div>
+
+            {/* Stats Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
+            >
+              <h3 className="text-lg font-semibold text-text-primary mb-4">Информация</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-text-secondary">Рейтинг</span>
+                  <div className="flex items-center gap-1">
+                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    <span className="font-semibold">4.8</span>
+                  </div>
+                </div>
+                {service.categories && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-text-secondary">Категория</span>
+                    <span className="font-semibold">{service.categories.name}</span>
+                  </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="text-text-secondary">Статус</span>
+                  <span className="font-semibold text-green-600">Активен</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-text-secondary">Добавлен</span>
+                  <span className="font-semibold">{new Date(service.created_at).toLocaleDateString('ru-RU')}</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Pricing Card */}
+            {service.price && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
+              >
+                <h3 className="text-lg font-semibold text-text-primary mb-4">Стоимость</h3>
+                <div className="text-2xl font-bold text-accent-primary mb-2">
+                  {service.price}
+                </div>
+                <p className="text-text-secondary text-sm">
+                  Актуальные тарифы смотрите на официальном сайте
+                </p>
+              </motion.div>
+            )}
+
+            {/* Quick Actions */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
+            >
+              <h3 className="text-lg font-semibold text-text-primary mb-4">Быстрые действия</h3>
+              <div className="space-y-3">
                 <Link
                   href="/ai-services"
-                  className="block w-full text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                  className="block w-full text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
                 >
                   Все сервисы
                 </Link>
-                
                 {service.categories && (
                   <Link
-                    href={`/ai-services?category=${service.categories.id}`}
-                    className="block w-full text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                    href={`/ai-services?category_id=${service.categories.id}`}
+                    className="block w-full text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
                   >
                     Сервисы категории
                   </Link>
                 )}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
