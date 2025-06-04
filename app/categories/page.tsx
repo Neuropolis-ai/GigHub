@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Category } from '@/lib/supabase'
+
+interface Category {
+  id: number
+  name: string
+  description: string | null
+  created_at: string
+}
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([])
@@ -10,30 +16,32 @@ export default function CategoriesPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await fetch('/api/categories')
+        if (!response.ok) {
+          throw new Error('Ошибка при загрузке категорий')
+        }
+        const data = await response.json()
+        setCategories(data)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Неизвестная ошибка')
+      } finally {
+        setLoading(false)
+      }
+    }
+
     fetchCategories()
   }, [])
 
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch('/api/categories')
-      if (!response.ok) {
-        throw new Error('Не удалось загрузить категории')
-      }
-      const data = await response.json()
-      setCategories(data)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Произошла ошибка')
-    } finally {
-      setLoading(false)
-    }
-  }
-
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mb-4"></div>
-          <p className="text-gray-600">Загружаем категории...</p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="container mx-auto px-6 py-24">
+          <div className="text-center">
+            <div className="loading-spinner w-12 h-12 mx-auto mb-4"></div>
+            <p className="text-gray-600">Загружаем категории...</p>
+          </div>
         </div>
       </div>
     )
@@ -41,71 +49,101 @@ export default function CategoriesPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center text-red-600">
-          <h2 className="text-2xl font-bold mb-4">Ошибка</h2>
-          <p>{error}</p>
-          <button 
-            onClick={fetchCategories}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            Попробовать снова
-          </button>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="container mx-auto px-6 py-24">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Ошибка загрузки</h2>
+            <p className="text-gray-600 mb-6">{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="btn-primary"
+            >
+              Попробовать снова
+            </button>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <Link href="/" className="text-blue-600 hover:text-blue-800 mb-4 inline-block">
-            ← Вернуться на главную
-          </Link>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Категории ИИ-сервисов
-          </h1>
-          <p className="text-xl text-gray-600">
-            Выберите категорию, чтобы найти лучшие ИИ-инструменты для ваших задач
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              href={`/ai-services?category=${category.id}`}
-              className="group bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-200"
-            >
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                  {category.name}
-                </h3>
-                <span className="text-gray-400 group-hover:text-blue-500 transition-colors">
-                  →
-                </span>
-              </div>
-              
-              {category.description && (
-                <p className="text-gray-600 mb-4">
-                  {category.description}
-                </p>
-              )}
-              
-              <div className="text-sm text-blue-600 font-medium">
-                Посмотреть сервисы
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        {categories.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">Категории не найдены</p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-white/50">
+        <div className="container mx-auto px-6 py-16">
+          <div className="text-center max-w-3xl mx-auto">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 animate-fade-in-up">
+              Категории <span className="gradient-text">ИИ-сервисов</span>
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+              Исследуйте {categories.length} категорий искусственного интеллекта. 
+              От генерации контента до анализа данных.
+            </p>
           </div>
-        )}
-      </div>
+        </div>
+      </section>
+
+      {/* Categories Grid */}
+      <section className="py-16">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {categories.map((category, index) => (
+              <Link 
+                key={category.id} 
+                href={`/ai-services?category=${category.id}`}
+                className="service-card group animate-fade-in-up"
+                style={{animationDelay: `${index * 0.1}s`}}
+              >
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-4">
+                    <span className="text-white font-bold text-lg">
+                      {category.name.charAt(0)}
+                    </span>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                      {category.name}
+                    </h3>
+                  </div>
+                </div>
+                
+                {category.description && (
+                  <p className="text-gray-600 line-clamp-3 mb-4">
+                    {category.description}
+                  </p>
+                )}
+                
+                <div className="flex items-center text-blue-600 font-medium group-hover:text-blue-700 transition-colors">
+                  <span>Посмотреть сервисы</span>
+                  <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-white/50">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Не нашли нужную категорию?
+          </h2>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Исследуйте все доступные ИИ-сервисы или воспользуйтесь поиском
+          </p>
+          <Link href="/ai-services" className="btn-primary text-lg px-8 py-4">
+            Все ИИ-сервисы
+          </Link>
+        </div>
+      </section>
     </div>
   )
 } 
