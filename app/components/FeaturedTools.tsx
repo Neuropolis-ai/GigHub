@@ -6,118 +6,28 @@ import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import ServiceCard, { ServiceCardProps } from './ServiceCard'
 
-// Моковые данные для демонстрации
-const mockFeaturedServices: ServiceCardProps[] = [
-  {
-    id: 1,
-    title: 'SeamlessExpressive',
-    short_description_ru: 'Мультиязычный перевод с сохранением стиля речи.',
-    rating: 0,
-    bookmarks_count: 28,
-    cover_url: 'https://media.theresanaiforthat.com/covers/seamlessexpressive.jpg',
-    logo_url: 'https://media.theresanaiforthat.com/icons/seamlessexpressive.svg',
-    price: 'Бесплатно',
-    service_url: 'https://example.com',
-    categories: {
-      id: 1,
-      name: 'Текст',
-      slug: 'text'
-    }
-  },
-  {
-    id: 2,
-    title: 'NewOaks',
-    short_description_ru: 'Персонализированный чат-бот для назначения встреч.',
-    rating: 0,
-    bookmarks_count: 18,
-    cover_url: 'https://media.theresanaiforthat.com/covers/newoaks.jpg',
-    logo_url: 'https://media.theresanaiforthat.com/icons/newoaks.svg',
-    price: 'Бесплатно + от $19/мес',
-    service_url: 'https://example.com',
-    categories: {
-      id: 2,
-      name: 'Чат-боты',
-      slug: 'chatbots'
-    }
-  },
-  {
-    id: 3,
-    title: 'Create',
-    short_description_ru: 'Создавайте приложения автомагически быстро',
-    rating: 5.0,
-    bookmarks_count: 93,
-    cover_url: 'https://media.theresanaiforthat.com/covers/create.jpg',
-    logo_url: 'https://media.theresanaiforthat.com/icons/create.svg',
-    price: 'Бесплатно',
-    service_url: 'https://example.com',
-    categories: {
-      id: 3,
-      name: 'Безопасность',
-      slug: 'security'
-    }
-  },
-  {
-    id: 4,
-    title: 'MyFitChecker',
-    short_description_ru: 'Советы по моде и оценки стиля на основе загруженных фотографий.',
-    rating: 5.0,
-    bookmarks_count: 54,
-    cover_url: 'https://media.theresanaiforthat.com/covers/myfitchecker.jpg',
-    logo_url: 'https://media.theresanaiforthat.com/icons/myfitchecker.svg',
-    price: 'Бесплатно',
-    service_url: 'https://example.com',
-    categories: {
-      id: 4,
-      name: 'Создание контента',
-      slug: 'content-creation'
-    }
-  },
-  {
-    id: 5,
-    title: 'Simplify Extension',
-    short_description_ru: 'Краткие обзоры обучающих видеороликов на YouTube.',
-    rating: 0,
-    bookmarks_count: 27,
-    cover_url: 'https://media.theresanaiforthat.com/covers/simplify.jpg',
-    logo_url: 'https://media.theresanaiforthat.com/icons/simplify.svg',
-    price: 'Бесплатно + от $5/мес',
-    service_url: 'https://example.com',
-    categories: {
-      id: 5,
-      name: 'Видео',
-      slug: 'video'
-    }
-  },
-  {
-    id: 6,
-    title: 'Bidlytics',
-    short_description_ru: 'Bidlytics: Согласованные предложения для государственных контрактов.',
-    rating: 0,
-    bookmarks_count: 31,
-    cover_url: 'https://media.theresanaiforthat.com/covers/bidlytics.jpg',
-    logo_url: 'https://media.theresanaiforthat.com/icons/bidlytics.svg',
-    price: 'Бесплатно + от $29.99/мес',
-    service_url: 'https://example.com',
-    categories: {
-      id: 6,
-      name: 'Безопасность',
-      slug: 'security'
-    }
-  }
-]
-
 export default function FeaturedTools() {
   const [featuredServices, setFeaturedServices] = useState<ServiceCardProps[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Имитируем загрузку данных
-    const timer = setTimeout(() => {
-      setFeaturedServices(mockFeaturedServices)
-      setLoading(false)
-    }, 1000)
+    const fetchFeaturedServices = async () => {
+      try {
+        const response = await fetch('/api/ai-services?limit=6&sort=bookmarks_count:desc')
+        if (response.ok) {
+          const data = await response.json()
+          setFeaturedServices(data.data)
+        } else {
+          console.error('Ошибка загрузки сервисов:', response.statusText)
+        }
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
 
-    return () => clearTimeout(timer)
+    fetchFeaturedServices()
   }, [])
 
   return (
