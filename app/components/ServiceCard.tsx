@@ -47,7 +47,8 @@ const getBadgeColor = (categoryName: string) => {
 }
 
 const getInitials = (name: string) => {
-  return name.split(' ').map(word => word.charAt(0)).join('').slice(0, 2).toUpperCase()
+  if (!name || typeof name !== 'string') return 'AI';
+  return name.split(' ').map(word => word.charAt(0)).join('').slice(0, 2).toUpperCase();
 }
 
 export default function ServiceCard({ 

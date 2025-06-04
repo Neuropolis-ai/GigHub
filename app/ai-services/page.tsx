@@ -1,136 +1,363 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import ServiceCard, { ServiceCardProps } from '../components/ServiceCard'
+import Image from 'next/image'
+import { Search, Filter, Star, Users, ExternalLink, Grid, List } from 'lucide-react'
+import { AIServiceWithCategory, Category } from '@/lib/supabase'
 
-interface Category {
-  id: number
-  name: string
-  description: string | null
-  created_at: string
+interface PaginationInfo {
+  page: number
+  limit: number
+  total: number
+  totalPages: number
+  hasNextPage: boolean
+  hasPreviousPage: boolean
 }
 
-interface AIService {
-  id: number
-  name: string
-  short_description: string | null
-  full_description: string | null
-  service_url: string | null
-  price: string | null
-  category_id: number | null
-  created_at: string
+interface APIResponse {
+  data: AIServiceWithCategory[]
+  pagination: PaginationInfo
 }
 
-interface ServiceWithCategory extends AIService {
-  categories: Category | null
-}
-
-interface ServiceResponse {
-  data: ServiceWithCategory[]
-  pagination: {
-    page: number
-    limit: number
-    total: number
-    totalPages: number
-  }
-}
-
-function AIServicesContent() {
+export default function AIServicesPage() {
   const searchParams = useSearchParams()
-  const [services, setServices] = useState<ServiceWithCategory[]>([])
+  const router = useRouter()
+  
+  const [services, setServices] = useState<AIServiceWithCategory[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [search, setSearch] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get('category') || '')
-  const [currentPage, setCurrentPage] = useState(1)
-  const [pagination, setPagination] = useState({
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '')
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category_id') || '')
+  const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'created_at')
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [pagination, setPagination] = useState<PaginationInfo>({
     page: 1,
     limit: 20,
     total: 0,
-    totalPages: 0
+    totalPages: 0,
+    hasNextPage: false,
+    hasPreviousPage: false
   })
+
+  // Получение данных
+  const fetchServices = async (page = 1) => {
+    try {
+      setLoading(true)
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: '20',
+        sort: sortBy,
+        order: 'desc'
+      })
+
+      if (searchTerm) params.append('search', searchTerm)
+      if (selectedCategory) params.append('category_id', selectedCategory)
+
+      const response = await fetch(`/api/ai-services?${params}`)
+      if (!response.ok) throw new Error('Ошибка загрузки данных')
+
+      const data: APIResponse = await response.json()
+      setServices(data.data)
+      setPagination(data.pagination)
+    } catch (error) {
+      console.error('Ошибка:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/categories')
+      if (!response.ok) throw new Error('Ошибка загрузки категорий')
+      const data = await response.json()
+      setCategories(data)
+    } catch (error) {
+      console.error('Ошибка:', error)
+    }
+  }
 
   useEffect(() => {
     fetchCategories()
   }, [])
 
   useEffect(() => {
-    fetchServices()
-  }, [search, selectedCategory, currentPage])
+    fetchServices(1)
+  }, [searchTerm, selectedCategory, sortBy])
 
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch('/api/categories')
-      if (!response.ok) throw new Error('Не удалось загрузить категории')
-      const data = await response.json()
-      setCategories(data)
-    } catch (err) {
-      console.error('Ошибка загрузки категорий:', err)
-    }
+  const updateURL = () => {
+    const params = new URLSearchParams()
+    if (searchTerm) params.set('search', searchTerm)
+    if (selectedCategory) params.set('category_id', selectedCategory)
+    if (sortBy !== 'created_at') params.set('sort', sortBy)
+    
+    const newURL = params.toString() ? `?${params.toString()}` : ''
+    router.push(`/ai-services${newURL}`)
   }
 
-  const fetchServices = async () => {
-    setLoading(true)
-    try {
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        limit: '20'
-      })
-      
-      if (search) params.append('search', search)
-      if (selectedCategory) params.append('category_id', selectedCategory)
+  useEffect(() => {
+    updateURL()
+  }, [searchTerm, selectedCategory, sortBy])
 
-      const response = await fetch(`/api/ai-services?${params}`)
-      if (!response.ok) throw new Error('Не удалось загрузить сервисы')
-      
-      const data: ServiceResponse = await response.json()
-      setServices(data.data)
-      setPagination(data.pagination)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Произошла ошибка')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setCurrentPage(1)
-    fetchServices()
+  const handleSearch = (value: string) => {
+    setSearchTerm(value)
   }
 
   const handleCategoryChange = (categoryId: string) => {
     setSelectedCategory(categoryId)
-    setCurrentPage(1)
   }
 
-  const getSelectedCategoryName = () => {
-    if (!selectedCategory) return 'Все категории'
-    const category = categories.find(c => c.id.toString() === selectedCategory)
-    return category?.name || 'Неизвестная категория'
+  const handleSortChange = (sort: string) => {
+    setSortBy(sort)
   }
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="container mx-auto px-6 py-24">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+  const handlePageChange = (page: number) => {
+    fetchServices(page)
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="py-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Каталог ИИ-сервисов
+            </h1>
+            <p className="text-gray-600">
+              Найдено {pagination.total} сервисов искусственного интеллекта
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Filters and Search */}
+        <div className="bg-white rounded-xl shadow-sm border p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* Search */}
+            <div className="md:col-span-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Поиск ИИ-сервисов..."
+                  value={searchTerm}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Ошибка загрузки</h2>
-            <p className="text-gray-600 mb-6">{error}</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="btn-primary"
+
+            {/* Category Filter */}
+            <div>
+              <select
+                value={selectedCategory}
+                onChange={(e) => handleCategoryChange(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Все категории</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Sort */}
+            <div>
+              <select
+                value={sortBy}
+                onChange={(e) => handleSortChange(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="created_at">По дате</option>
+                <option value="title">По названию</option>
+                <option value="rating">По рейтингу</option>
+                <option value="bookmarks">По популярности</option>
+              </select>
+            </div>
+          </div>
+
+          {/* View Mode Toggle */}
+          <div className="flex items-center justify-between mt-4 pt-4 border-t">
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-gray-500" />
+              <span className="text-sm text-gray-600">
+                {pagination.total} результатов
+              </span>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-gray-500 hover:bg-gray-100'}`}
+              >
+                <Grid className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 rounded ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-gray-500 hover:bg-gray-100'}`}
+              >
+                <List className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          </div>
+        )}
+
+        {/* Services Grid */}
+        {!loading && (
+          <div className={viewMode === 'grid' 
+            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" 
+            : "space-y-4"
+          }>
+            {services.map((service) => (
+              <ServiceCard 
+                key={service.id} 
+                service={service} 
+                viewMode={viewMode} 
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && services.length === 0 && (
+          <div className="text-center py-12">
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Сервисы не найдены
+            </h3>
+            <p className="text-gray-500">
+              Попробуйте изменить параметры поиска
+            </p>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {pagination.totalPages > 1 && (
+          <div className="flex justify-center items-center gap-2 mt-8">
+            <button
+              onClick={() => handlePageChange(pagination.page - 1)}
+              disabled={!pagination.hasPreviousPage}
+              className="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
-              Попробовать снова
+              Назад
             </button>
+            
+            <span className="px-4 py-2 text-gray-700">
+              Страница {pagination.page} из {pagination.totalPages}
+            </span>
+            
+            <button
+              onClick={() => handlePageChange(pagination.page + 1)}
+              disabled={!pagination.hasNextPage}
+              className="px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+            >
+              Вперед
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Service Card Component
+function ServiceCard({ service, viewMode }: { service: AIServiceWithCategory, viewMode: 'grid' | 'list' }) {
+  const cardClasses = viewMode === 'grid' 
+    ? "bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow duration-200"
+    : "bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow duration-200 flex items-center p-4"
+
+  if (viewMode === 'list') {
+    return (
+      <div className={cardClasses}>
+        {/* Logo */}
+        <div className="flex-shrink-0 w-16 h-16 mr-4">
+          {service.logo_url ? (
+            <Image
+              src={service.logo_url || ''}
+              alt={`${service.title} logo`}
+              width={64}
+              height={64}
+              className="w-full h-full object-contain rounded-lg"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement
+                target.style.display = 'none'
+              }}
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
+              <span className="text-xl font-bold text-blue-600">
+                {service.title.charAt(0)}
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Content */}
+        <div className="flex-grow min-w-0">
+          <div className="flex items-start justify-between">
+            <div className="flex-grow">
+              <Link 
+                href={`/ai-services/${service.id}`}
+                className="block hover:text-blue-600 transition-colors"
+              >
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                  {service.title}
+                </h3>
+              </Link>
+              
+              <p className="text-gray-600 text-sm mb-2 line-clamp-2">
+                {service.short_description_ru || 'Описание недоступно'}
+              </p>
+
+              <div className="flex items-center gap-4 text-sm text-gray-500">
+                {service.categories && (
+                  <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs">
+                    {service.categories.name}
+                  </span>
+                )}
+                
+                {service.rating && service.rating > 0 && (
+                  <div className="flex items-center gap-1">
+                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                    <span>{service.rating.toFixed(1)}</span>
+                  </div>
+                )}
+                
+                {service.bookmarks_count && service.bookmarks_count > 0 && (
+                  <div className="flex items-center gap-1">
+                    <Users className="w-4 h-4" />
+                    <span>{service.bookmarks_count}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center gap-2 ml-4">
+              {service.service_url && (
+                <a
+                  href={service.service_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                  title="Открыть сервис"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -138,235 +365,97 @@ function AIServicesContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-white/50">
-        <div className="container mx-auto px-6 py-16">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 animate-fade-in-up">
-              <span className="gradient-text">ИИ-сервисы</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
-              {selectedCategory 
-                ? `Категория: ${getSelectedCategoryName()}`
-                : `Исследуйте ${pagination.total} ИИ-инструментов для любых задач`
-              }
-            </p>
-          </div>
+    <div className={cardClasses}>
+      {/* Cover Image */}
+      {service.cover_url && (
+        <div className="aspect-video rounded-t-xl overflow-hidden">
+          <Image
+            src={service.cover_url || ''}
+            alt={`${service.title} cover`}
+            width={400}
+            height={225}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement
+              target.parentElement!.style.display = 'none'
+            }}
+          />
         </div>
-      </section>
+      )}
 
-      {/* Filters Section */}
-      <section className="py-8 bg-white/80">
-        <div className="container mx-auto px-6">
-          <div className="card max-w-4xl mx-auto p-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Search */}
-              <form onSubmit={handleSearchSubmit} className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Поиск по названию или описанию
-                </label>
-                <div className="flex">
-                  <input
-                    type="text"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Введите запрос..."
-                    className="input-field rounded-r-none"
-                  />
-                  <button
-                    type="submit"
-                    className="btn-primary rounded-l-none px-6"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </button>
-                </div>
-              </form>
-
-              {/* Category Filter */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Категория
-                </label>
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => handleCategoryChange(e.target.value)}
-                  className="input-field"
-                >
-                  <option value="">Все категории</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+      <div className="p-6">
+        {/* Header with Logo */}
+        <div className="flex items-start gap-3 mb-4">
+          {service.logo_url && (
+            <div className="flex-shrink-0 w-12 h-12">
+              <Image
+                src={service.logo_url || ''}
+                alt={`${service.title} logo`}
+                width={48}
+                height={48}
+                className="w-full h-full object-contain rounded-lg"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement
+                  target.style.display = 'none'
+                }}
+              />
             </div>
-
-            {/* Active Filters */}
-            {(search || selectedCategory) && (
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm text-gray-600">Активные фильтры:</span>
-                  {search && (
-                    <span className="category-tag">
-                      Поиск: "{search}"
-                      <button
-                        onClick={() => setSearch('')}
-                        className="ml-2 text-blue-600 hover:text-blue-800"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  )}
-                  {selectedCategory && (
-                    <span className="category-tag">
-                      {getSelectedCategoryName()}
-                      <button
-                        onClick={() => setSelectedCategory('')}
-                        className="ml-2 text-blue-600 hover:text-blue-800"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  )}
-                  <button
-                    onClick={() => {
-                      setSearch('')
-                      setSelectedCategory('')
-                      setCurrentPage(1)
-                    }}
-                    className="text-sm text-blue-600 hover:text-blue-800 underline"
-                  >
-                    Очистить все
-                  </button>
-                </div>
-              </div>
+          )}
+          
+          <div className="flex-grow min-w-0">
+            <Link 
+              href={`/ai-services/${service.id}`}
+              className="block hover:text-blue-600 transition-colors"
+            >
+              <h3 className="text-lg font-semibold text-gray-900 mb-1 truncate">
+                {service.title}
+              </h3>
+            </Link>
+            
+            {service.categories && (
+              <span className="inline-block bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs">
+                {service.categories.name}
+              </span>
             )}
           </div>
         </div>
-      </section>
 
-      {/* Content Section */}
-      <section className="py-12">
-        <div className="container mx-auto px-6">
-          {/* Loading */}
-          {loading && (
-            <div className="text-center py-20">
-              <div className="loading-spinner w-12 h-12 mx-auto mb-4"></div>
-              <p className="text-gray-600">Загружаем сервисы...</p>
-            </div>
-          )}
+        {/* Description */}
+        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+          {service.short_description_ru || 'Описание недоступно'}
+        </p>
 
-          {/* Services Grid */}
-          {!loading && (
-            <>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                {services.map((service, index) => (
-                  <ServiceCard
-                    key={service.id}
-                    id={service.id}
-                    name={service.name}
-                    short_description={service.short_description || ''}
-                    category={service.categories ? {
-                      id: service.categories.id,
-                      name: service.categories.name,
-                      slug: service.categories.name.toLowerCase().replace(/\s+/g, '-')
-                    } : undefined}
-                    price={service.price}
-                    service_url={service.service_url || ''}
-                    index={index}
-                  />
-                ))}
+        {/* Footer */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3 text-sm text-gray-500">
+            {service.rating && service.rating > 0 && (
+              <div className="flex items-center gap-1">
+                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                <span>{service.rating.toFixed(1)}</span>
               </div>
-
-              {/* Pagination */}
-              {pagination.totalPages > 1 && (
-                <div className="flex justify-center items-center space-x-4">
-                  <button
-                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                    disabled={currentPage === 1}
-                    className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                    Предыдущая
-                  </button>
-                  
-                  <div className="flex items-center space-x-2">
-                    <span className="px-4 py-2 text-sm text-gray-700 bg-white rounded-lg border">
-                      Страница {pagination.page} из {pagination.totalPages}
-                    </span>
-                  </div>
-                  
-                  <button
-                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, pagination.totalPages))}
-                    disabled={currentPage === pagination.totalPages}
-                    className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Следующая
-                    <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
-              )}
-
-              {/* No results */}
-              {services.length === 0 && (
-                <div className="text-center py-20">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {search || selectedCategory 
-                      ? 'По вашему запросу ничего не найдено' 
-                      : 'Сервисы не найдены'
-                    }
-                  </h3>
-                  <p className="text-gray-600 mb-6">
-                    Попробуйте изменить параметры поиска или очистить фильтры
-                  </p>
-                  {(search || selectedCategory) && (
-                    <button
-                      onClick={() => {
-                        setSearch('')
-                        setSelectedCategory('')
-                        setCurrentPage(1)
-                      }}
-                      className="btn-primary"
-                    >
-                      Показать все сервисы
-                    </button>
-                  )}
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </section>
-    </div>
-  )
-}
-
-export default function AIServicesPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="container mx-auto px-6 py-24">
-          <div className="text-center">
-            <div className="loading-spinner w-12 h-12 mx-auto mb-4"></div>
-            <p className="text-gray-600">Загружаем страницу...</p>
+            )}
+            
+            {service.bookmarks_count && service.bookmarks_count > 0 && (
+              <div className="flex items-center gap-1">
+                <Users className="w-4 h-4" />
+                <span>{service.bookmarks_count}</span>
+              </div>
+            )}
           </div>
+
+          {service.service_url && (
+            <a
+              href={service.service_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-700 transition-colors"
+              title="Открыть сервис"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          )}
         </div>
       </div>
-    }>
-      <AIServicesContent />
-    </Suspense>
+    </div>
   )
 } 

@@ -1,18 +1,16 @@
-import { supabase } from '@/lib/supabase'
 import { NextRequest, NextResponse } from 'next/server'
+import { supabase } from '@/lib/supabase'
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params
+    const serviceId = parseInt(params.id)
 
-    // Валидация и конвертация ID
-    const serviceId = Number(id)
-    if (!id || isNaN(serviceId)) {
+    if (isNaN(serviceId)) {
       return NextResponse.json(
-        { error: 'Неверный ID сервиса' },
+        { error: 'Некорректный ID сервиса' },
         { status: 400 }
       )
     }
@@ -33,23 +31,24 @@ export async function GET(
       .single()
 
     if (error) {
-      console.error('Ошибка при получении ИИ-сервиса:', error)
+      if (error.code === 'PGRST116') {
+        return NextResponse.json(
+          { error: 'Сервис не найден' },
+          { status: 404 }
+        )
+      }
+      
+      console.error('Ошибка при получении сервиса:', error)
       return NextResponse.json(
-        { error: 'Сервис не найден' },
-        { status: 404 }
-      )
-    }
-
-    if (!service) {
-      return NextResponse.json(
-        { error: 'Сервис не найден' },
-        { status: 404 }
+        { error: 'Не удалось загрузить информацию о сервисе' },
+        { status: 500 }
       )
     }
 
     return NextResponse.json(service)
+
   } catch (error) {
-    console.error('Непредвиденная ошибка:', error)
+    console.error('Ошибка API:', error)
     return NextResponse.json(
       { error: 'Внутренняя ошибка сервера' },
       { status: 500 }

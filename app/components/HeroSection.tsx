@@ -59,7 +59,7 @@ export default function HeroSection() {
             transition={{ delay: 0.4, duration: 0.6 }}
             className="text-lg sm:text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed"
           >
-            Откройте для себя более 400 нейросетей и ИИ-сервисов для генерации изображений, 
+            Откройте для себя более 25 качественных ИИ-сервисов для генерации изображений, 
             текста, музыки, автоматизации и решения бизнес-задач
           </motion.p>
 

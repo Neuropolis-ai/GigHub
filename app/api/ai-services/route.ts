@@ -1,90 +1,86 @@
-import { supabase } from '@/lib/supabase'
 import { NextRequest, NextResponse } from 'next/server'
+import { supabase } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const categoryId = searchParams.get('category_id')
-    const search = searchParams.get('search')
     const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '20')
+    const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100)
+    const search = searchParams.get('search') || ''
+    const categoryId = searchParams.get('category_id')
+    const sortBy = searchParams.get('sort') || 'created_at'
+    const order = searchParams.get('order') || 'desc'
+
     const offset = (page - 1) * limit
 
-    // Создаем базовый запрос для данных
-    let dataQuery = supabase
+    // Строим запрос с JOIN для категорий
+    let query = supabase
       .from('ai_services')
       .select(`
         *,
-        categories (
-          id,
-          name,
-          slug
-        )
+        categories!inner(*)
+      `, { count: 'exact' })
+
+    // Добавляем поиск по названию и описанию
+    if (search) {
+      query = query.or(`
+        title.ilike.%${search}%,
+        short_description_ru.ilike.%${search}%,
+        full_description_ru.ilike.%${search}%,
+        ai_category.ilike.%${search}%
       `)
-
-    // Создаем запрос для подсчета
-    let countQuery = supabase
-      .from('ai_services')
-      .select('*', { count: 'exact', head: true })
-
-    // Применяем фильтры к обоим запросам
-    if (categoryId) {
-      const categoryIdNum = parseInt(categoryId)
-      dataQuery = dataQuery.eq('category_id', categoryIdNum)
-      countQuery = countQuery.eq('category_id', categoryIdNum)
     }
 
-    if (search) {
-      dataQuery = dataQuery.or(`name.ilike.%${search}%,short_description.ilike.%${search}%`)
-      countQuery = countQuery.or(`name.ilike.%${search}%,short_description.ilike.%${search}%`)
+    // Фильтрация по категории
+    if (categoryId) {
+      query = query.eq('category_id', parseInt(categoryId))
     }
 
     // Только активные сервисы
-    dataQuery = dataQuery.eq('status', 'active')
-    countQuery = countQuery.eq('status', 'active')
+    query = query.eq('status', 'active')
 
-    // Применяем пагинацию и сортировку к запросу данных
-    dataQuery = dataQuery
-      .order('name')
-      .range(offset, offset + limit - 1)
+    // Сортировка
+    if (sortBy === 'rating') {
+      query = query.order('rating', { ascending: order === 'asc' })
+    } else if (sortBy === 'bookmarks') {
+      query = query.order('bookmarks_count', { ascending: order === 'asc' })
+    } else if (sortBy === 'title') {
+      query = query.order('title', { ascending: order === 'asc' })
+    } else {
+      query = query.order('created_at', { ascending: order === 'asc' })
+    }
 
-    // Выполняем оба запроса параллельно
-    const [dataResult, countResult] = await Promise.all([
-      dataQuery,
-      countQuery
-    ])
+    // Применяем пагинацию
+    query = query.range(offset, offset + limit - 1)
 
-    if (dataResult.error) {
-      console.error('Ошибка при получении ИИ-сервисов:', dataResult.error)
+    const { data: services, error, count } = await query
+
+    if (error) {
+      console.error('Ошибка при получении ИИ-сервисов:', error)
       return NextResponse.json(
-        { error: 'Не удалось получить ИИ-сервисы' }, 
+        { error: 'Не удалось загрузить ИИ-сервисы' },
         { status: 500 }
       )
     }
 
-    if (countResult.error) {
-      console.error('Ошибка при подсчете ИИ-сервисов:', countResult.error)
-      return NextResponse.json(
-        { error: 'Не удалось получить количество сервисов' }, 
-        { status: 500 }
-      )
-    }
-
-    const total = countResult.count || 0
+    const totalPages = Math.ceil((count || 0) / limit)
 
     return NextResponse.json({
-      data: dataResult.data || [],
+      data: services || [],
       pagination: {
         page,
         limit,
-        total,
-        totalPages: Math.ceil(total / limit)
+        total: count || 0,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1
       }
     })
+
   } catch (error) {
-    console.error('Непредвиденная ошибка:', error)
+    console.error('Ошибка API:', error)
     return NextResponse.json(
-      { error: 'Внутренняя ошибка сервера' }, 
+      { error: 'Внутренняя ошибка сервера' },
       { status: 500 }
     )
   }

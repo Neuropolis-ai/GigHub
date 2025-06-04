@@ -1,6 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // В Next.js 14 appDir включен по умолчанию
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'media.theresanaiforthat.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
 }
 
 module.exports = nextConfig 

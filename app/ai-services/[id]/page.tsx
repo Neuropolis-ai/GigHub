@@ -3,17 +3,24 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { ArrowLeft, ExternalLink, Star, Users, Calendar, Shield, Zap, Globe, Check, X } from 'lucide-react'
-import { AIService, Category } from '@/lib/supabase'
-
-interface ServiceWithCategory extends AIService {
-  categories: Category | null
-}
+import { 
+  ArrowLeft, 
+  ExternalLink, 
+  Star, 
+  Users, 
+  Check, 
+  X,
+  Calendar,
+  Tag,
+  DollarSign
+} from 'lucide-react'
+import { AIServiceWithCategory } from '@/lib/supabase'
 
 export default function AIServicePage() {
   const params = useParams()
-  const [service, setService] = useState<ServiceWithCategory | null>(null)
+  const [service, setService] = useState<AIServiceWithCategory | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -25,13 +32,13 @@ export default function AIServicePage() {
 
   const fetchService = async (id: string) => {
     try {
+      setLoading(true)
       const response = await fetch(`/api/ai-services/${id}`)
+      
       if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error('Сервис не найден')
-        }
-        throw new Error('Не удалось загрузить информацию о сервисе')
+        throw new Error('Сервис не найден')
       }
+      
       const data = await response.json()
       setService(data)
     } catch (err) {
@@ -41,16 +48,27 @@ export default function AIServicePage() {
     }
   }
 
+  // Парсинг преимуществ из текста
+  const advantages = service?.advantages_ru 
+    ? service.advantages_ru.split('\n').filter(item => item.trim())
+    : []
+
+  // Парсинг недостатков из текста
+  const disadvantages = service?.disadvantages_ru 
+    ? service.disadvantages_ru.split('\n').filter(item => item.trim())
+    : []
+
+  // Парсинг FAQ из текста
+  const faqItems = service?.faq_ru 
+    ? service.faq_ru.split('\n').filter(item => item.trim())
+    : []
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"
-          />
-          <p className="text-gray-600 text-lg">Загружаем информацию о сервисе...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Загружаем информацию о сервисе...</p>
         </div>
       </div>
     )
@@ -58,66 +76,46 @@ export default function AIServicePage() {
 
   if (error || !service) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-pink-100">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center"
-        >
-          <h2 className="text-3xl font-bold text-red-600 mb-4">
-            {error || 'Сервис не найден'}
-          </h2>
-          <Link
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <X className="w-8 h-8 text-red-600" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Сервис не найден</h2>
+          <p className="text-gray-600 mb-6">{error || 'Запрашиваемый сервис не существует'}</p>
+          <Link 
             href="/ai-services"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Вернуться к списку сервисов
+            Вернуться к каталогу
           </Link>
-        </motion.div>
+        </div>
       </div>
     )
   }
 
-  // Парсим FAQ и недостатки для лучшего отображения
-  const faqItems = service.faq_ru ? service.faq_ru.split('\n').filter(item => item.trim()) : []
-  const disadvantageItems = service.disadvantages ? service.disadvantages.split('\n').filter(item => item.trim()) : []
-  const features = service.full_description ? service.full_description.split('.').slice(0, 6).filter(item => item.trim()) : []
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="relative bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {/* Back Button */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-8"
+          >
             <Link 
               href="/ai-services"
-              className="flex items-center gap-2 text-text-secondary hover:text-accent-primary transition-colors"
+              className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>Вернуться к каталогу</span>
+              Назад к каталогу
             </Link>
-            
-            {service.service_url && (
-              <motion.a
-                href={service.service_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="flex items-center gap-2 px-6 py-2 bg-accent-primary text-white rounded-xl font-medium hover:bg-accent-primary/90 transition-colors"
-              >
-                Открыть {service.name}
-                <ExternalLink className="w-4 h-4" />
-              </motion.a>
-            )}
-          </div>
-        </div>
-      </header>
+          </motion.div>
 
-      {/* Hero Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-accent-primary/5 via-white to-accent-secondary/5">
-        <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left: Content */}
             <motion.div
@@ -126,69 +124,103 @@ export default function AIServicePage() {
               transition={{ duration: 0.8 }}
               className="space-y-6"
             >
-              <div className="flex items-center gap-3">
-                {service.categories && (
-                  <span className="px-3 py-1 bg-accent-primary/10 text-accent-primary text-sm font-medium rounded-full">
-                    {service.categories.name}
-                  </span>
+              {/* Logo and Title */}
+              <div className="flex items-start gap-4">
+                {service.logo_url && (
+                  <div className="flex-shrink-0 w-16 h-16">
+                    <Image
+                      src={service.logo_url || ''}
+                      alt={`${service.title} logo`}
+                      width={64}
+                      height={64}
+                      className="w-full h-full object-contain rounded-xl"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        target.style.display = 'none'
+                      }}
+                    />
+                  </div>
                 )}
-                <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  <span className="font-semibold">4.8</span>
-                  <span className="text-text-secondary text-sm">(отзывы)</span>
+                <div className="flex-grow">
+                  <h1 className="text-4xl font-bold text-gray-900 mb-2">
+                    {service.title}
+                  </h1>
+                  {service.categories && (
+                    <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                      {service.categories.name}
+                    </span>
+                  )}
                 </div>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl font-bold text-text-primary">
-                {service.name}
-              </h1>
-
-              <p className="text-xl text-text-secondary leading-relaxed">
-                {service.short_description || 'Мощный ИИ-инструмент для решения ваших задач'}
+              {/* Description */}
+              <p className="text-xl text-gray-600 leading-relaxed">
+                {service.short_description_ru || 'Описание недоступно'}
               </p>
 
-              <div className="flex flex-wrap gap-4 text-sm text-text-secondary">
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  <span>Активные пользователи</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  <span>Добавлен {new Date(service.created_at).toLocaleDateString('ru-RU')}</span>
-                </div>
-                {service.price && (
+              {/* Stats */}
+              <div className="flex items-center gap-6">
+                {service.rating && service.rating > 0 && (
                   <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4" />
-                    <span>{service.price}</span>
+                    <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                    <span className="font-semibold text-gray-900">{service.rating.toFixed(1)}</span>
+                    <span className="text-gray-500">рейтинг</span>
+                  </div>
+                )}
+                
+                {service.bookmarks_count && service.bookmarks_count > 0 && (
+                  <div className="flex items-center gap-2">
+                    <Users className="w-5 h-5 text-gray-400" />
+                    <span className="font-semibold text-gray-900">{service.bookmarks_count}</span>
+                    <span className="text-gray-500">закладок</span>
                   </div>
                 )}
               </div>
 
-              <div className="flex flex-wrap gap-2">
-                {service.categories && (
-                  <span className="px-3 py-1 bg-gray-100 text-text-secondary text-sm rounded-lg">
-                    {service.categories.name}
-                  </span>
-                )}
-                <span className="px-3 py-1 bg-gray-100 text-text-secondary text-sm rounded-lg">
-                  ИИ-инструмент
-                </span>
-              </div>
+              {/* CTA Button */}
+              {service.service_url && (
+                <motion.a
+                  href={service.service_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow-lg"
+                >
+                  Попробовать сервис
+                  <ExternalLink className="w-5 h-5" />
+                </motion.a>
+              )}
             </motion.div>
 
-            {/* Right: Image */}
+            {/* Right: Cover Image */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative"
             >
-              <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden aspect-video">
-                <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-6xl font-bold text-white/30">{service.name.charAt(0)}</div>
+              {service.cover_url ? (
+                <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden aspect-video">
+                  <Image
+                    src={service.cover_url || ''}
+                    alt={`${service.title} cover`}
+                    fill
+                    className="object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement
+                      target.parentElement!.style.display = 'none'
+                    }}
+                  />
                 </div>
-              </div>
+              ) : (
+                <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden aspect-video">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-6xl font-bold text-white/30">{service.title.charAt(0)}</div>
+                  </div>
+                </div>
+              )}
             </motion.div>
           </div>
         </div>
@@ -200,34 +232,34 @@ export default function AIServicePage() {
           {/* Left: Main Content */}
           <div className="lg:col-span-2 space-y-12">
             {/* Description */}
-            {service.full_description && (
+            {service.full_description_ru && (
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="text-3xl font-bold text-text-primary mb-6">О продукте</h2>
-                <p className="text-text-secondary leading-relaxed text-lg whitespace-pre-line">
-                  {service.full_description}
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">О продукте</h2>
+                <p className="text-gray-600 leading-relaxed text-lg whitespace-pre-line">
+                  {service.full_description_ru}
                 </p>
               </motion.section>
             )}
 
-            {/* Features */}
-            {features.length > 0 && (
+            {/* Advantages */}
+            {advantages.length > 0 && (
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="text-3xl font-bold text-text-primary mb-6">Основные возможности</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">Преимущества</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
-                      <div className="w-8 h-8 bg-accent-primary/10 rounded-lg flex items-center justify-center">
-                        <Check className="w-4 h-4 text-accent-primary" />
+                  {advantages.map((advantage, index) => (
+                    <div key={index} className="flex items-start gap-3 p-4 bg-green-50 rounded-xl">
+                      <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Check className="w-4 h-4 text-green-600" />
                       </div>
-                      <span className="text-text-primary">{feature.trim()}</span>
+                      <span className="text-gray-700">{advantage.trim()}</span>
                     </div>
                   ))}
                 </div>
@@ -235,17 +267,17 @@ export default function AIServicePage() {
             )}
 
             {/* FAQ */}
-            {service.faq_ru && (
+            {faqItems.length > 0 && (
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="text-3xl font-bold text-text-primary mb-6">Часто задаваемые вопросы</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">Часто задаваемые вопросы</h2>
                 <div className="space-y-4">
                   {faqItems.slice(0, 6).map((item, index) => (
-                    <div key={index} className="p-4 border border-gray-200 rounded-xl hover:border-accent-primary/30 transition-colors">
-                      <span className="text-text-primary">{item}</span>
+                    <div key={index} className="p-4 border border-gray-200 rounded-xl hover:border-blue-300 transition-colors">
+                      <span className="text-gray-700">{item}</span>
                     </div>
                   ))}
                 </div>
@@ -253,18 +285,18 @@ export default function AIServicePage() {
             )}
 
             {/* Disadvantages */}
-            {service.disadvantages && (
+            {disadvantages.length > 0 && (
               <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="text-3xl font-bold text-text-primary mb-6">Ограничения</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">Ограничения</h2>
                 <div className="space-y-3">
-                  {disadvantageItems.map((item, index) => (
-                    <div key={index} className="flex items-start gap-3">
+                  {disadvantages.map((item, index) => (
+                    <div key={index} className="flex items-start gap-3 p-4 bg-red-50 rounded-xl">
                       <X className="w-4 h-4 text-red-500 mt-1 flex-shrink-0" />
-                      <span className="text-text-secondary">{item}</span>
+                      <span className="text-gray-700">{item.trim()}</span>
                     </div>
                   ))}
                 </div>
@@ -282,9 +314,9 @@ export default function AIServicePage() {
               className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
             >
               <div className="text-center space-y-4">
-                <h3 className="text-xl font-semibold text-text-primary">Попробовать {service.name}</h3>
-                <p className="text-text-secondary text-sm">
-                  Начните использовать {service.name} уже сегодня
+                <h3 className="text-xl font-semibold text-gray-900">Попробовать {service.title}</h3>
+                <p className="text-gray-600 text-sm">
+                  Начните использовать {service.title} уже сегодня
                 </p>
                 {service.service_url && (
                   <motion.a
@@ -293,7 +325,7 @@ export default function AIServicePage() {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-accent-primary text-white rounded-xl font-medium hover:bg-accent-primary/90 transition-colors"
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
                   >
                     Перейти на сайт
                     <ExternalLink className="w-4 h-4" />
@@ -309,29 +341,46 @@ export default function AIServicePage() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
             >
-              <h3 className="text-lg font-semibold text-text-primary mb-4">Информация</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Информация</h3>
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-text-secondary">Рейтинг</span>
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    <span className="font-semibold">4.8</span>
+                {service.rating && service.rating > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Рейтинг</span>
+                    <div className="flex items-center gap-1">
+                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <span className="font-semibold">{service.rating.toFixed(1)}</span>
+                    </div>
                   </div>
-                </div>
+                )}
+                
+                {service.bookmarks_count && service.bookmarks_count > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Закладки</span>
+                    <div className="flex items-center gap-1">
+                      <Users className="w-4 h-4 text-gray-400" />
+                      <span className="font-semibold">{service.bookmarks_count}</span>
+                    </div>
+                  </div>
+                )}
+                
                 {service.categories && (
                   <div className="flex items-center justify-between">
-                    <span className="text-text-secondary">Категория</span>
+                    <span className="text-gray-600">Категория</span>
                     <span className="font-semibold">{service.categories.name}</span>
                   </div>
                 )}
+                
                 <div className="flex items-center justify-between">
-                  <span className="text-text-secondary">Статус</span>
+                  <span className="text-gray-600">Статус</span>
                   <span className="font-semibold text-green-600">Активен</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-text-secondary">Добавлен</span>
-                  <span className="font-semibold">{new Date(service.created_at).toLocaleDateString('ru-RU')}</span>
-                </div>
+                
+                {service.date_added && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Добавлен</span>
+                    <span className="font-semibold">{new Date(service.date_added).toLocaleDateString('ru-RU')}</span>
+                  </div>
+                )}
               </div>
             </motion.div>
 
@@ -343,11 +392,11 @@ export default function AIServicePage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
               >
-                <h3 className="text-lg font-semibold text-text-primary mb-4">Стоимость</h3>
-                <div className="text-2xl font-bold text-accent-primary mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Стоимость</h3>
+                <div className="text-2xl font-bold text-blue-600 mb-2">
                   {service.price}
                 </div>
-                <p className="text-text-secondary text-sm">
+                <p className="text-gray-600 text-sm">
                   Актуальные тарифы смотрите на официальном сайте
                 </p>
               </motion.div>
@@ -360,7 +409,7 @@ export default function AIServicePage() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
             >
-              <h3 className="text-lg font-semibold text-text-primary mb-4">Быстрые действия</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Быстрые действия</h3>
               <div className="space-y-3">
                 <Link
                   href="/ai-services"
