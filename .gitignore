@@ -41,4 +41,8 @@ pnpm-lock.yaml
 .vscode/
 .idea/
 *.swp
-*.swo 
+*.swo
+
+# Large CSV files
+ИИ-сервисы база.csv
+*.csv 
