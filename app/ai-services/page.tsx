@@ -7,6 +7,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Search, Filter, CheckCircle, Users, ExternalLink, Grid, List, Sparkles, TrendingUp, Clock } from 'lucide-react'
 import { AIServiceWithCategory, Category } from '@/lib/supabase'
+import ServiceCard from '@/app/components/ServiceCard'
+import ServiceCardList from '@/app/components/ServiceCardList'
 
 interface PaginationInfo {
   page: number
@@ -185,7 +187,7 @@ export default function AIServicesPage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {/* Search */}
             <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-text-primary mb-2">
+              <label className="block text-sm font-semibold text-text-primary mb-3">
                 Поиск по названию или описанию
               </label>
               <div className="relative">
@@ -195,44 +197,58 @@ export default function AIServicesPage() {
                   placeholder="Введите название сервиса..."
                   value={searchTerm}
                   onChange={(e) => handleSearch(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
+                  className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary transition-all duration-200 bg-gray-50 hover:bg-white text-gray-900 placeholder-gray-500"
                 />
               </div>
             </div>
 
             {/* Category Filter */}
             <div>
-              <label className="block text-sm font-semibold text-text-primary mb-2">
+              <label className="block text-sm font-semibold text-text-primary mb-3">
                 Категория
               </label>
-              <select
-                value={selectedCategory}
-                onChange={(e) => handleCategoryChange(e.target.value)}
-                className="w-full px-4 py-4 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
-              >
-                <option value="">Все категории</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => handleCategoryChange(e.target.value)}
+                  className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary transition-all duration-200 bg-gray-50 hover:bg-white text-gray-900 appearance-none cursor-pointer"
+                >
+                  <option value="">Все категории</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
             </div>
 
             {/* Sort */}
             <div>
-              <label className="block text-sm font-semibold text-text-primary mb-2">
+              <label className="block text-sm font-semibold text-text-primary mb-3">
                 Сортировка
               </label>
-              <select
-                value={sortBy}
-                onChange={(e) => handleSortChange(e.target.value)}
-                className="w-full px-4 py-4 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white"
-              >
-                <option value="created_at">По дате добавления</option>
-                <option value="title">По названию</option>
-                <option value="bookmarks_count">По популярности</option>
-              </select>
+              <div className="relative">
+                <select
+                  value={sortBy}
+                  onChange={(e) => handleSortChange(e.target.value)}
+                  className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary transition-all duration-200 bg-gray-50 hover:bg-white text-gray-900 appearance-none cursor-pointer"
+                >
+                  <option value="created_at">По дате добавления</option>
+                  <option value="title">По названию</option>
+                  <option value="bookmarks_count">По популярности</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -278,10 +294,10 @@ export default function AIServicesPage() {
 
         {/* Loading State */}
         {loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {[...Array(8)].map((_, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, index) => (
               <div key={index} className="bg-white rounded-3xl shadow-lg p-6 animate-pulse">
-                <div className="h-48 bg-gray-200 rounded-2xl mb-4"></div>
+                <div className="h-48 bg-gray-200 rounded-xl mb-4"></div>
                 <div className="h-4 bg-gray-200 rounded mb-2"></div>
                 <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
                 <div className="h-3 bg-gray-200 rounded mb-2"></div>
@@ -298,26 +314,25 @@ export default function AIServicesPage() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
             className={viewMode === 'grid' 
-              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" 
+              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" 
               : "space-y-6"
             }
           >
-            {services.map((service, index) => (
-              <ServiceCard
-                key={service.id}
-                id={service.id}
-                title={service.title}
-                short_description_ru={service.short_description_ru}
-                logo_url={service.logo_url}
-                cover_url={service.cover_url}
-                bookmarks_count={service.bookmarks_count}
-                categories={service.categories}
-                price={service.price}
-                service_url={service.service_url}
-                index={index}
-                viewMode={viewMode}
-              />
-            ))}
+            {services.map((service, index) => 
+              viewMode === 'list' ? (
+                <ServiceCardList
+                  key={service.id}
+                  {...service}
+                  index={index}
+                />
+              ) : (
+                <ServiceCard
+                  key={service.id}
+                  {...service}
+                  index={index}
+                />
+              )
+            )}
           </motion.div>
         )}
 
@@ -404,274 +419,5 @@ export default function AIServicesPage() {
         )}
       </div>
     </div>
-  )
-}
-
-function ServiceCard({ 
-  id, 
-  title, 
-  short_description_ru, 
-  logo_url, 
-  cover_url, 
-  bookmarks_count, 
-  categories, 
-  price, 
-  service_url, 
-  index,
-  viewMode = 'grid'
-}: { 
-  id: number, 
-  title: string, 
-  short_description_ru: string | null, 
-  logo_url: string | null, 
-  cover_url: string | null, 
-  bookmarks_count: number | null, 
-  categories: Category | null, 
-  price: string | null, 
-  service_url: string | null, 
-  index: number,
-  viewMode?: 'grid' | 'list'
-}) {
-  const getBadgeColor = (categoryName: string) => {
-    const colors: { [key: string]: string } = {
-      'Изображения': 'from-purple-500 to-pink-500',
-      'Генерация изображений': 'from-purple-500 to-pink-500',
-      'Большие языковые модели': 'from-blue-500 to-cyan-500',
-      'Чат-боты': 'from-blue-500 to-cyan-500',
-      'Аудио': 'from-green-500 to-emerald-500',
-      'Музыка': 'from-green-500 to-emerald-500',
-      'Видео': 'from-red-500 to-orange-500',
-      'Продуктивность': 'from-yellow-500 to-amber-500',
-      'Автоматизация': 'from-yellow-500 to-amber-500',
-      'Текст': 'from-indigo-500 to-purple-500',
-      'Аналитика данных': 'from-teal-500 to-green-500'
-    }
-    return colors[categoryName] || 'from-gray-500 to-slate-500'
-  }
-
-  const getInitials = (name: string) => {
-    if (!name || typeof name !== 'string') return 'AI';
-    return name.split(' ').map(word => word.charAt(0)).join('').slice(0, 2).toUpperCase();
-  }
-
-  const badgeColor = categories ? getBadgeColor(categories.name) : 'from-gray-500 to-slate-500'
-  const initials = getInitials(title)
-
-  if (viewMode === 'list') {
-    return (
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ delay: index * 0.05, duration: 0.6 }}
-        className="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-accent-primary/30 p-6"
-      >
-        <Link href={`/ai-services/${id}`} className="block">
-          <div className="flex items-center gap-6">
-            {/* Logo */}
-            <div className="w-20 h-20 flex-shrink-0 rounded-2xl overflow-hidden bg-gray-100">
-              {logo_url ? (
-                <Image
-                  src={logo_url}
-                  alt={`${title} logo`}
-                  width={80}
-                  height={80}
-                  className="w-full h-full object-contain"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.parentElement!.innerHTML = `<div class="w-full h-full bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white font-bold">${initials}</div>`
-                  }}
-                />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white font-bold">
-                  {initials}
-                </div>
-              )}
-            </div>
-
-            {/* Content */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between mb-2">
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-text-primary group-hover:text-accent-primary transition-colors line-clamp-1 mb-1">
-                    {title}
-                  </h3>
-                  {categories && (
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r ${badgeColor} text-white text-xs font-semibold`}>
-                      {categories.name}
-                    </span>
-                  )}
-                </div>
-                {price && (
-                  <div className="bg-green-50 px-3 py-1 rounded-lg">
-                    <span className="text-sm font-semibold text-green-700">{price}</span>
-                  </div>
-                )}
-              </div>
-
-              <p className="text-text-secondary text-sm leading-relaxed line-clamp-2 mb-4">
-                {short_description_ru || 'Описание сервиса'}
-              </p>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4 text-sm text-gray-500">
-                  {bookmarks_count && bookmarks_count > 0 && (
-                    <div className="flex items-center gap-1">
-                      <Users className="w-4 h-4" />
-                      <span>{bookmarks_count}</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  {service_url && (
-                    <ExternalLink className="w-4 h-4 text-gray-400" />
-                  )}
-                  <span className="text-accent-primary font-medium">Подробнее →</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Link>
-      </motion.div>
-    )
-  }
-
-  // Grid view (default)
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.6 }}
-      whileHover={{ y: -8 }}
-      className="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-accent-primary/30 cursor-pointer"
-    >
-      <Link href={`/ai-services/${id}`} className="block">
-        {/* Category Badge */}
-        {categories && (
-          <div className="absolute top-4 left-4 z-20">
-            <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r ${badgeColor} text-white text-xs font-semibold shadow-lg`}>
-              {categories.name}
-            </div>
-          </div>
-        )}
-
-        {/* Cover Image */}
-        {cover_url && (
-          <div className="aspect-video rounded-t-3xl overflow-hidden">
-            <Image
-              src={cover_url}
-              alt={`${title} cover`}
-              width={400}
-              height={225}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement
-                target.parentElement!.style.display = 'none'
-              }}
-            />
-          </div>
-        )}
-
-        {/* Logo Area (если нет обложки) */}
-        {!cover_url && (
-          <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
-            <div className={`absolute inset-0 bg-gradient-to-br ${badgeColor} opacity-10`} />
-            {logo_url ? (
-              <div className="absolute inset-0 flex items-center justify-center p-8">
-                <Image
-                  src={logo_url}
-                  alt={`${title} logo`}
-                  width={80}
-                  height={80}
-                  className="max-w-full max-h-full object-contain"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.style.display = 'none'
-                  }}
-                />
-              </div>
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-4xl font-bold text-white bg-gradient-to-br from-accent-primary to-accent-secondary bg-clip-text text-transparent">
-                  {initials}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Content */}
-        <div className="p-6">
-          {/* Header with logo and title */}
-          <div className="flex items-start gap-3 mb-4">
-            {/* Logo (маленький) */}
-            {logo_url && cover_url && (
-              <div className="w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
-                <Image
-                  src={logo_url}
-                  alt={`${title} logo`}
-                  width={48}
-                  height={48}
-                  className="w-full h-full object-contain"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.parentElement!.innerHTML = `<div class="w-full h-full bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white text-xs font-bold">${initials}</div>`
-                  }}
-                />
-              </div>
-            )}
-            
-            <div className="flex-1 min-w-0">
-              <h3 className="text-xl font-semibold text-text-primary group-hover:text-accent-primary transition-colors line-clamp-2 mb-1">
-                {title}
-              </h3>
-              {categories && (
-                <span className="text-sm text-accent-primary font-medium">{categories.name}</span>
-              )}
-            </div>
-
-            {/* Price */}
-            {price && (
-              <div className="flex items-center gap-1 bg-green-50 px-2 py-1 rounded-lg">
-                <span className="text-sm font-semibold text-green-700">{price}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Description */}
-          <p className="text-text-secondary text-sm leading-relaxed line-clamp-3 mb-4">
-            {short_description_ru || 'Описание сервиса'}
-          </p>
-
-          {/* Stats */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3 text-sm text-gray-500">
-              {bookmarks_count && bookmarks_count > 0 && (
-                <div className="flex items-center gap-1">
-                  <Users className="w-4 h-4" />
-                  <span>{bookmarks_count}</span>
-                </div>
-              )}
-            </div>
-
-            {service_url && (
-              <div className="flex items-center text-xs text-gray-400">
-                <ExternalLink className="w-3 h-3" />
-              </div>
-            )}
-          </div>
-
-          {/* View Service Link */}
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-text-secondary">
-              Перейти к сервису
-            </span>
-            <div className="w-8 h-8 rounded-full bg-accent-primary/10 flex items-center justify-center group-hover:bg-accent-primary group-hover:text-white transition-all duration-300">
-              <span className="text-accent-primary group-hover:text-white text-sm">→</span>
-            </div>
-          </div>
-        </div>
-      </Link>
-    </motion.div>
   )
 } 

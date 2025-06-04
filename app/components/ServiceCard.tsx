@@ -8,17 +8,17 @@ import Image from 'next/image'
 export interface ServiceCardProps {
   id: number
   title: string
-  short_description_ru?: string
-  logo_url?: string
-  cover_url?: string
-  bookmarks_count?: number
+  short_description_ru?: string | null
+  logo_url?: string | null
+  cover_url?: string | null
+  bookmarks_count?: number | null
   price?: string | null
-  service_url?: string
+  service_url?: string | null
   categories?: {
     id: number
     name: string
     slug: string
-  }
+  } | null
   index?: number
   className?: string
 }
@@ -104,11 +104,11 @@ export default function ServiceCard({
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.6 }}
-      whileHover={{ y: -8 }}
-      className={`group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-accent-primary/30 cursor-pointer ${className} flex flex-col`}
+      whileHover={{ y: -8, scale: 1.02 }}
+      className={`group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-accent-primary/30 cursor-pointer ${className} flex flex-col h-full`}
     >
-      <Link href={`/ai-services/${id}`} className="block flex-1 flex flex-col">
-        {/* Category Badge (обратно наверх) */}
+      <Link href={`/ai-services/${id}`} className="block flex-1 flex flex-col h-full">
+        {/* Category Badge */}
         {categories && (
           <div className="absolute top-4 left-4 z-20">
             <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r ${badgeColor} text-white text-xs font-semibold shadow-lg`}>
@@ -136,7 +136,7 @@ export default function ServiceCard({
 
         {/* Logo Area (если нет обложки) */}
         {!normalizedCoverUrl && (
-          <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+          <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden rounded-t-3xl">
             <div className={`absolute inset-0 bg-gradient-to-br ${badgeColor} opacity-10`} />
             {normalizedLogoUrl ? (
               <div className="absolute inset-0 flex items-center justify-center p-8">
@@ -168,7 +168,7 @@ export default function ServiceCard({
           <div className="flex items-start gap-3 mb-4">
             {/* Logo (маленький) */}
             {normalizedLogoUrl && normalizedCoverUrl && (
-              <div className="w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+              <div className="w-12 h-12 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 shadow-sm">
                 <Image
                   src={normalizedLogoUrl}
                   alt={`${title} logo`}
@@ -184,11 +184,13 @@ export default function ServiceCard({
             )}
             
             <div className="flex-1 min-w-0">
-              <h3 className="text-xl font-semibold text-text-primary group-hover:text-accent-primary transition-colors line-clamp-2 mb-1">
+              <h3 className="text-xl font-bold text-text-primary group-hover:text-accent-primary transition-colors line-clamp-2 mb-2">
                 {title}
               </h3>
               {price && (
-                <span className="text-sm text-green-600 font-semibold">{price}</span>
+                <span className="inline-flex items-center px-2 py-1 bg-green-50 text-green-700 text-sm font-semibold rounded-lg">
+                  {price}
+                </span>
               )}
             </div>
           </div>
@@ -215,20 +217,20 @@ export default function ServiceCard({
               </div>
             )}
           </div>
-        </div>
-      </Link>
-      
-      {/* View Service Link - закреплена в самом низу */}
-      <div className="px-6 pb-6">
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-text-secondary">
-            Перейти к сервису
-          </span>
-          <div className="w-8 h-8 rounded-full bg-accent-primary/10 flex items-center justify-center group-hover:bg-accent-primary group-hover:text-white transition-all duration-300">
-            <span className="text-accent-primary group-hover:text-white text-sm">→</span>
+
+          {/* CTA Button */}
+          <div className="mt-auto">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-text-secondary font-medium">
+                Перейти к сервису
+              </span>
+              <div className="w-8 h-8 rounded-full bg-accent-primary/10 flex items-center justify-center group-hover:bg-accent-primary group-hover:text-white transition-all duration-300">
+                <span className="text-accent-primary group-hover:text-white text-sm">→</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </Link>
     </motion.div>
   )
 } 
