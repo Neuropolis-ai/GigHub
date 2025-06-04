@@ -1,35 +1,36 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Link from 'next/link'
 import { Brain, Github, Twitter, Linkedin, Mail, Heart } from 'lucide-react'
 
 const footerLinks = {
-  platform: [
-    { name: 'Каталог ИИ', href: '/catalog' },
-    { name: 'Категории', href: '/categories' },
-    { name: 'Новые инструменты', href: '/new' },
-    { name: 'Популярные', href: '/popular' },
-    { name: 'API', href: '/api' }
+  neyroseti: [
+    { name: 'Бесплатные нейросети', href: '/free-neural-networks' },
+    { name: 'Нейросети онлайн', href: '/online-neural-networks' },
+    { name: 'ИИ на русском', href: '/russian-neural-networks' },
+    { name: 'Нейросети для текста', href: '/text-neural-networks' },
+    { name: 'Нейросети для изображений', href: '/image-neural-networks' }
   ],
-  company: [
-    { name: 'О нас', href: '/about' },
-    { name: 'Блог', href: '/blog' },
-    { name: 'Карьера', href: '/careers' },
-    { name: 'Пресс-кит', href: '/press' },
-    { name: 'Партнеры', href: '/partners' }
+  ai_tools: [
+    { name: 'GPT нейросети', href: '/gpt-neural-networks' },
+    { name: 'ИИ для презентаций', href: '/presentation-ai' },
+    { name: 'ИИ чат-боты', href: '/ai-chat' },
+    { name: 'ИИ помощники', href: '/ai-help' },
+    { name: 'Каталог ИИ', href: '/ai-services' }
   ],
-  resources: [
-    { name: 'Документация', href: '/docs' },
-    { name: 'Руководства', href: '/guides' },
-    { name: 'Поддержка', href: '/support' },
-    { name: 'Статус', href: '/status' },
-    { name: 'Сообщество', href: '/community' }
+  categories: [
+    { name: 'Категории ИИ', href: '/categories' },
+    { name: 'Генерация изображений', href: '/ai-services?category=image' },
+    { name: 'Обработка текста', href: '/ai-services?category=text' },
+    { name: 'Чат-боты', href: '/ai-services?category=chat' },
+    { name: 'Музыка и аудио', href: '/ai-services?category=audio' }
   ],
   legal: [
     { name: 'Условия использования', href: '/terms' },
     { name: 'Политика конфиденциальности', href: '/privacy' },
     { name: 'Cookie', href: '/cookies' },
-    { name: 'Лицензии', href: '/licenses' }
+    { name: 'Контакты', href: '/contact' }
   ]
 }
 
@@ -86,64 +87,64 @@ export default function Footer() {
           {/* Links Columns */}
           <div className="lg:col-span-3">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {/* Platform */}
+              {/* Нейросети */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.6 }}
               >
-                <h4 className="text-lg font-semibold mb-6">Платформа</h4>
+                <h4 className="text-lg font-semibold mb-6">Нейросети</h4>
                 <ul className="space-y-3">
-                  {footerLinks.platform.map((link, index) => (
+                  {footerLinks.neyroseti.map((link, index) => (
                     <li key={index}>
-                      <a 
+                      <Link
                         href={link.href}
                         className="text-gray-300 hover:text-accent-primary transition-colors text-sm"
                       >
                         {link.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
               </motion.div>
 
-              {/* Company */}
+              {/* ИИ-инструменты */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
               >
-                <h4 className="text-lg font-semibold mb-6">Компания</h4>
+                <h4 className="text-lg font-semibold mb-6">ИИ-инструменты</h4>
                 <ul className="space-y-3">
-                  {footerLinks.company.map((link, index) => (
+                  {footerLinks.ai_tools.map((link, index) => (
                     <li key={index}>
-                      <a 
+                      <Link
                         href={link.href}
                         className="text-gray-300 hover:text-accent-primary transition-colors text-sm"
                       >
                         {link.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
               </motion.div>
 
-              {/* Resources */}
+              {/* Категории */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
               >
-                <h4 className="text-lg font-semibold mb-6">Ресурсы</h4>
+                <h4 className="text-lg font-semibold mb-6">Категории</h4>
                 <ul className="space-y-3">
-                  {footerLinks.resources.map((link, index) => (
+                  {footerLinks.categories.map((link, index) => (
                     <li key={index}>
-                      <a 
+                      <Link
                         href={link.href}
                         className="text-gray-300 hover:text-accent-primary transition-colors text-sm"
                       >
                         {link.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -159,12 +160,12 @@ export default function Footer() {
                 <ul className="space-y-3">
                   {footerLinks.legal.map((link, index) => (
                     <li key={index}>
-                      <a 
+                      <Link
                         href={link.href}
                         className="text-gray-300 hover:text-accent-primary transition-colors text-sm"
                       >
                         {link.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
