@@ -78,7 +78,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: 'https://gighub.ru/blog',
       lastModified: new Date(),
       changeFrequency: 'daily',
-      priority: 0.8,
+      priority: 0.7,
     },
     // TODO: Добавить все страницы ИИ-сервисов динамически
   ]

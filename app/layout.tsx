@@ -3,9 +3,15 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import CriticalCSS from './components/CriticalCSS'
+import WebVitals from './components/WebVitals'
 import Script from 'next/script'
 
-const inter = Inter({ subsets: ['latin', 'cyrillic'] })
+const inter = Inter({ 
+  subsets: ['latin', 'cyrillic'],
+  display: 'swap',
+  variable: '--font-inter'
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://gighub.ru'),
@@ -58,6 +64,9 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <head>
+        {/* Critical CSS и Resource Hints */}
+        <CriticalCSS />
+        
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -160,6 +169,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <WebVitals />
       </body>
     </html>
   )
