@@ -41,9 +41,14 @@ const stats = [
 
 const AnimatedCounter = ({ value, suffix = '', inView }: { value: number; suffix?: string; inView: boolean }) => {
   const [count, setCount] = useState(0)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    if (!inView) return
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!inView || !mounted) return
 
     const timer = setTimeout(() => {
       const increment = value / 100
@@ -62,7 +67,12 @@ const AnimatedCounter = ({ value, suffix = '', inView }: { value: number; suffix
     }, 200)
 
     return () => clearTimeout(timer)
-  }, [value, inView])
+  }, [value, inView, mounted])
+
+  // На сервере и до монтирования показываем конечное значение
+  if (!mounted) {
+    return <span>{value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")}{suffix}</span>
+  }
 
   return (
     <span>

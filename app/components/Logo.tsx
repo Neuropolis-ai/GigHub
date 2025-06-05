@@ -3,7 +3,6 @@
 import { Brain } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg'
@@ -51,29 +50,21 @@ export default function Logo({
   className = '',
   animate = false 
 }: LogoProps) {
-  const [mounted, setMounted] = useState(false)
   const sizeClasses = sizeVariants[size]
   const colorClasses = colorVariants[variant]
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
   const logoContent = (
     <div className={`flex items-center gap-3 ${className}`}>
-      <motion.div
-        className={`${sizeClasses.container} ${colorClasses.container} rounded-2xl flex items-center justify-center shadow-lg`}
-        whileHover={mounted && animate ? { scale: 1.05, rotate: 5 } : {}}
-        transition={{ duration: 0.2 }}
+      <div
+        className={`${sizeClasses.container} ${colorClasses.container} rounded-2xl flex items-center justify-center shadow-lg transition-transform duration-200 ${animate ? 'hover:scale-105' : ''}`}
       >
         <Brain className={`${sizeClasses.icon} ${colorClasses.icon}`} />
-      </motion.div>
-      <motion.span 
-        className={`${sizeClasses.text} font-bold ${colorClasses.text}`}
-        whileHover={mounted && animate ? { scale: 1.02 } : {}}
+      </div>
+      <span 
+        className={`${sizeClasses.text} font-bold ${colorClasses.text} transition-transform duration-200 ${animate ? 'hover:scale-105' : ''}`}
       >
         GigHub
-      </motion.span>
+      </span>
     </div>
   )
 
