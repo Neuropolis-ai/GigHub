@@ -8,18 +8,6 @@ import Image from 'next/image'
 import { Search, Filter, CheckCircle, Users, ExternalLink, Grid, List, Sparkles, TrendingUp, Clock } from 'lucide-react'
 import { AIServiceWithCategory, Category } from '@/lib/supabase'
 import ServiceCard from '@/app/components/ServiceCard'
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Каталог нейросетей — 2000+ ИИ-сервисов для генерации и автоматизации',
-  description: 'Полный каталог нейросетей и ИИ-инструментов. Найдите лучшую нейросеть для генерации изображений, текста, музыки. Бесплатные и платные сервисы с рейтингами и отзывами.',
-  keywords: 'каталог нейросетей, нейросеть для генерации, ии сервисы, искусственный интеллект, нейросеть картинки, нейросеть текст',
-  openGraph: {
-    title: 'Каталог нейросетей — 2000+ ИИ-сервисов',
-    description: 'Полный каталог нейросетей и ИИ-инструментов для генерации и автоматизации',
-    url: 'https://gighub.ru/ai-services',
-  },
-}
 
 interface PaginationInfo {
   page: number

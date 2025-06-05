@@ -27,7 +27,6 @@ const nextConfig = {
   generateEtags: true,
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion'],
-    optimizeCss: true,
     webVitalsAttribution: ['CLS', 'LCP'],
   },
   trailingSlash: false,

@@ -14,6 +14,7 @@ import {
   ExternalLink,
   Github
 } from 'lucide-react'
+import Logo from './Logo'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -40,19 +41,7 @@ export default function Header() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-text-primary group-hover:text-accent-primary transition-colors">
-                  GigHub
-                </span>
-                <span className="text-xs text-text-secondary -mt-1">
-                  ИИ-сервисы
-                </span>
-              </div>
-            </Link>
+            <Logo variant="dark" size="md" animate={true} />
           </motion.div>
 
           {/* Desktop Navigation */}

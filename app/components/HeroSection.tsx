@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowRight, Sparkles, Search, Command } from 'lucide-react'
+import { ArrowRight, Sparkles, Mouse, ChevronDown } from 'lucide-react'
 
 export default function HeroSection() {
   return (
@@ -45,11 +45,11 @@ export default function HeroSection() {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight"
           >
-            <span className="text-text-primary">Лучшие</span>
+            <span className="text-text-primary">Каталог лучших</span>
             <br />
-            <span className="text-gradient">нейросети</span>
+            <span className="text-gradient">ИИ-инструментов</span>
             <br />
-            <span className="text-text-primary">и ИИ-сервисы мира</span>
+            <span className="text-text-primary">и нейросетей 2024</span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -59,62 +59,36 @@ export default function HeroSection() {
             transition={{ delay: 0.4, duration: 0.6 }}
             className="text-lg sm:text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed"
           >
-            Найдите идеальную нейросеть среди 2000+ проверенных ИИ-инструментов для генерации 
-            изображений, текста, музыки и автоматизации. Бесплатные и платные сервисы 
-            искусственного интеллекта на русском языке.
+            Откройте для себя 2000+ проверенных нейросетей и AI-сервисов для генерации 
+            изображений, текста, музыки и автоматизации бизнеса. Бесплатные и платные 
+            инструменты искусственного интеллекта с поддержкой русского языка.
           </motion.p>
 
-          {/* Search Bar */}
+          {/* Enhanced Scroll Indicator - Moved to center */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            className="max-w-2xl mx-auto"
+            className="flex flex-col items-center gap-4 py-8"
           >
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-accent-primary/20 to-accent-secondary/20 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
-              <div className="relative bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
-                <div className="flex items-center px-6 py-4">
-                  <Search className="w-5 h-5 text-text-secondary mr-4 flex-shrink-0" />
-                  
-                  <input
-                    type="text"
-                    placeholder="Найти ИИ-инструмент... например, 'генерация изображений'"
-                    className="flex-1 bg-transparent border-none outline-none text-text-primary placeholder-text-secondary text-base"
-                  />
-                  
-                  <div className="flex items-center gap-1 ml-4 px-2 py-1 bg-gray-100/80 rounded-lg text-xs text-text-secondary font-medium">
-                    <Command className="w-3 h-3" />
-                    <span>K</span>
-                  </div>
-                </div>
-                
-                {/* Search suggestions */}
-                <div className="px-6 pb-4">
-                  <div className="flex flex-wrap gap-2">
-                    {['Midjourney', 'ChatGPT', 'Stable Diffusion', 'Runway ML'].map((suggestion, index) => (
-                      <motion.button
-                        key={suggestion}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.6 + index * 0.1, duration: 0.3 }}
-                        className="px-3 py-1 bg-gray-50/80 hover:bg-accent-primary/10 text-text-secondary hover:text-accent-primary text-sm rounded-lg transition-colors duration-200"
-                      >
-                        {suggestion}
-                      </motion.button>
-                    ))}
-                  </div>
-                </div>
+            <motion.div
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              className="flex flex-col items-center gap-3 text-text-secondary"
+            >
+              <span className="text-sm font-medium">Прокрутите вниз</span>
+              <div className="flex items-center gap-2">
+                <Mouse className="w-6 h-6 text-accent-primary" />
+                <ChevronDown className="w-5 h-5 text-accent-primary" />
               </div>
-            </div>
+            </motion.div>
           </motion.div>
 
           {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.6 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
             className="flex flex-col sm:flex-row gap-4 justify-center pt-4"
           >
             <motion.button 
@@ -144,25 +118,6 @@ export default function HeroSection() {
           </motion.div>
         </div>
       </div>
-
-      {/* Improved Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5, duration: 0.6 }}
-        className="absolute bottom-6 left-1/2 transform -translate-x-1/2"
-      >
-        <div className="flex flex-col items-center gap-2 text-text-secondary">
-          <span className="text-xs font-medium">Прокрутите вниз</span>
-          <div className="w-5 h-8 border border-gray-300/60 rounded-full flex justify-center relative overflow-hidden">
-            <motion.div 
-              className="w-0.5 h-2 bg-accent-primary rounded-full absolute top-1.5"
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </div>
-        </div>
-      </motion.div>
     </section>
   )
 } 

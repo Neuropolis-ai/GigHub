@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Brain, Github, Twitter, Linkedin, Mail, Heart } from 'lucide-react'
+import Logo from './Logo'
 
 const footerLinks = {
   neyroseti: [
@@ -55,11 +56,8 @@ export default function Footer() {
               transition={{ duration: 0.6 }}
             >
               {/* Logo */}
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-2xl flex items-center justify-center">
-                  <Brain className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-2xl font-bold">GigHub</span>
+              <div className="mb-6">
+                <Logo variant="light" size="md" animate={true} />
               </div>
 
               <p className="text-gray-300 text-lg leading-relaxed mb-8 max-w-lg">
