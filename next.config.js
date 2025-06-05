@@ -26,11 +26,8 @@ const nextConfig = {
   poweredByHeader: false,
   generateEtags: true,
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion', 'next-seo'],
-    webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
-    optimizeCss: true,
-    scrollRestoration: true,
-    gzipSize: true,
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
+    webVitalsAttribution: ['CLS', 'LCP'],
   },
   trailingSlash: false,
   swcMinify: true,
