@@ -21,6 +21,7 @@ const categories = [
   {
     id: 10,
     name: 'Генерация изображений',
+    slug: 'images',
     description: 'AI-художники и генераторы визуала',
     icon: Image,
     count: '400+',
@@ -29,6 +30,7 @@ const categories = [
   {
     id: 7,
     name: 'Чат-боты и ассистенты',
+    slug: 'chatbots',
     description: 'Умные помощники для любых задач',
     icon: MessageSquare,
     count: '250+',
@@ -37,6 +39,7 @@ const categories = [
   {
     id: 12,
     name: 'Музыка и аудио',
+    slug: 'audio',
     description: 'Создание и обработка звука',
     icon: Music,
     count: '180+',
@@ -45,6 +48,7 @@ const categories = [
   {
     id: 9,
     name: 'Видео редакторы',
+    slug: 'video',
     description: 'Монтаж и создание видеоконтента',
     icon: Video,
     count: '150+',
@@ -53,6 +57,7 @@ const categories = [
   {
     id: 17,
     name: 'Автоматизация',
+    slug: 'automation',
     description: 'Workflow и бизнес-процессы',
     icon: Zap,
     count: '320+',
@@ -61,6 +66,7 @@ const categories = [
   {
     id: 11,
     name: 'Обработка текста',
+    slug: 'text',
     description: 'Письмо и редактирование',
     icon: FileText,
     count: '280+',
@@ -69,6 +75,7 @@ const categories = [
   {
     id: 3,
     name: 'Анализ данных',
+    slug: 'analytics',
     description: 'Аналитика и машинное обучение',
     icon: BarChart,
     count: '200+',
@@ -77,6 +84,7 @@ const categories = [
   {
     id: 8,
     name: 'Кодирование',
+    slug: 'development',
     description: 'ИИ-помощники для разработчиков',
     icon: Code,
     count: '120+',
@@ -115,7 +123,7 @@ export default function CategoryGrid() {
                 whileHover={{ y: -8, scale: 1.02 }}
                 className="group relative"
               >
-                <Link href={`/ai-services?category=${category.id}`}>
+                <Link href={`/ai-services?category=${category.slug}`}>
                   <div className="relative overflow-hidden rounded-3xl bg-white border border-gray-200 hover:border-accent-primary/30 shadow-lg hover:shadow-2xl transition-all duration-300 p-6 h-full cursor-pointer">
                     {/* Gradient background on hover */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-3xl`} />
