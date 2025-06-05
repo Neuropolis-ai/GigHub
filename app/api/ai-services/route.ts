@@ -1,81 +1,329 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
+import { requireAuth, requireModerator, createAuthErrorResponse, getClientIP, logAuthFailure } from '@/lib/auth'
+import { validateData, validateQuery, createValidationErrorResponse, aiServiceSchema, aiServiceUpdateSchema, aiServiceSearchSchema } from '@/lib/validations'
 
+// Инициализация Supabase
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+
+// Rate limiting - простая реализация в памяти (в продакшне использовать Redis)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
+
+function checkRateLimit(ip: string, limit: number = 100, windowMs: number = 60000): boolean {
+  const now = Date.now()
+  const userLimit = rateLimitMap.get(ip)
+
+  if (!userLimit || now > userLimit.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + windowMs })
+    return true
+  }
+
+  if (userLimit.count >= limit) {
+    return false
+  }
+
+  userLimit.count++
+  return true
+}
+
+// GET /api/ai-services - Получение списка AI сервисов
 export async function GET(request: NextRequest) {
   try {
+    // Rate limiting
+    const ip = getClientIP(request)
+    if (!checkRateLimit(ip, 100, 60000)) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Too many requests',
+          code: 'RATE_LIMIT_EXCEEDED',
+          timestamp: new Date().toISOString()
+        }),
+        { 
+          status: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            'Retry-After': '60'
+          }
+        }
+      )
+    }
+
+    // Валидация query параметров
     const { searchParams } = new URL(request.url)
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100)
-    const search = searchParams.get('search') || ''
-    const categoryId = searchParams.get('category_id')
-    const sortBy = searchParams.get('sort') || 'created_at'
-    const order = searchParams.get('order') || 'desc'
+    const queryValidation = validateQuery(aiServiceSearchSchema, searchParams)
+    
+    if (!queryValidation.success) {
+      return createValidationErrorResponse(queryValidation.errors!)
+    }
 
-    const offset = (page - 1) * limit
+    const queryData = queryValidation.data!
+    const { q, category, status, sort, order, page, limit } = queryData
 
-    // Строим запрос с LEFT JOIN для категорий (показываем все записи)
+    // Создание Supabase клиента
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
+    // Построение запроса
     let query = supabase
       .from('ai_services')
-      .select(`
-        *,
-        categories(*)
-      `, { count: 'exact' })
+      .select('*', { count: 'exact' })
 
-    // Добавляем поиск по названию и описанию
-    if (search) {
-      query = query.or(`title.ilike.%${search}%,short_description_ru.ilike.%${search}%,full_description_ru.ilike.%${search}%,ai_category.ilike.%${search}%`)
+    // Фильтрация по статусу (публичные данные - только active)
+    if (status) {
+      query = query.eq('status', status)
+    } else {
+      query = query.eq('status', 'active')
+    }
+
+    // Поиск по тексту
+    if (q) {
+      query = query.or(`title.ilike.%${q}%,short_description_ru.ilike.%${q}%`)
     }
 
     // Фильтрация по категории
-    if (categoryId) {
-      query = query.eq('category_id', parseInt(categoryId))
+    if (category) {
+      query = query.eq('ai_category', category)
     }
-
-    // Только активные сервисы
-    query = query.eq('status', 'active')
 
     // Сортировка
-    if (sortBy === 'rating') {
-      query = query.order('rating', { ascending: order === 'asc' })
-    } else if (sortBy === 'bookmarks_count') {
-      query = query.order('bookmarks_count', { ascending: order === 'asc' })
-    } else if (sortBy === 'title') {
-      query = query.order('title', { ascending: order === 'asc' })
-    } else {
-      query = query.order('created_at', { ascending: order === 'asc' })
-    }
+    query = query.order(sort, { ascending: order === 'asc' })
 
-    // Применяем пагинацию
+    // Пагинация
+    const offset = (page - 1) * limit
     query = query.range(offset, offset + limit - 1)
 
-    const { data: services, error, count } = await query
+    const { data, error, count } = await query
 
     if (error) {
-      console.error('Ошибка при получении ИИ-сервисов:', error)
+      console.error('Database error:', error)
       return NextResponse.json(
-        { error: 'Не удалось загрузить ИИ-сервисы' },
+        { 
+          error: 'Database error',
+          code: 'DATABASE_ERROR',
+          timestamp: new Date().toISOString()
+        },
         { status: 500 }
       )
     }
 
-    const totalPages = Math.ceil((count || 0) / limit)
-
     return NextResponse.json({
-      data: services || [],
+      data,
       pagination: {
         page,
         limit,
         total: count || 0,
-        totalPages,
-        hasNextPage: page < totalPages,
-        hasPreviousPage: page > 1
-      }
+        totalPages: Math.ceil((count || 0) / limit)
+      },
+      timestamp: new Date().toISOString()
     })
 
   } catch (error) {
-    console.error('Ошибка API:', error)
+    console.error('API error:', error)
     return NextResponse.json(
-      { error: 'Внутренняя ошибка сервера' },
+      { 
+        error: 'Internal server error',
+        code: 'INTERNAL_ERROR',
+        timestamp: new Date().toISOString()
+      },
+      { status: 500 }
+    )
+  }
+}
+
+// POST /api/ai-services - Создание нового AI сервиса (требует аутентификации)
+export async function POST(request: NextRequest) {
+  try {
+    // Rate limiting для POST запросов (более строгий)
+    const ip = getClientIP(request)
+    if (!checkRateLimit(ip, 10, 60000)) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Too many requests',
+          code: 'RATE_LIMIT_EXCEEDED',
+          timestamp: new Date().toISOString()
+        }),
+        { 
+          status: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            'Retry-After': '60'
+          }
+        }
+      )
+    }
+
+    // Проверка аутентификации
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
+      logAuthFailure(request, authResult.error!, request.headers.get('user-agent') || undefined)
+      return createAuthErrorResponse(authResult.error!)
+    }
+
+    // Валидация данных
+    const body = await request.json()
+    const validation = validateData(aiServiceSchema, body)
+    
+    if (!validation.success) {
+      return createValidationErrorResponse(validation.errors!)
+    }
+
+    // Создание Supabase клиента
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
+    // Проверка уникальности slug
+    const { data: existingService } = await supabase
+      .from('ai_services')
+      .select('id')
+      .eq('slug', validation.data!.slug)
+      .single()
+
+    if (existingService) {
+      return createValidationErrorResponse(['slug: Такой slug уже существует'])
+    }
+
+    // Вставка данных
+    const { data, error } = await supabase
+      .from('ai_services')
+      .insert([{
+        ...validation.data!,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }])
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Database error:', error)
+      return NextResponse.json(
+        { 
+          error: 'Failed to create service',
+          code: 'DATABASE_ERROR',
+          timestamp: new Date().toISOString()
+        },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({
+      data,
+      message: 'AI service created successfully',
+      timestamp: new Date().toISOString()
+    }, { status: 201 })
+
+  } catch (error) {
+    console.error('API error:', error)
+    return NextResponse.json(
+      { 
+        error: 'Internal server error',
+        code: 'INTERNAL_ERROR',
+        timestamp: new Date().toISOString()
+      },
+      { status: 500 }
+    )
+  }
+}
+
+// PUT /api/ai-services - Обновление AI сервиса (требует модераторских прав)
+export async function PUT(request: NextRequest) {
+  try {
+    // Rate limiting
+    const ip = getClientIP(request)
+    if (!checkRateLimit(ip, 20, 60000)) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Too many requests',
+          code: 'RATE_LIMIT_EXCEEDED',
+          timestamp: new Date().toISOString()
+        }),
+        { 
+          status: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            'Retry-After': '60'
+          }
+        }
+      )
+    }
+
+    // Проверка модераторских прав
+    const authResult = await requireModerator(request)
+    if (!authResult.success) {
+      logAuthFailure(request, authResult.error!, request.headers.get('user-agent') || undefined)
+      return createAuthErrorResponse(authResult.error!, 403)
+    }
+
+    // Валидация данных
+    const body = await request.json()
+    const { id, ...updateData } = body
+
+    if (!id || typeof id !== 'number') {
+      return createValidationErrorResponse(['id: ID сервиса обязателен и должен быть числом'])
+    }
+
+    const validation = validateData(aiServiceUpdateSchema, updateData)
+    
+    if (!validation.success) {
+      return createValidationErrorResponse(validation.errors!)
+    }
+
+    // Создание Supabase клиента
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
+    // Проверка существования сервиса
+    const { data: existingService } = await supabase
+      .from('ai_services')
+      .select('id')
+      .eq('id', id)
+      .single()
+
+    if (!existingService) {
+      return NextResponse.json(
+        { 
+          error: 'Service not found',
+          code: 'NOT_FOUND',
+          timestamp: new Date().toISOString()
+        },
+        { status: 404 }
+      )
+    }
+
+    // Обновление данных
+    const { data, error } = await supabase
+      .from('ai_services')
+      .update({
+        ...validation.data!,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Database error:', error)
+      return NextResponse.json(
+        { 
+          error: 'Failed to update service',
+          code: 'DATABASE_ERROR',
+          timestamp: new Date().toISOString()
+        },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({
+      data,
+      message: 'AI service updated successfully',
+      timestamp: new Date().toISOString()
+    })
+
+  } catch (error) {
+    console.error('API error:', error)
+    return NextResponse.json(
+      { 
+        error: 'Internal server error',
+        code: 'INTERNAL_ERROR',
+        timestamp: new Date().toISOString()
+      },
       { status: 500 }
     )
   }

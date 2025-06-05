@@ -7,6 +7,9 @@ const { createClient } = require('@supabase/supabase-js');
 
 // Конфигурация Supabase
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+// ⚠️ БЕЗОПАСНОСТЬ: Service Role Key используется ТОЛЬКО в серверных скриптах!
+// НЕ используйте service_role в клиентском коде - это нарушение безопасности
+// Этот скрипт выполняется локально на сервере разработки
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY; // Используем anon key если service key недоступен
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
