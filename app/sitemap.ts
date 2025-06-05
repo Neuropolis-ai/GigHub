@@ -1,85 +1,42 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
+  const baseUrl = 'https://gighub.ru'
+  
+  // Статические страницы
+  const staticPages = [
     {
-      url: 'https://gighub.ru',
+      url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1.0,
+      changeFrequency: 'daily' as const,
+      priority: 1,
     },
     {
-      url: 'https://gighub.ru/ai-services',
+      url: `${baseUrl}/ai-services`,
       lastModified: new Date(),
-      changeFrequency: 'daily',
+      changeFrequency: 'hourly' as const,
       priority: 0.9,
     },
     {
-      url: 'https://gighub.ru/categories',
+      url: `${baseUrl}/about`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://gighub.ru/free-neural-networks',
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: 'https://gighub.ru/online-neural-networks',
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: 'https://gighub.ru/text-neural-networks',
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: 'https://gighub.ru/image-neural-networks',
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: 'https://gighub.ru/russian-neural-networks',
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: 'https://gighub.ru/ai-help',
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: 'https://gighub.ru/presentation-ai',
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: 'https://gighub.ru/ai-chat',
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: 'https://gighub.ru/gpt-neural-networks',
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: 'https://gighub.ru/blog',
-      lastModified: new Date(),
-      changeFrequency: 'daily',
+      changeFrequency: 'monthly' as const,
       priority: 0.7,
     },
-    // TODO: Добавить все страницы ИИ-сервисов динамически
+  ]
+
+  // TODO: Добавить динамические страницы сервисов
+  // Это будет реализовано после подключения к базе данных
+  // const services = await getServices()
+  // const servicePages = services.map(service => ({
+  //   url: `${baseUrl}/ai-services/${service.slug || service.id}`,
+  //   lastModified: new Date(service.updated_at || service.created_at),
+  //   changeFrequency: 'weekly' as const,
+  //   priority: 0.8,
+  // }))
+
+  return [
+    ...staticPages,
+    // ...servicePages (будет добавлено позже)
   ]
 } 

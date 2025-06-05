@@ -19,6 +19,7 @@ import { AIServiceWithCategory } from '@/lib/supabase'
 import ServiceSEO from './components/ServiceSEO'
 import Breadcrumbs from './components/Breadcrumbs'
 import FAQSection from './components/FAQSection'
+import SocialShare from './components/SocialShare'
 
 export default function AIServicePage() {
   const params = useParams()
@@ -110,7 +111,7 @@ export default function AIServicePage() {
       
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
-        <section className="relative bg-white border-b pt-8">
+        <header className="relative bg-white border-b pt-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             {/* Breadcrumbs */}
             <Breadcrumbs service={service} />
@@ -133,6 +134,7 @@ export default function AIServicePage() {
                         width={64}
                         height={64}
                         className="w-full h-full object-contain rounded-xl"
+                        loading="lazy"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement
                           target.style.display = 'none'
@@ -192,18 +194,20 @@ export default function AIServicePage() {
                 className="relative"
               >
                 {service.cover_url ? (
-                  <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden aspect-video">
+                  <figure className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden aspect-video">
                     <Image
                       src={service.cover_url || ''}
                       alt={`Скриншот интерфейса ${service.title}`}
                       fill
                       className="object-cover"
+                      priority={true}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement
                         target.parentElement!.style.display = 'none'
                       }}
                     />
-                  </div>
+                  </figure>
                 ) : (
                   <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden aspect-video">
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20" />
@@ -215,13 +219,13 @@ export default function AIServicePage() {
               </motion.div>
             </div>
           </div>
-        </section>
+        </header>
 
         {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Left: Main Content */}
-            <div className="lg:col-span-2 space-y-12">
+            <article className="lg:col-span-2 space-y-12">
               {/* Description */}
               {service.full_description_ru && (
                 <motion.section
@@ -278,10 +282,10 @@ export default function AIServicePage() {
                   </div>
                 </motion.section>
               )}
-            </div>
+            </article>
 
             {/* Right: Sidebar */}
-            <div className="space-y-8">
+            <aside className="space-y-8">
               {/* CTA Card */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -318,36 +322,36 @@ export default function AIServicePage() {
                 className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
               >
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Информация</h3>
-                <div className="space-y-3">
+                <dl className="space-y-3">
                   {service.bookmarks_count && service.bookmarks_count > 0 && (
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600">Закладки</span>
-                      <div className="flex items-center gap-1">
+                      <dt className="text-gray-600">Закладки</dt>
+                      <dd className="flex items-center gap-1">
                         <Users className="w-4 h-4 text-gray-400" />
                         <span className="font-semibold">{service.bookmarks_count}</span>
-                      </div>
+                      </dd>
                     </div>
                   )}
                   
                   {service.categories && (
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600">Категория</span>
-                      <span className="font-semibold">{service.categories.name}</span>
+                      <dt className="text-gray-600">Категория</dt>
+                      <dd className="font-semibold">{service.categories.name}</dd>
                     </div>
                   )}
                   
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Статус</span>
-                    <span className="font-semibold text-green-600">Активен</span>
+                    <dt className="text-gray-600">Статус</dt>
+                    <dd className="font-semibold text-green-600">Активен</dd>
                   </div>
                   
                   {service.date_added && (
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-600">Добавлен</span>
-                      <span className="font-semibold">{new Date(service.date_added).toLocaleDateString('ru-RU')}</span>
+                      <dt className="text-gray-600">Добавлен</dt>
+                      <dd className="font-semibold">{new Date(service.date_added).toLocaleDateString('ru-RU')}</dd>
                     </div>
                   )}
-                </div>
+                </dl>
               </motion.div>
 
               {/* Pricing Card */}
@@ -368,12 +372,29 @@ export default function AIServicePage() {
                 </motion.div>
               )}
 
-              {/* Quick Actions */}
+              {/* Social Share */}
               <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
+              >
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Поделиться</h3>
+                <div className="flex justify-center">
+                  <SocialShare service={service} />
+                </div>
+                <p className="text-sm text-gray-600 text-center mt-3">
+                  Расскажите друзьям о полезном сервисе
+                </p>
+              </motion.div>
+
+              {/* Quick Actions */}
+              <motion.nav
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
+                aria-label="Быстрые действия"
               >
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Быстрые действия</h3>
                 <div className="space-y-3">
@@ -392,10 +413,10 @@ export default function AIServicePage() {
                     </Link>
                   )}
                 </div>
-              </motion.div>
-            </div>
+              </motion.nav>
+            </aside>
           </div>
-        </div>
+        </main>
       </div>
     </>
   )

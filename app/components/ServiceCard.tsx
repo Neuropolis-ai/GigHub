@@ -124,10 +124,12 @@ export default function ServiceCard({
           <div className="aspect-video rounded-t-3xl overflow-hidden">
             <Image
               src={normalizedCoverUrl}
-              alt={`${title} cover`}
+              alt={`Скриншот интерфейса ${title}`}
               width={400}
               height={225}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               onError={(e) => {
                 const target = e.target as HTMLImageElement
                 target.parentElement!.style.display = 'none'
@@ -144,10 +146,11 @@ export default function ServiceCard({
               <div className="absolute inset-0 flex items-center justify-center p-8">
                 <Image
                   src={normalizedLogoUrl}
-                  alt={`${title} logo`}
+                  alt={`Логотип ${title}`}
                   width={80}
                   height={80}
                   className="max-w-full max-h-full object-contain"
+                  loading="lazy"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement
                     target.style.display = 'none'
@@ -173,10 +176,11 @@ export default function ServiceCard({
               <div className="w-12 h-12 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 shadow-sm">
                 <Image
                   src={normalizedLogoUrl}
-                  alt={`${title} logo`}
+                  alt={`Логотип ${title}`}
                   width={48}
                   height={48}
                   className="w-full h-full object-contain"
+                  loading="lazy"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement
                     target.parentElement!.innerHTML = `<div class="w-full h-full bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white text-xs font-bold">${initials}</div>`
