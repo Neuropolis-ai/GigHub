@@ -23,6 +23,43 @@ interface APIResponse {
   pagination: PaginationInfo
 }
 
+// Функция для правильного склонения категорий
+const getCategoryDeclined = (categoryName: string): string => {
+  const declensions: { [key: string]: string } = {
+    'Изображения': 'изображений',
+    'Генерация изображений': 'генерации изображений',
+    'Большие языковые модели': 'больших языковых моделей',
+    'Чат-боты': 'чат-ботов',
+    'Аудио': 'аудио',
+    'Музыка': 'музыки',
+    'Видео': 'видео',
+    'Продуктивность': 'продуктивности',
+    'Автоматизация': 'автоматизации',
+    'Текст': 'работы с текстом',
+    'Аналитика данных': 'аналитики данных',
+    'Виртуальные аватары': 'виртуальных аватаров',
+    'Email': 'работы с email',
+    'Безопасность': 'безопасности',
+    'Бизнес и стартапы': 'бизнеса и стартапов',
+    'Архитектура и дизайн интерьера': 'архитектуры и дизайна интерьера',
+    'Здоровье и фитнес': 'здоровья и фитнеса',
+    'Маркетинг и продажи': 'маркетинга и продаж',
+    'Образ жизни': 'образа жизни',
+    'Развлечения и lifestyle': 'развлечений и lifestyle',
+    'Обслуживание и поддержка клиентов': 'обслуживания и поддержки клиентов',
+    'Обучение, гайды и коучинг': 'обучения, гайдов и коучинга',
+    'Создание презентаций': 'создания презентаций',
+    'Разработка и IT': 'разработки и IT',
+    'Развлечения': 'развлечений',
+    'Инвестиции и финансы': 'инвестиций и финансов',
+    'Создание контента': 'создания контента',
+    'Социальные сети': 'социальных сетей',
+    'Трудоустройство и HR': 'трудоустройства и HR',
+    'Документы': 'работы с документами'
+  }
+  return declensions[categoryName] || categoryName.toLowerCase()
+}
+
 export default function AIServicesPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -31,7 +68,7 @@ export default function AIServicesPage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '')
-  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category_id') || '')
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '')
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'created_at')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [pagination, setPagination] = useState<PaginationInfo>({
@@ -55,7 +92,15 @@ export default function AIServicesPage() {
       })
 
       if (searchTerm) params.append('search', searchTerm)
-      if (selectedCategory) params.append('category_id', selectedCategory)
+      if (selectedCategory) {
+        // Найдем категорию по slug или ID
+        const category = categories.find(cat => 
+          cat.slug === selectedCategory || cat.id.toString() === selectedCategory
+        )
+        if (category) {
+          params.append('category_id', category.id.toString())
+        }
+      }
 
       const response = await fetch(`/api/ai-services?${params}`)
       if (!response.ok) throw new Error('Ошибка загрузки данных')
@@ -86,13 +131,15 @@ export default function AIServicesPage() {
   }, [])
 
   useEffect(() => {
-    fetchServices(1)
-  }, [searchTerm, selectedCategory, sortBy])
+    if (categories.length > 0) {
+      fetchServices(1)
+    }
+  }, [searchTerm, selectedCategory, sortBy, categories])
 
   const updateURL = () => {
     const params = new URLSearchParams()
     if (searchTerm) params.set('search', searchTerm)
-    if (selectedCategory) params.set('category_id', selectedCategory)
+    if (selectedCategory) params.set('category', selectedCategory)
     if (sortBy !== 'created_at') params.set('sort', sortBy)
     
     const newURL = params.toString() ? `?${params.toString()}` : ''
@@ -100,15 +147,17 @@ export default function AIServicesPage() {
   }
 
   useEffect(() => {
-    updateURL()
-  }, [searchTerm, selectedCategory, sortBy])
+    if (categories.length > 0) {
+      updateURL()
+    }
+  }, [searchTerm, selectedCategory, sortBy, categories])
 
   const handleSearch = (value: string) => {
     setSearchTerm(value)
   }
 
-  const handleCategoryChange = (categoryId: string) => {
-    setSelectedCategory(categoryId)
+  const handleCategoryChange = (categorySlug: string) => {
+    setSelectedCategory(categorySlug)
   }
 
   const handleSortChange = (sort: string) => {
@@ -119,8 +168,10 @@ export default function AIServicesPage() {
     fetchServices(page)
   }
 
-  // Получаем название выбранной категории
-  const selectedCategoryName = categories.find(cat => cat.id.toString() === selectedCategory)?.name
+  // Получаем выбранную категорию
+  const selectedCategoryObj = categories.find(cat => 
+    cat.slug === selectedCategory || cat.id.toString() === selectedCategory
+  )
 
   return (
     <div className="min-h-screen bg-background">
@@ -130,10 +181,10 @@ export default function AIServicesPage() {
           <li><Link href="/" className="hover:text-accent-primary">Главная</Link></li>
           <li className="mx-2">/</li>
           <li><span className="text-text-primary">Каталог нейросетей</span></li>
-          {selectedCategoryName && (
+          {selectedCategoryObj && (
             <>
               <li className="mx-2">/</li>
-              <li><span className="text-text-primary">{selectedCategoryName}</span></li>
+              <li><span className="text-text-primary">{selectedCategoryObj.name}</span></li>
             </>
           )}
         </ol>
@@ -152,21 +203,21 @@ export default function AIServicesPage() {
             <div className="flex items-center justify-center gap-2 mb-6">
               <Sparkles className="w-8 h-8 text-accent-primary" />
               <span className="text-accent-primary font-semibold">
-                {selectedCategoryName ? `Категория: ${selectedCategoryName}` : 'Каталог ИИ-сервисов'}
+                {selectedCategoryObj ? `Категория: ${selectedCategoryObj.name}` : 'Каталог ИИ-сервисов'}
               </span>
             </div>
             
             <h1 className="text-4xl md:text-6xl font-bold text-text-primary mb-6">
-              {selectedCategoryName ? (
-                <>Нейросети для <span className="text-gradient">{selectedCategoryName.toLowerCase()}</span></>
+              {selectedCategoryObj ? (
+                <>Нейросети для <span className="text-gradient">{getCategoryDeclined(selectedCategoryObj.name)}</span></>
               ) : (
                 <>Каталог <span className="text-gradient">нейросетей</span> и ИИ-сервисов</>
               )}
             </h1>
             
             <p className="text-xl text-text-secondary mb-8 leading-relaxed">
-              {selectedCategoryName ? (
-                `Откройте для себя ${pagination.total} проверенных ИИ-инструментов в категории "${selectedCategoryName}"`
+              {selectedCategoryObj ? (
+                `Откройте для себя ${pagination.total} проверенных ИИ-инструментов в категории "${selectedCategoryObj.name}"`
               ) : (
                 `Найдено ${pagination.total} сервисов искусственного интеллекта. Выберите идеальный инструмент для ваших задач.`
               )}
@@ -229,7 +280,7 @@ export default function AIServicesPage() {
                 >
                   <option value="">Все категории</option>
                   {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
+                    <option key={category.id} value={category.slug || category.id}>
                       {category.name}
                     </option>
                   ))}
@@ -273,9 +324,9 @@ export default function AIServicesPage() {
               <span className="text-text-primary font-semibold">
                 {pagination.total} результатов найдено
               </span>
-              {selectedCategoryName && (
+              {selectedCategoryObj && (
                 <span className="px-3 py-1 bg-accent-primary/10 text-accent-primary rounded-full text-sm font-medium">
-                  {selectedCategoryName}
+                  {selectedCategoryObj.name}
                 </span>
               )}
             </div>

@@ -188,7 +188,7 @@ export default function ServiceCard({
                 {title}
               </h3>
               {price && (
-                <span className="inline-flex items-center px-2 py-1 bg-green-50 text-green-700 text-sm font-semibold rounded-lg">
+                <span className="inline-flex items-center px-2 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-lg">
                   {price}
                 </span>
               )}
