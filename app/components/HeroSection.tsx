@@ -49,7 +49,7 @@ export default function HeroSection() {
             <br />
             <span className="text-gradient">ИИ-инструментов</span>
             <br />
-            <span className="text-text-primary">и нейросетей 2024</span>
+            <span className="text-text-primary">и нейросетей 2025</span>
           </motion.h1>
 
           {/* Subtitle */}

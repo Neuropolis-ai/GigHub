@@ -184,7 +184,7 @@ export default function Footer() {
           >
             {/* Copyright */}
             <div className="flex items-center gap-2 text-gray-400 text-sm">
-              <span>© 2024 GigHub. Создано с</span>
+              <span>© 2025 GigHub. Создано с</span>
               <Heart className="w-4 h-4 text-red-500" />
               <span>для будущего ИИ</span>
             </div>
