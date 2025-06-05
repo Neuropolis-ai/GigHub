@@ -184,7 +184,7 @@ export default function ServiceCard({
             )}
             
             <div className="flex-1 min-w-0">
-              <h3 className="text-xl font-bold text-text-primary group-hover:text-accent-primary transition-colors line-clamp-2 mb-2">
+              <h3 className="text-xl font-bold text-text-primary group-hover:text-accent-primary transition-colors line-clamp-2 mb-1">
                 {title}
               </h3>
               {price && (
@@ -200,32 +200,19 @@ export default function ServiceCard({
             {short_description_ru || 'Описание сервиса'}
           </p>
 
-          {/* Stats */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3 text-sm text-gray-500">
-              {bookmarks_count && bookmarks_count > 0 && (
-                <div className="flex items-center gap-1">
-                  <Users className="w-4 h-4" />
-                  <span>{bookmarks_count}</span>
-                </div>
-              )}
-            </div>
-
-            {service_url && (
-              <div className="flex items-center text-xs text-gray-400">
-                <ExternalLink className="w-3 h-3" />
-              </div>
-            )}
-          </div>
-
           {/* CTA Button */}
           <div className="mt-auto">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-text-secondary font-medium">
-                Перейти к сервису
-              </span>
+              {bookmarks_count && bookmarks_count > 0 ? (
+                <div className="flex items-center gap-1 text-sm text-gray-500">
+                  <Users className="w-4 h-4" />
+                  <span>{bookmarks_count}</span>
+                </div>
+              ) : (
+                <div></div>
+              )}
               <div className="w-8 h-8 rounded-full bg-accent-primary/10 flex items-center justify-center group-hover:bg-accent-primary group-hover:text-white transition-all duration-300">
-                <span className="text-accent-primary group-hover:text-white text-sm">→</span>
+                <span className="text-accent-primary group-hover:text-white text-sm leading-none">→</span>
               </div>
             </div>
           </div>
