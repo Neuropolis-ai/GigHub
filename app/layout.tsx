@@ -16,6 +16,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://gighub.ru'),
   title: 'GigHub - Каталог нейросетей и ИИ-сервисов',
   description: 'Открой для себя лучшие нейросети и ИИ-сервисы. Более 1000+ инструментов для работы, творчества и бизнеса. Читай обзоры, сравнивай возможности.',
   keywords: 'нейросети, ИИ, искусственный интеллект, ChatGPT, Midjourney, AI инструменты, машинное обучение',
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
     description: 'Открой для себя лучшие нейросети и ИИ-сервисы. Более 1000+ инструментов для работы, творчества и бизнеса.',
     images: [
       {
-        url: 'https://gighub.ru/og-image.jpg',
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'GigHub - Каталог нейросетей и ИИ-сервисов',
@@ -58,7 +59,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'GigHub - Каталог нейросетей и ИИ-сервисов',
     description: 'Открой для себя лучшие нейросети и ИИ-сервисы. Более 1000+ инструментов для работы, творчества и бизнеса.',
-    images: ['https://gighub.ru/og-image.jpg'],
+    images: ['/og-image.jpg'],
   },
   alternates: {
     canonical: 'https://gighub.ru',
