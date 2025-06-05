@@ -6,16 +6,12 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const serviceId = parseInt(params.id)
+    const identifier = params.id
+    let service = null
+    let error = null
 
-    if (isNaN(serviceId)) {
-      return NextResponse.json(
-        { error: 'Некорректный ID сервиса' },
-        { status: 400 }
-      )
-    }
-
-    const { data: service, error } = await supabase
+    // Сначала пробуем найти по slug
+    const { data: serviceBySlug, error: slugError } = await supabase
       .from('ai_services')
       .select(`
         *,
@@ -26,18 +22,49 @@ export async function GET(
           description
         )
       `)
-      .eq('id', serviceId)
+      .eq('slug', identifier)
       .eq('status', 'active')
-      .single()
+      .maybeSingle()
+
+    if (serviceBySlug) {
+      service = serviceBySlug
+    } else {
+      // Если не найдено по slug и identifier это число, пробуем найти по ID
+      const serviceId = parseInt(identifier)
+      if (!isNaN(serviceId)) {
+        const { data: serviceById, error: idError } = await supabase
+          .from('ai_services')
+          .select(`
+            *,
+            categories (
+              id,
+              name,
+              slug,
+              description
+            )
+          `)
+          .eq('id', serviceId)
+          .eq('status', 'active')
+          .maybeSingle()
+
+        if (serviceById) {
+          service = serviceById
+        } else {
+          error = idError
+        }
+      } else {
+        error = slugError
+      }
+    }
+
+    if (!service) {
+      return NextResponse.json(
+        { error: 'Сервис не найден' },
+        { status: 404 }
+      )
+    }
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        return NextResponse.json(
-          { error: 'Сервис не найден' },
-          { status: 404 }
-        )
-      }
-      
       console.error('Ошибка при получении сервиса:', error)
       return NextResponse.json(
         { error: 'Не удалось загрузить информацию о сервисе' },

@@ -8,6 +8,7 @@ import Image from 'next/image'
 export interface ServiceCardProps {
   id: number
   title: string
+  slug?: string | null
   short_description_ru?: string | null
   logo_url?: string | null
   cover_url?: string | null
@@ -81,7 +82,8 @@ const normalizeImageUrl = (url: string | undefined | null): string | null => {
 
 export default function ServiceCard({ 
   id, 
-  title, 
+  title,
+  slug,
   short_description_ru, 
   logo_url,
   cover_url,
@@ -99,12 +101,15 @@ export default function ServiceCard({
   const normalizedCoverUrl = normalizeImageUrl(cover_url)
   const normalizedLogoUrl = normalizeImageUrl(logo_url)
 
+  // Используем slug если есть, иначе fallback на ID
+  const serviceLink = slug ? `/ai-services/${slug}` : `/ai-services/${id}`
+
   return (
     <motion.div
       whileHover={{ y: -8, scale: 1.02 }}
       className={`group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-accent-primary/30 cursor-pointer ${className} flex flex-col h-full`}
     >
-      <Link href={`/ai-services/${id}`} className="block flex-1 flex flex-col h-full">
+      <Link href={serviceLink} className="block flex-1 flex flex-col h-full">
         {/* Category Badge */}
         {categories && (
           <div className="absolute top-4 left-4 z-20">
