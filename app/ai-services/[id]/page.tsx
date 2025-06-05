@@ -16,6 +16,9 @@ import {
   DollarSign
 } from 'lucide-react'
 import { AIServiceWithCategory } from '@/lib/supabase'
+import ServiceSEO from './components/ServiceSEO'
+import Breadcrumbs from './components/Breadcrumbs'
+import FAQSection from './components/FAQSection'
 
 export default function AIServicePage() {
   const params = useParams()
@@ -101,204 +104,71 @@ export default function AIServicePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="relative bg-white border-b pt-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left: Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="space-y-6"
-            >
-              {/* Logo and Title */}
-              <div className="flex items-start gap-4">
-                {service.logo_url && (
-                  <div className="flex-shrink-0 w-16 h-16">
-                    <Image
-                      src={service.logo_url || ''}
-                      alt={`${service.title} logo`}
-                      width={64}
-                      height={64}
-                      className="w-full h-full object-contain rounded-xl"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement
-                        target.style.display = 'none'
-                      }}
-                    />
+    <>
+      {/* SEO метатеги и структурированные данные */}
+      <ServiceSEO service={service} />
+      
+      <div className="min-h-screen bg-gray-50">
+        {/* Hero Section */}
+        <section className="relative bg-white border-b pt-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            {/* Breadcrumbs */}
+            <Breadcrumbs service={service} />
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              {/* Left: Content */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+                className="space-y-6"
+              >
+                {/* Logo and Title */}
+                <div className="flex items-start gap-4">
+                  {service.logo_url && (
+                    <div className="flex-shrink-0 w-16 h-16">
+                      <Image
+                        src={service.logo_url || ''}
+                        alt={`Логотип ${service.title}`}
+                        width={64}
+                        height={64}
+                        className="w-full h-full object-contain rounded-xl"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement
+                          target.style.display = 'none'
+                        }}
+                      />
+                    </div>
+                  )}
+                  <div className="flex-grow">
+                    <h1 className="text-4xl font-bold text-gray-900 mb-2">
+                      {service.title}
+                    </h1>
+                    {service.categories && (
+                      <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                        {service.categories.name}
+                      </span>
+                    )}
                   </div>
-                )}
-                <div className="flex-grow">
-                  <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                    {service.title}
-                  </h1>
-                  {service.categories && (
-                    <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
-                      {service.categories.name}
-                    </span>
+                </div>
+
+                {/* Description */}
+                <p className="text-xl text-gray-600 leading-relaxed">
+                  {service.short_description_ru || 'Описание недоступно'}
+                </p>
+
+                {/* Stats */}
+                <div className="flex items-center gap-6">
+                  {service.bookmarks_count && service.bookmarks_count > 0 && (
+                    <div className="flex items-center gap-2">
+                      <Users className="w-5 h-5 text-gray-400" />
+                      <span className="font-semibold text-gray-900">{service.bookmarks_count}</span>
+                      <span className="text-gray-500">закладок</span>
+                    </div>
                   )}
                 </div>
-              </div>
 
-              {/* Description */}
-              <p className="text-xl text-gray-600 leading-relaxed">
-                {service.short_description_ru || 'Описание недоступно'}
-              </p>
-
-              {/* Stats */}
-              <div className="flex items-center gap-6">
-                {service.bookmarks_count && service.bookmarks_count > 0 && (
-                  <div className="flex items-center gap-2">
-                    <Users className="w-5 h-5 text-gray-400" />
-                    <span className="font-semibold text-gray-900">{service.bookmarks_count}</span>
-                    <span className="text-gray-500">закладок</span>
-                  </div>
-                )}
-              </div>
-
-              {/* CTA Button */}
-              {service.service_url && (
-                <motion.a
-                  href={service.service_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow-lg"
-                >
-                  Попробовать сервис
-                  <ExternalLink className="w-5 h-5" />
-                </motion.a>
-              )}
-            </motion.div>
-
-            {/* Right: Cover Image */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
-            >
-              {service.cover_url ? (
-                <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden aspect-video">
-                  <Image
-                    src={service.cover_url || ''}
-                    alt={`${service.title} cover`}
-                    fill
-                    className="object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement
-                      target.parentElement!.style.display = 'none'
-                    }}
-                  />
-                </div>
-              ) : (
-                <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden aspect-video">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-6xl font-bold text-white/30">{service.title.charAt(0)}</div>
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Left: Main Content */}
-          <div className="lg:col-span-2 space-y-12">
-            {/* Description */}
-            {service.full_description_ru && (
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">О продукте</h2>
-                <p className="text-gray-600 leading-relaxed text-lg whitespace-pre-line">
-                  {service.full_description_ru}
-                </p>
-              </motion.section>
-            )}
-
-            {/* Advantages */}
-            {advantages.length > 0 && (
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">Преимущества</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {advantages.map((advantage, index) => (
-                    <div key={index} className="flex items-start gap-3 p-4 bg-green-50 rounded-xl">
-                      <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <Check className="w-4 h-4 text-green-600" />
-                      </div>
-                      <span className="text-gray-700">{advantage.trim()}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.section>
-            )}
-
-            {/* FAQ */}
-            {faqItems.length > 0 && (
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">Часто задаваемые вопросы</h2>
-                <div className="space-y-4">
-                  {faqItems.slice(0, 6).map((item, index) => (
-                    <div key={index} className="p-4 border border-gray-200 rounded-xl hover:border-blue-300 transition-colors">
-                      <span className="text-gray-700">{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.section>
-            )}
-
-            {/* Disadvantages */}
-            {disadvantages.length > 0 && (
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">Ограничения</h2>
-                <div className="space-y-3">
-                  {disadvantages.map((item, index) => (
-                    <div key={index} className="flex items-start gap-3 p-4 bg-red-50 rounded-xl">
-                      <X className="w-4 h-4 text-red-500 mt-1 flex-shrink-0" />
-                      <span className="text-gray-700">{item.trim()}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.section>
-            )}
-          </div>
-
-          {/* Right: Sidebar */}
-          <div className="space-y-8">
-            {/* CTA Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
-            >
-              <div className="text-center space-y-4">
-                <h3 className="text-xl font-semibold text-gray-900">Попробовать {service.title}</h3>
-                <p className="text-gray-600 text-sm">
-                  Начните использовать {service.title} уже сегодня
-                </p>
+                {/* CTA Button */}
                 {service.service_url && (
                   <motion.a
                     href={service.service_url}
@@ -306,101 +176,227 @@ export default function AIServicePage() {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
+                    className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow-lg"
                   >
-                    Перейти на сайт
-                    <ExternalLink className="w-4 h-4" />
+                    Попробовать сервис
+                    <ExternalLink className="w-5 h-5" />
                   </motion.a>
                 )}
-              </div>
-            </motion.div>
+              </motion.div>
 
-            {/* Stats Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
-            >
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Информация</h3>
-              <div className="space-y-3">
-                {service.bookmarks_count && service.bookmarks_count > 0 && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Закладки</span>
-                    <div className="flex items-center gap-1">
-                      <Users className="w-4 h-4 text-gray-400" />
-                      <span className="font-semibold">{service.bookmarks_count}</span>
+              {/* Right: Cover Image */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="relative"
+              >
+                {service.cover_url ? (
+                  <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden aspect-video">
+                    <Image
+                      src={service.cover_url || ''}
+                      alt={`Скриншот интерфейса ${service.title}`}
+                      fill
+                      className="object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement
+                        target.parentElement!.style.display = 'none'
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden aspect-video">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-6xl font-bold text-white/30">{service.title.charAt(0)}</div>
                     </div>
                   </div>
                 )}
-                
-                {service.categories && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Категория</span>
-                    <span className="font-semibold">{service.categories.name}</span>
-                  </div>
-                )}
-                
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Статус</span>
-                  <span className="font-semibold text-green-600">Активен</span>
-                </div>
-                
-                {service.date_added && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Добавлен</span>
-                    <span className="font-semibold">{new Date(service.date_added).toLocaleDateString('ru-RU')}</span>
-                  </div>
-                )}
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
 
-            {/* Pricing Card */}
-            {service.price && (
+        {/* Main Content */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            {/* Left: Main Content */}
+            <div className="lg:col-span-2 space-y-12">
+              {/* Description */}
+              {service.full_description_ru && (
+                <motion.section
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <h2 className="text-3xl font-bold text-gray-900 mb-6">О продукте</h2>
+                  <p className="text-gray-600 leading-relaxed text-lg whitespace-pre-line">
+                    {service.full_description_ru}
+                  </p>
+                </motion.section>
+              )}
+
+              {/* Advantages */}
+              {advantages.length > 0 && (
+                <motion.section
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <h2 className="text-3xl font-bold text-gray-900 mb-6">Преимущества</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {advantages.map((advantage, index) => (
+                      <div key={index} className="flex items-start gap-3 p-4 bg-green-50 rounded-xl">
+                        <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Check className="w-4 h-4 text-green-600" />
+                        </div>
+                        <span className="text-gray-700">{advantage.trim()}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.section>
+              )}
+
+              {/* FAQ */}
+              <FAQSection faqText={service.faq_ru} />
+
+              {/* Disadvantages */}
+              {disadvantages.length > 0 && (
+                <motion.section
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <h2 className="text-3xl font-bold text-gray-900 mb-6">Ограничения</h2>
+                  <div className="space-y-3">
+                    {disadvantages.map((item, index) => (
+                      <div key={index} className="flex items-start gap-3 p-4 bg-red-50 rounded-xl">
+                        <X className="w-4 h-4 text-red-500 mt-1 flex-shrink-0" />
+                        <span className="text-gray-700">{item.trim()}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.section>
+              )}
+            </div>
+
+            {/* Right: Sidebar */}
+            <div className="space-y-8">
+              {/* CTA Card */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+                transition={{ duration: 0.6 }}
                 className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
               >
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Стоимость</h3>
-                <div className="text-2xl font-bold text-blue-600 mb-2">
-                  {service.price}
+                <div className="text-center space-y-4">
+                  <h3 className="text-xl font-semibold text-gray-900">Попробовать {service.title}</h3>
+                  <p className="text-gray-600 text-sm">
+                    Начните использовать {service.title} уже сегодня
+                  </p>
+                  {service.service_url && (
+                    <motion.a
+                      href={service.service_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
+                    >
+                      Перейти на сайт
+                      <ExternalLink className="w-4 h-4" />
+                    </motion.a>
+                  )}
                 </div>
-                <p className="text-gray-600 text-sm">
-                  Актуальные тарифы смотрите на официальном сайте
-                </p>
               </motion.div>
-            )}
 
-            {/* Quick Actions */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
-            >
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Быстрые действия</h3>
-              <div className="space-y-3">
-                <Link
-                  href="/ai-services"
-                  className="block w-full text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+              {/* Stats Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
+              >
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Информация</h3>
+                <div className="space-y-3">
+                  {service.bookmarks_count && service.bookmarks_count > 0 && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">Закладки</span>
+                      <div className="flex items-center gap-1">
+                        <Users className="w-4 h-4 text-gray-400" />
+                        <span className="font-semibold">{service.bookmarks_count}</span>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {service.categories && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">Категория</span>
+                      <span className="font-semibold">{service.categories.name}</span>
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Статус</span>
+                    <span className="font-semibold text-green-600">Активен</span>
+                  </div>
+                  
+                  {service.date_added && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">Добавлен</span>
+                      <span className="font-semibold">{new Date(service.date_added).toLocaleDateString('ru-RU')}</span>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+
+              {/* Pricing Card */}
+              {service.price && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
                 >
-                  Все сервисы
-                </Link>
-                {service.categories && (
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Стоимость</h3>
+                  <div className="text-2xl font-bold text-blue-600 mb-2">
+                    {service.price}
+                  </div>
+                  <p className="text-gray-600 text-sm">
+                    Актуальные тарифы смотрите на официальном сайте
+                  </p>
+                </motion.div>
+              )}
+
+              {/* Quick Actions */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="bg-white rounded-3xl border border-gray-200 p-6 shadow-lg"
+              >
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Быстрые действия</h3>
+                <div className="space-y-3">
                   <Link
-                    href={`/ai-services?category=${service.categories.slug || service.categories.id}`}
+                    href="/ai-services"
                     className="block w-full text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
                   >
-                    Сервисы категории
+                    Все сервисы
                   </Link>
-                )}
-              </div>
-            </motion.div>
+                  {service.categories && (
+                    <Link
+                      href={`/ai-services?category=${service.categories.slug || service.categories.id}`}
+                      className="block w-full text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
+                    >
+                      Сервисы категории
+                    </Link>
+                  )}
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 } 

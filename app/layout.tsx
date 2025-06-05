@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: 'Нейросети — Каталог лучших ИИ-сервисов 2025',
     description: 'Откройте для себя 2000+ нейросетей для генерации изображений, текста, музыки. Бесплатные и платные ИИ-инструменты в одном месте.',
     url: 'https://gighub.ru',
-    siteName: 'GigHub - Каталог нейросетей',
+    siteName: 'GigHub - Каталог нейросетей и ИИ-сервисов',
     images: [
       {
         url: 'https://gighub.ru/og-neyroseti.jpg',
@@ -73,7 +73,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebSite",
-              "name": "GigHub - Каталог нейросетей",
+              "name": "GigHub - Каталог нейросетей и ИИ-сервисов",
               "url": "https://gighub.ru",
               "description": "Каталог лучших нейросетей и ИИ-сервисов для генерации изображений, текста и решения задач",
               "potentialAction": {
