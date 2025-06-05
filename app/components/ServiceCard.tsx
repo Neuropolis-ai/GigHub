@@ -101,9 +101,6 @@ export default function ServiceCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.6 }}
       whileHover={{ y: -8, scale: 1.02 }}
       className={`group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-accent-primary/30 cursor-pointer ${className} flex flex-col h-full`}
     >
@@ -183,15 +180,17 @@ export default function ServiceCard({
               </div>
             )}
             
-            <div className="flex-1 min-w-0">
-              <h3 className="text-xl font-bold text-text-primary group-hover:text-accent-primary transition-colors line-clamp-2 mb-1">
-                {title}
-              </h3>
-              {price && (
-                <span className="inline-flex items-center px-2 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-lg">
-                  {price}
-                </span>
-              )}
+            <div className={`flex-1 min-w-0 ${price ? 'items-start' : 'flex items-center h-12'}`}>
+              <div className="w-full">
+                <h3 className="text-xl font-bold text-text-primary group-hover:text-accent-primary transition-colors line-clamp-2 mb-1">
+                  {title}
+                </h3>
+                {price && (
+                  <span className="inline-flex items-center px-2 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-lg">
+                    {price}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -212,7 +211,7 @@ export default function ServiceCard({
                 <div></div>
               )}
               <div className="w-8 h-8 rounded-full bg-accent-primary/10 flex items-center justify-center group-hover:bg-accent-primary group-hover:text-white transition-all duration-300">
-                <span className="text-accent-primary group-hover:text-white text-sm leading-none">→</span>
+                <span className="text-accent-primary group-hover:text-white text-base leading-none flex items-center justify-center w-full h-full">→</span>
               </div>
             </div>
           </div>

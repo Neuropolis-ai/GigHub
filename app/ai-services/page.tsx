@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, Filter, CheckCircle, Users, ExternalLink, Grid, List, Sparkles, TrendingUp, Clock } from 'lucide-react'
+import { Search, Filter, CheckCircle, Users, ExternalLink, Sparkles, TrendingUp, Clock } from 'lucide-react'
 import { AIServiceWithCategory, Category } from '@/lib/supabase'
 import ServiceCard from '@/app/components/ServiceCard'
 
@@ -70,7 +70,6 @@ export default function AIServicesPage() {
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '')
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || '')
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'created_at')
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [pagination, setPagination] = useState<PaginationInfo>({
     page: 1,
     limit: 20,
@@ -330,30 +329,6 @@ export default function AIServicesPage() {
                 </span>
               )}
             </div>
-            
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-text-secondary mr-3">Вид:</span>
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-3 rounded-xl transition-all duration-200 ${
-                  viewMode === 'grid' 
-                    ? 'bg-accent-primary text-white shadow-lg' 
-                    : 'text-gray-500 hover:bg-gray-100'
-                }`}
-              >
-                <Grid className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`p-3 rounded-xl transition-all duration-200 ${
-                  viewMode === 'list' 
-                    ? 'bg-accent-primary text-white shadow-lg' 
-                    : 'text-gray-500 hover:bg-gray-100'
-                }`}
-              >
-                <List className="w-5 h-5" />
-              </button>
-            </div>
           </div>
         </motion.div>
 
@@ -374,20 +349,15 @@ export default function AIServicesPage() {
 
         {/* Services Grid */}
         {!loading && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <ServiceCard
                 key={service.id}
                 {...service}
-                index={index}
+                index={0}
               />
             ))}
-          </motion.div>
+          </div>
         )}
 
         {/* Empty State */}
