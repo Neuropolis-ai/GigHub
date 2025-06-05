@@ -20,18 +20,33 @@ import ServiceSEO from './components/ServiceSEO'
 import Breadcrumbs from './components/Breadcrumbs'
 import FAQSection from './components/FAQSection'
 import SocialShare from './components/SocialShare'
+import useAnalytics from '@/app/hooks/useAnalytics'
 
 export default function AIServicePage() {
   const params = useParams()
   const [service, setService] = useState<AIServiceWithCategory | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { trackServiceView, trackExternalLink } = useAnalytics()
 
   useEffect(() => {
     if (params.id) {
       fetchService(params.id as string)
     }
   }, [params.id])
+
+  useEffect(() => {
+    // Отслеживаем просмотр сервиса
+    if (service) {
+      trackServiceView({
+        item_id: service.slug || service.id.toString(),
+        item_name: service.title,
+        item_category: service.categories?.name || 'Неопределенная',
+        price: service.price || 'Бесплатно',
+        currency: 'USD'
+      })
+    }
+  }, [service, trackServiceView])
 
   const fetchService = async (id: string) => {
     try {
@@ -176,6 +191,11 @@ export default function AIServicePage() {
                     href={service.service_url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => trackExternalLink({
+                      service_name: service.title,
+                      service_url: service.service_url!,
+                      source_page: 'service_detail_hero'
+                    })}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow-lg"
@@ -303,6 +323,11 @@ export default function AIServicePage() {
                       href={service.service_url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => trackExternalLink({
+                        service_name: service.title,
+                        service_url: service.service_url!,
+                        source_page: 'service_detail_sidebar'
+                      })}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"

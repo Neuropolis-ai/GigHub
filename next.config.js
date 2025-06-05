@@ -21,16 +21,25 @@ const nextConfig = {
     minimumCacheTTL: 60,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    quality: 85,
+    loader: 'default',
+    unoptimized: false,
   },
   compress: true,
   poweredByHeader: false,
   generateEtags: true,
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion'],
-    webVitalsAttribution: ['CLS', 'LCP'],
+    optimizePackageImports: ['lucide-react', 'framer-motion', 'next-seo'],
+    webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
+    optimizeCss: true,
+    scrollRestoration: true,
+    gzipSize: true,
   },
   trailingSlash: false,
   swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
   headers: async () => {
     return [
       {

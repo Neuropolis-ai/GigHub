@@ -10,36 +10,19 @@ import Script from 'next/script'
 const inter = Inter({ 
   subsets: ['latin', 'cyrillic'],
   display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'arial'],
   variable: '--font-inter'
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://gighub.ru'),
-  title: 'Нейросети — Каталог лучших ИИ-сервисов и нейросетей 2025',
-  description: 'Топ нейросетей для генерации изображений, текста и решения задач. 2000+ ИИ-сервисов онлайн бесплатно и на русском языке. Найдите лучшую нейросеть для ваших целей.',
-  keywords: 'нейросети, нейросеть, ии сервисы, искусственный интеллект, генерация изображений, chatgpt, midjourney, бесплатные нейросети, нейросеть онлайн',
-  openGraph: {
-    title: 'Нейросети — Каталог лучших ИИ-сервисов 2025',
-    description: 'Откройте для себя 2000+ нейросетей для генерации изображений, текста, музыки. Бесплатные и платные ИИ-инструменты в одном месте.',
-    url: 'https://gighub.ru',
-    siteName: 'GigHub - Каталог нейросетей и ИИ-сервисов',
-    images: [
-      {
-        url: 'https://gighub.ru/og-neyroseti.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Каталог лучших нейросетей и ИИ-сервисов',
-      },
-    ],
-    locale: 'ru_RU',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Нейросети — Каталог лучших ИИ-сервисов 2025',
-    description: 'Откройте для себя 2000+ нейросетей для генерации изображений, текста, музыки',
-    images: ['https://gighub.ru/twitter-neyroseti.jpg'],
-  },
+  title: 'GigHub - Каталог нейросетей и ИИ-сервисов',
+  description: 'Открой для себя лучшие нейросети и ИИ-сервисы. Более 1000+ инструментов для работы, творчества и бизнеса. Читай обзоры, сравнивай возможности.',
+  keywords: 'нейросети, ИИ, искусственный интеллект, ChatGPT, Midjourney, AI инструменты, машинное обучение',
+  authors: [{ name: 'GigHub Team' }],
+  creator: 'GigHub',
+  publisher: 'GigHub',
+  category: 'technology',
   robots: {
     index: true,
     follow: true,
@@ -50,6 +33,32 @@ export const metadata: Metadata = {
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
+  },
+  verification: {
+    google: 'ваш-google-verification-код',
+    yandex: 'ваш-yandex-verification-код',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'ru_RU',
+    url: 'https://gighub.ru',
+    siteName: 'GigHub - Каталог нейросетей и ИИ-сервисов',
+    title: 'GigHub - Каталог нейросетей и ИИ-сервисов',
+    description: 'Открой для себя лучшие нейросети и ИИ-сервисы. Более 1000+ инструментов для работы, творчества и бизнеса.',
+    images: [
+      {
+        url: 'https://gighub.ru/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'GigHub - Каталог нейросетей и ИИ-сервисов',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'GigHub - Каталог нейросетей и ИИ-сервисов',
+    description: 'Открой для себя лучшие нейросети и ИИ-сервисы. Более 1000+ инструментов для работы, творчества и бизнеса.',
+    images: ['https://gighub.ru/og-image.jpg'],
   },
   alternates: {
     canonical: 'https://gighub.ru',
@@ -62,8 +71,31 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ru">
+    <html lang="ru" className={inter.variable}>
       <head>
+        {/* Предзагрузка критических ресурсов */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://media.theresanaiforthat.com" />
+        <link rel="preconnect" href="https://f55ed2adb1bb673919f5f8189e32d3a1.cdn.bubble.io" />
+        
+        {/* DNS предзагрузка для внешних сервисов */}
+        <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="//mc.yandex.ru" />
+        
+        {/* Favicons и иконки */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
+        
+        {/* Метатег для цвета темы */}
+        <meta name="theme-color" content="#2563eb" />
+        <meta name="color-scheme" content="light" />
+        
+        {/* Viewport оптимизация */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
         {/* Critical CSS и Resource Hints */}
         <CriticalCSS />
         

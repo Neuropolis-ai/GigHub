@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { Users, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import useAnalytics from '@/app/hooks/useAnalytics'
 
 export interface ServiceCardProps {
   id: number
@@ -96,6 +97,7 @@ export default function ServiceCard({
 }: ServiceCardProps) {
   const badgeColor = categories ? getBadgeColor(categories.name) : 'from-gray-500 to-slate-500'
   const initials = getInitials(title)
+  const { trackServiceView } = useAnalytics()
   
   // Нормализуем URL изображений
   const normalizedCoverUrl = normalizeImageUrl(cover_url)
@@ -104,12 +106,23 @@ export default function ServiceCard({
   // Используем slug если есть, иначе fallback на ID
   const serviceLink = slug ? `/ai-services/${slug}` : `/ai-services/${id}`
 
+  const handleCardClick = () => {
+    // Отслеживаем клик по карточке
+    trackServiceView({
+      item_id: slug || id.toString(),
+      item_name: title,
+      item_category: categories?.name || 'Неопределенная',
+      price: price || 'Бесплатно',
+      currency: 'USD'
+    })
+  }
+
   return (
     <motion.div
       whileHover={{ y: -8, scale: 1.02 }}
       className={`group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-accent-primary/30 cursor-pointer ${className} flex flex-col h-full`}
     >
-      <Link href={serviceLink} className="block flex-1 flex flex-col h-full">
+      <Link href={serviceLink} className="block flex-1 flex flex-col h-full" onClick={handleCardClick}>
         {/* Category Badge */}
         {categories && (
           <div className="absolute top-4 left-4 z-20">

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Share2, MessageCircle, Copy, Check } from 'lucide-react'
 import { AIServiceWithCategory } from '@/lib/supabase'
+import useAnalytics from '@/app/hooks/useAnalytics'
 
 interface SocialShareProps {
   service: AIServiceWithCategory
@@ -12,6 +13,7 @@ interface SocialShareProps {
 const SocialShare = ({ service }: SocialShareProps) => {
   const [copied, setCopied] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+  const { trackShare, trackCopyLink } = useAnalytics()
 
   const shareUrl = `https://gighub.ru/ai-services/${service.slug || service.id}`
   const shareTitle = `${service.title} - лучший ИИ-сервис | GigHub`
@@ -22,6 +24,12 @@ const SocialShare = ({ service }: SocialShareProps) => {
       await navigator.clipboard.writeText(shareUrl)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
+      
+      // Отслеживаем копирование ссылки
+      trackCopyLink({
+        service_name: service.title,
+        service_id: service.slug || service.id.toString()
+      })
     } catch (err) {
       console.error('Ошибка копирования:', err)
     }
@@ -30,16 +38,37 @@ const SocialShare = ({ service }: SocialShareProps) => {
   const shareToTelegram = () => {
     const url = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`
     window.open(url, '_blank', 'width=600,height=400')
+    
+    // Отслеживаем шеринг в Telegram
+    trackShare({
+      service_name: service.title,
+      service_id: service.slug || service.id.toString(),
+      share_method: 'telegram'
+    })
   }
 
   const shareToVK = () => {
     const url = `https://vk.com/share.php?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareTitle)}&description=${encodeURIComponent(shareText)}`
     window.open(url, '_blank', 'width=600,height=400')
+    
+    // Отслеживаем шеринг ВКонтакте
+    trackShare({
+      service_name: service.title,
+      service_id: service.slug || service.id.toString(),
+      share_method: 'vk'
+    })
   }
 
   const shareToWhatsApp = () => {
     const url = `https://wa.me/?text=${encodeURIComponent(`${shareTitle}\n\n${shareText}\n\n${shareUrl}`)}`
     window.open(url, '_blank', 'width=600,height=400')
+    
+    // Отслеживаем шеринг в WhatsApp
+    trackShare({
+      service_name: service.title,
+      service_id: service.slug || service.id.toString(),
+      share_method: 'whatsapp'
+    })
   }
 
   const shareButtons = [
