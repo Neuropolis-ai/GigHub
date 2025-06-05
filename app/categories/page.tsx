@@ -26,6 +26,7 @@ interface Category {
   name: string
   description: string | null
   created_at: string
+  slug?: string
 }
 
 // Иконки для категорий
@@ -225,7 +226,7 @@ export default function CategoriesPage() {
                   whileHover={{ y: -8, scale: 1.02 }}
                   className="group"
                 >
-                  <Link href={`/ai-services?category_id=${category.id}`}>
+                  <Link href={`/ai-services?category=${category.slug || category.id}`}>
                     <div className="relative bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 hover:border-accent-primary/30 overflow-hidden h-full">
                       {/* Background gradient */}
                       <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${gradient}`}></div>

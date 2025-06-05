@@ -390,7 +390,7 @@ export default function AIServicePage() {
                 </Link>
                 {service.categories && (
                   <Link
-                    href={`/ai-services?category_id=${service.categories.id}`}
+                    href={`/ai-services?category=${service.categories.slug || service.categories.id}`}
                     className="block w-full text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors"
                   >
                     Сервисы категории

@@ -63,7 +63,7 @@ export default function RelatedServices({
             className="text-center mt-12"
           >
             <a
-              href={`/ai-services${currentService.category_id ? `?category_id=${currentService.category_id}` : ''}`}
+              href={`/ai-services${currentService.categories?.slug ? `?category=${currentService.categories.slug}` : ''}`}
               className="inline-flex items-center px-8 py-4 bg-purple-500 text-white rounded-xl hover:bg-purple-600 transition-colors font-semibold"
             >
               Смотреть все сервисы
