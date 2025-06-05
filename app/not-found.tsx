@@ -102,7 +102,6 @@ export default function NotFound() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.6 }}
-              className="mb-16"
             >
               <h3 className="text-2xl font-bold text-text-primary mb-8">
                 Популярные разделы
@@ -130,23 +129,6 @@ export default function NotFound() {
                     </Link>
                   </motion.div>
                 ))}
-              </div>
-            </motion.div>
-
-            {/* Дополнительная помощь */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5, duration: 0.6 }}
-              className="text-center pb-12"
-            >
-              <p className="text-text-secondary mb-4">
-                Не нашли то, что искали? Попробуйте воспользоваться поиском на главной странице
-              </p>
-              <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-                <span>Код ошибки: 404</span>
-                <span>•</span>
-                <span>Страница не найдена</span>
               </div>
             </motion.div>
           </motion.div>
