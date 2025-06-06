@@ -15,9 +15,10 @@ function createSupabaseClient() {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+  context: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
   try {
+    const params = await context.params
     const identifier = params.id
     let service = null
     let error = null
