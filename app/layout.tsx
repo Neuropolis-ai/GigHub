@@ -90,12 +90,17 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
         
-        {/* Метатег для цвета темы */}
-        <meta name="theme-color" content="#2563eb" />
-        <meta name="color-scheme" content="light" />
+        {/* Viewport оптимизация для мобильных */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover, user-scalable=no" />
         
-        {/* Viewport оптимизация */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        {/* Метатеги для улучшенной мобильной поддержки */}
+        <meta name="theme-color" content="#6366F1" />
+        <meta name="color-scheme" content="light" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="GigHub" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="format-detection" content="telephone=no" />
 
         {/* Critical CSS и Resource Hints */}
         <CriticalCSS />
@@ -198,12 +203,14 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={`${inter.className} font-sans antialiased`}>
-        <Header />
-        <main>
-          {children}
-        </main>
-        <Footer />
+      <body className={`${inter.className} font-sans antialiased bg-background text-text-primary overflow-x-hidden`}>
+        <div className="min-h-screen-mobile flex flex-col safe-area-inset">
+          <Header />
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
+        </div>
         <WebVitals />
       </body>
     </html>
