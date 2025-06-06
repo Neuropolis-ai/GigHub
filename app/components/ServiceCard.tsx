@@ -208,24 +208,46 @@ export default function ServiceCard({
               </div>
             )}
             
-            {/* Заголовок с улучшенной типографикой */}
-            <div className="flex-1 min-w-0">
-              <h3 className="text-lg sm:text-xl font-semibold text-text-primary mb-2 line-clamp-2 leading-tight">
-                {title}
-              </h3>
-              {price && (
-                <div className="text-accent-primary font-medium text-sm sm:text-base">
-                  {price}
-                </div>
-              )}
+            {/* Заголовок с условным выравниванием */}
+            <div className={`flex-1 min-w-0 ${!price && normalizedLogoUrl && normalizedCoverUrl ? 'flex items-center' : ''}`}>
+              <div>
+                <h3 className="text-lg sm:text-xl font-semibold text-text-primary mb-2 line-clamp-2 leading-tight">
+                  {title}
+                </h3>
+                {price && (
+                  <div className="text-accent-primary font-normal text-xs sm:text-sm">
+                    {price}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Description с улучшенной читаемостью */}
+          {/* Description с обработкой преимуществ/недостатков */}
           {short_description_ru && (
-            <p className="text-text-secondary text-sm sm:text-base leading-relaxed line-clamp-3 mb-4 flex-1">
-              {short_description_ru}
-            </p>
+            <div className="text-text-secondary text-sm sm:text-base leading-relaxed mb-4 flex-1">
+              {short_description_ru.split('\n').map((line, index) => {
+                const trimmedLine = line.trim()
+                if (trimmedLine.startsWith('-')) {
+                  // Преимущество/недостаток - убираем дефис и добавляем стилизацию
+                  const content = trimmedLine.substring(1).trim()
+                  return (
+                    <div key={index} className="flex items-start gap-2 mb-1">
+                      <span className="text-accent-primary mt-1 flex-shrink-0">•</span>
+                      <span>{content}</span>
+                    </div>
+                  )
+                } else if (trimmedLine) {
+                  // Обычный текст
+                  return (
+                    <p key={index} className="line-clamp-3 mb-2">
+                      {trimmedLine}
+                    </p>
+                  )
+                }
+                return null
+              }).filter(Boolean).slice(0, 4)} {/* Ограничиваем количество строк */}
+            </div>
           )}
 
           {/* Footer с улучшенными touch targets */}
