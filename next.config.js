@@ -101,6 +101,11 @@ const nextConfig = {
         destination: '/ai-services',
         permanent: true,
       },
+      {
+        source: '/ai_tools/:slug',
+        destination: '/ai-services/:slug',
+        permanent: true,
+      },
     ]
   },
 }

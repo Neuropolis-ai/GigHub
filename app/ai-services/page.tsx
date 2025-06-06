@@ -142,13 +142,12 @@ function AIServicesContent() {
 
   useEffect(() => {
     fetchCategories()
+    fetchServices(1) // Загружаем сервисы независимо от категорий
   }, [])
 
   useEffect(() => {
-    if (categories.length > 0) {
-      fetchServices(1)
-    }
-  }, [searchTerm, selectedCategory, sortBy, categories])
+    fetchServices(1)
+  }, [searchTerm, selectedCategory, sortBy])
 
   const updateURL = () => {
     const params = new URLSearchParams()
@@ -161,10 +160,8 @@ function AIServicesContent() {
   }
 
   useEffect(() => {
-    if (categories.length > 0) {
-      updateURL()
-    }
-  }, [searchTerm, selectedCategory, sortBy, categories])
+    updateURL()
+  }, [searchTerm, selectedCategory, sortBy])
 
   const handleSearch = (value: string) => {
     setSearchTerm(value)
