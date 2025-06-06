@@ -412,10 +412,10 @@ export default function ImageGenerationPage() {
 
           {/* CTA кнопки */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-            <Link href="/ai-services" className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all">
-              Смотреть все ИИ-сервисы
+            <Link href="/ai-tools" className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all">
+              Смотреть все ИИ-инструменты
             </Link>
-            <Link href="/ai-services?category=free" className="border-2 border-purple-600 text-purple-600 px-8 py-3 rounded-lg font-medium hover:bg-purple-50 transition-all">
+            <Link href="/ai-tools?category=free" className="border-2 border-purple-600 text-purple-600 px-8 py-3 rounded-lg font-medium hover:bg-purple-50 transition-all">
               Только бесплатные
             </Link>
           </div>
