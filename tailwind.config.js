@@ -21,10 +21,28 @@ module.exports = {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
       },
+      spacing: {
+        'safe': 'env(safe-area-inset-bottom)',
+        '18': '4.5rem',
+        '88': '22rem',
+      },
+      minHeight: {
+        'touch': '44px',
+        'input': '56px',
+      },
+      fontSize: {
+        'xs': ['0.75rem', { lineHeight: '1.5' }],
+        'sm': ['0.875rem', { lineHeight: '1.6' }],
+        'base': ['1rem', { lineHeight: '1.6' }],
+        'lg': ['1.125rem', { lineHeight: '1.6' }],
+      },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.6s ease-out',
         'scale-in': 'scaleIn 0.4s ease-out',
+        'fade-in-mobile': 'fadeIn 0.3s ease-in-out',
+        'slide-up-mobile': 'slideUp 0.4s ease-out',
+        'scale-in-mobile': 'scaleIn 0.2s ease-out',
       },
       keyframes: {
         fadeIn: {
@@ -40,6 +58,14 @@ module.exports = {
           '100%': { transform: 'scale(1)', opacity: '1' },
         },
       },
+    },
+    screens: {
+      'xs': '475px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
     },
   },
   plugins: [],

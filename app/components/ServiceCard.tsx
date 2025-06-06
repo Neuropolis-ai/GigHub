@@ -3,6 +3,7 @@
 import { Users, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
 import useAnalytics from '@/app/hooks/useAnalytics'
 
 export interface ServiceCardProps {
@@ -122,14 +123,16 @@ export default function ServiceCard({
   }
 
   return (
-    <div
-      className={`group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-accent-primary/30 cursor-pointer ${className} flex flex-col h-full transform hover:scale-105 hover:-translate-y-2`}
+    <motion.div
+      whileHover={{ y: -4, scale: 1.01 }}
+      whileTap={{ scale: 0.98 }}
+      className={`group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-accent-primary/30 cursor-pointer min-h-[320px] sm:min-h-[350px] flex flex-col h-full touch-manipulation ${className}`}
     >
       <Link href={serviceLink} className="block flex-1 flex flex-col h-full" onClick={handleCardClick}>
         {/* Category Badge */}
         {categories && (
           <div className="absolute top-4 left-4 z-20">
-            <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gradient-to-r ${badgeColor} text-white text-xs font-semibold shadow-lg`}>
+            <div className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r ${badgeColor} text-white text-xs font-semibold shadow-lg`}>
               {categories.name}
             </div>
           </div>
@@ -137,13 +140,13 @@ export default function ServiceCard({
 
         {/* Cover Image */}
         {normalizedCoverUrl && (
-          <div className="aspect-video rounded-t-3xl overflow-hidden">
+          <div className="aspect-[4/3] sm:aspect-video rounded-t-3xl overflow-hidden">
             <Image
               src={normalizedCoverUrl}
               alt={`Скриншот интерфейса ${title}`}
               width={400}
-              height={225}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              height={300}
+              className="w-full h-full object-cover"
               loading="lazy"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               onError={(e) => {
@@ -156,7 +159,7 @@ export default function ServiceCard({
 
         {/* Logo Area (если нет обложки) */}
         {!normalizedCoverUrl && (
-          <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden rounded-t-3xl">
+          <div className="relative h-48 sm:h-56 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden rounded-t-3xl">
             <div className={`absolute inset-0 bg-gradient-to-br ${badgeColor} opacity-10`} />
             {normalizedLogoUrl ? (
               <div className="absolute inset-0 flex items-center justify-center p-8">
@@ -184,17 +187,17 @@ export default function ServiceCard({
         )}
 
         {/* Content */}
-        <div className="p-6 flex-1 flex flex-col">
+        <div className="p-4 sm:p-6 flex-1 flex flex-col">
           {/* Header with logo and title */}
           <div className="flex items-start gap-3 mb-4">
-            {/* Logo (маленький) */}
+            {/* Logo (увеличенный для мобильных) */}
             {normalizedLogoUrl && normalizedCoverUrl && (
-              <div className="w-12 h-12 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 shadow-sm">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 shadow-sm">
                 <Image
                   src={normalizedLogoUrl}
                   alt={`Логотип ${title}`}
-                  width={48}
-                  height={48}
+                  width={64}
+                  height={64}
                   className="w-full h-full object-contain"
                   loading="lazy"
                   onError={(e) => {
@@ -205,43 +208,41 @@ export default function ServiceCard({
               </div>
             )}
             
-            <div className={`flex-1 min-w-0 ${price ? 'items-start' : 'flex items-center h-12'}`}>
-              <div className="w-full">
-                <h3 className="text-xl font-bold text-text-primary group-hover:text-accent-primary transition-colors line-clamp-2 mb-1">
-                  {title}
-                </h3>
-                {price && (
-                  <span className="inline-flex items-center px-2 py-1 bg-green-50 text-green-700 text-xs font-medium rounded-lg">
-                    {price}
-                  </span>
-                )}
-              </div>
+            {/* Заголовок с улучшенной типографикой */}
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg sm:text-xl font-semibold text-text-primary mb-2 line-clamp-2 leading-tight">
+                {title}
+              </h3>
+              {price && (
+                <div className="text-accent-primary font-medium text-sm sm:text-base">
+                  {price}
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Description */}
-          <p className="text-text-secondary text-sm leading-relaxed line-clamp-3 mb-4 flex-1">
-            {short_description_ru || 'Описание сервиса'}
-          </p>
+          {/* Description с улучшенной читаемостью */}
+          {short_description_ru && (
+            <p className="text-text-secondary text-sm sm:text-base leading-relaxed line-clamp-3 mb-4 flex-1">
+              {short_description_ru}
+            </p>
+          )}
 
-          {/* CTA Button */}
-          <div className="mt-auto">
-            <div className="flex items-center justify-between">
-              {bookmarks_count && bookmarks_count > 0 ? (
-                <div className="flex items-center gap-1 text-sm text-gray-500">
-                  <Users className="w-4 h-4" />
-                  <span>{bookmarks_count}</span>
-                </div>
-              ) : (
-                <div></div>
-              )}
-              <div className="w-8 h-8 rounded-full bg-accent-primary/10 flex items-center justify-center group-hover:bg-accent-primary group-hover:text-white transition-all duration-300">
-                <span className="text-accent-primary group-hover:text-white text-base leading-none flex items-center justify-center w-full h-full">→</span>
+          {/* Footer с улучшенными touch targets */}
+          <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+            {bookmarks_count !== null && bookmarks_count !== undefined && (
+              <div className="flex items-center gap-2 text-text-secondary">
+                <Users className="w-4 h-4" />
+                <span className="text-sm font-medium">{bookmarks_count}</span>
               </div>
+            )}
+            
+            <div className="w-10 h-10 rounded-full bg-accent-primary/10 flex items-center justify-center group-hover:bg-accent-primary transition-all duration-300">
+              <ExternalLink className="w-4 h-4 text-accent-primary group-hover:text-white transition-colors" />
             </div>
           </div>
         </div>
       </Link>
-    </div>
+    </motion.div>
   )
 } 

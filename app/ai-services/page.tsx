@@ -224,47 +224,52 @@ function AIServicesContent() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search */}
-            <div className="flex-1 relative">
-              <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+        <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-4 sm:p-6 mb-8">
+          <div className="space-y-4">
+            {/* Search - на всю ширину */}
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="Поиск по названию, описанию или функциям..."
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-transparent outline-none transition-all"
+                placeholder="Поиск по названию или описанию..."
+                className="w-full pl-12 pr-4 py-4 min-h-[56px] text-base bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-accent-primary outline-none transition-all touch-manipulation"
                 value={searchTerm}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleSearch(e.target.value)}
               />
             </div>
 
-            {/* Category Filter */}
-            <div className="lg:w-64">
-              <select 
-                className="w-full py-3 px-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-transparent outline-all bg-white"
-                value={selectedCategory}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleCategoryChange(e.target.value)}
-              >
-                <option value="">Все категории</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.slug || category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {/* Фильтры в две колонки на мобильном */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Category Filter */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Категория</label>
+                <select 
+                  className="w-full py-4 px-4 min-h-[56px] text-base bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-accent-primary outline-none transition-all touch-manipulation"
+                  value={selectedCategory}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleCategoryChange(e.target.value)}
+                >
+                  <option value="">Все категории</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.slug || category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            {/* Sort */}
-            <div className="lg:w-48">
-              <select 
-                className="w-full py-3 px-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-transparent outline-none transition-all bg-white"
-                value={sortBy}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleSortChange(e.target.value)}
-              >
-                <option value="bookmarks_count">По популярности</option>
-                <option value="created_at">По дате добавления</option>
-                <option value="title">По названию</option>
-              </select>
+              {/* Sort */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Сортировка</label>
+                <select 
+                  className="w-full py-4 px-4 min-h-[56px] text-base bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-accent-primary outline-none transition-all touch-manipulation"
+                  value={sortBy}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleSortChange(e.target.value)}
+                >
+                  <option value="bookmarks_count">По популярности</option>
+                  <option value="created_at">По дате добавления</option>
+                  <option value="title">По названию</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -338,41 +343,51 @@ function AIServicesContent() {
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="flex justify-center mt-12">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
             <div className="flex items-center gap-2">
               <button 
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-3 sm:px-6 sm:py-3 min-w-[48px] min-h-[48px] rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-colors touch-manipulation"
                 onClick={() => handlePageChange(pagination.page - 1)}
                 disabled={!pagination.hasPreviousPage}
               >
-                Назад
+                <span className="hidden sm:inline">Назад</span>
+                <span className="sm:hidden">←</span>
               </button>
               
-              {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                const pageNum = Math.max(1, pagination.page - 2) + i
-                if (pageNum <= pagination.totalPages) {
-                  return (
-                    <button
-                      key={pageNum}
-                      className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                        pagination.page === pageNum
-                          ? 'bg-accent-primary text-white'
-                          : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                      }`}
-                      onClick={() => handlePageChange(pageNum)}
-                    >
-                      {pageNum}
-                    </button>
-                  )
-                }
-              })}
+              {/* Номера страниц только на больших экранах */}
+              <div className="hidden sm:flex items-center gap-2">
+                {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                  const pageNum = Math.max(1, pagination.page - 2) + i
+                  if (pageNum <= pagination.totalPages) {
+                    return (
+                      <button
+                        key={pageNum}
+                        className={`px-4 py-3 min-w-[48px] min-h-[48px] rounded-xl font-medium transition-colors touch-manipulation ${
+                          pagination.page === pageNum
+                            ? 'bg-accent-primary text-white'
+                            : 'text-gray-700 hover:bg-gray-50'
+                        }`}
+                        onClick={() => handlePageChange(pageNum)}
+                      >
+                        {pageNum}
+                      </button>
+                    )
+                  }
+                })}
+              </div>
+              
+              {/* Мобильный индикатор страниц */}
+              <div className="sm:hidden px-4 py-3 text-sm text-gray-700 font-medium">
+                {pagination.page} из {pagination.totalPages}
+              </div>
               
               <button 
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-3 sm:px-6 sm:py-3 min-w-[48px] min-h-[48px] rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-colors touch-manipulation"
                 onClick={() => handlePageChange(pagination.page + 1)}
                 disabled={!pagination.hasNextPage}
               >
-                Далее
+                <span className="hidden sm:inline">Далее</span>
+                <span className="sm:hidden">→</span>
               </button>
             </div>
           </div>
