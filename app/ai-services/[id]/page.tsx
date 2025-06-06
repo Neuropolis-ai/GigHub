@@ -327,22 +327,29 @@ export default function AIServicePage() {
               >
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">Преимущества</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                  {advantages.map((advantage, index) => (
-                    <motion.div 
-                      key={index} 
-                      className="flex items-start gap-3 p-3 sm:p-4 bg-green-50 rounded-xl touch-manipulation"
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: index * 0.1 }}
-                      viewport={{ once: true }}
-                      whileHover={{ scale: 1.02 }}
-                    >
-                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <Check className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
-                      </div>
-                      <span className="text-gray-700 text-sm sm:text-base">{advantage.trim()}</span>
-                    </motion.div>
-                  ))}
+                  {advantages.map((advantage, index) => {
+                    // Убираем символ "-" из начала если он есть
+                    const cleanedAdvantage = advantage.trim().startsWith('-') 
+                      ? advantage.trim().substring(1).trim() 
+                      : advantage.trim()
+                    
+                    return (
+                      <motion.div 
+                        key={index} 
+                        className="flex items-start gap-3 p-3 sm:p-4 bg-green-50 rounded-xl touch-manipulation"
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                        viewport={{ once: true }}
+                        whileHover={{ scale: 1.02 }}
+                      >
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Check className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                        </div>
+                        <span className="text-gray-700 text-sm sm:text-base">{cleanedAdvantage}</span>
+                      </motion.div>
+                    )
+                  })}
                 </div>
               </motion.section>
             )}
@@ -369,20 +376,27 @@ export default function AIServicePage() {
               >
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">Ограничения</h2>
                 <div className="space-y-3">
-                  {disadvantages.map((item, index) => (
-                    <motion.div 
-                      key={index} 
-                      className="flex items-start gap-3 p-3 sm:p-4 bg-red-50 rounded-xl touch-manipulation"
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: index * 0.1 }}
-                      viewport={{ once: true }}
-                      whileHover={{ scale: 1.02 }}
-                    >
-                      <X className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 mt-1 flex-shrink-0" />
-                      <span className="text-gray-700 text-sm sm:text-base">{item.trim()}</span>
-                    </motion.div>
-                  ))}
+                  {disadvantages.map((item, index) => {
+                    // Убираем символ "-" из начала если он есть
+                    const cleanedDisadvantage = item.trim().startsWith('-') 
+                      ? item.trim().substring(1).trim() 
+                      : item.trim()
+                    
+                    return (
+                      <motion.div 
+                        key={index} 
+                        className="flex items-start gap-3 p-3 sm:p-4 bg-red-50 rounded-xl touch-manipulation"
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                        viewport={{ once: true }}
+                        whileHover={{ scale: 1.02 }}
+                      >
+                        <X className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 mt-1 flex-shrink-0" />
+                        <span className="text-gray-700 text-sm sm:text-base">{cleanedDisadvantage}</span>
+                      </motion.div>
+                    )
+                  })}
                 </div>
               </motion.section>
             )}
