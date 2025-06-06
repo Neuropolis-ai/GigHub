@@ -30,7 +30,6 @@ const nextConfig = {
     webVitalsAttribution: ['CLS', 'LCP'],
   },
   trailingSlash: false,
-  swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
