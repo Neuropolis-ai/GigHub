@@ -42,14 +42,14 @@ export default function AIServicePage() {
       }
 
       const data = await response.json()
-      setService(data.service)
+      setService(data.data)
       setRelatedServices(data.relatedServices || [])
       
       // Отслеживание просмотра страницы
       trackServiceView({
-        item_id: data.service.slug || data.service.id.toString(),
-        item_name: data.service.title,
-        item_category: data.service.categories?.name || 'unknown'
+        item_id: data.data.slug || data.data.id.toString(),
+        item_name: data.data.title,
+        item_category: data.data.categories?.name || 'unknown'
       })
       
     } catch (error) {
