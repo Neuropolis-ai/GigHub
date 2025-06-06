@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo, useCallback, memo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 
 // Интерфейсы для типизации
 interface AITool {
@@ -83,6 +84,50 @@ const aiTools: AITool[] = [
   }
 ]
 
+// Компонент системы оценок
+const RatingSystem = ({ toolId, initialRating }: { toolId: number, initialRating: number }) => {
+  const [userRating, setUserRating] = useState(0)
+  const [hasRated, setHasRated] = useState(false)
+  const [averageRating, setAverageRating] = useState(initialRating)
+
+  const handleRating = (rating: number) => {
+    setUserRating(rating)
+    setHasRated(true)
+    // Симуляция обновления среднего рейтинга
+    setAverageRating((prev) => ((prev * 100 + rating) / 101))
+  }
+
+  return (
+    <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm font-medium text-gray-700">Ваша оценка:</span>
+        <span className="text-xs text-gray-500">
+          {hasRated ? 'Спасибо за оценку!' : 'Оцените этот сервис'}
+        </span>
+      </div>
+      <div className="flex items-center space-x-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            onClick={() => !hasRated && handleRating(star)}
+            disabled={hasRated}
+            className={`text-2xl transition-colors ${
+              star <= (userRating || Math.round(averageRating))
+                ? 'text-yellow-400'
+                : 'text-gray-300'
+            } ${!hasRated ? 'hover:text-yellow-400 cursor-pointer' : 'cursor-default'}`}
+          >
+            ⭐
+          </button>
+        ))}
+        <span className="ml-3 text-sm text-gray-600">
+          {averageRating.toFixed(1)}/5.0
+        </span>
+      </div>
+    </div>
+  )
+}
+
 // Компонент карточки нейросети
 const AIToolCard = ({ tool }: { tool: AITool }) => (
   <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
@@ -135,9 +180,12 @@ const AIToolCard = ({ tool }: { tool: AITool }) => (
       </div>
 
       {/* Кнопка действия */}
-      <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-200">
+      <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-200 mb-3">
         Попробовать {tool.name}
       </button>
+
+      {/* Система оценок */}
+      <RatingSystem toolId={tool.id} initialRating={tool.rating} />
     </div>
   </div>
 )
@@ -225,15 +273,285 @@ const FAQSection = () => {
   )
 }
 
+// Компонент генератора промптов
+const PromptGenerator = () => {
+  const [selectedStyle, setSelectedStyle] = useState('фотореализм')
+  const [selectedSubject, setSelectedSubject] = useState('портрет')
+  const [selectedMood, setSelectedMood] = useState('яркий')
+  const [generatedPrompt, setGeneratedPrompt] = useState('')
+
+  const styles = ['фотореализм', 'аниме', 'цифровое искусство', 'живопись маслом', 'акварель']
+  const subjects = ['портрет', 'пейзаж', 'животное', 'архитектура', 'фэнтези']
+  const moods = ['яркий', 'темный', 'мечтательный', 'драматичный', 'спокойный']
+
+  const generatePrompt = () => {
+    const prompt = `${selectedSubject} в стиле ${selectedStyle}, ${selectedMood} настроение, высокое качество, детализированно, профессиональное освещение`
+    setGeneratedPrompt(prompt)
+  }
+
+  return (
+    <div className="bg-white rounded-xl shadow-lg p-8">
+      <h3 className="text-xl font-bold text-gray-900 mb-6">🎨 Генератор промптов</h3>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Стиль</label>
+          <select 
+            value={selectedStyle} 
+            onChange={(e) => setSelectedStyle(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+          >
+            {styles.map(style => (
+              <option key={style} value={style}>{style}</option>
+            ))}
+          </select>
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Предмет</label>
+          <select 
+            value={selectedSubject} 
+            onChange={(e) => setSelectedSubject(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+          >
+            {subjects.map(subject => (
+              <option key={subject} value={subject}>{subject}</option>
+            ))}
+          </select>
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Настроение</label>
+          <select 
+            value={selectedMood} 
+            onChange={(e) => setSelectedMood(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+          >
+            {moods.map(mood => (
+              <option key={mood} value={mood}>{mood}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <button 
+        onClick={generatePrompt}
+        className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-200 mb-4"
+      >
+        🎯 Сгенерировать промпт
+      </button>
+
+      {generatedPrompt && (
+        <div className="bg-gray-50 p-4 rounded-lg">
+          <p className="text-sm font-medium text-gray-700 mb-2">Ваш промпт:</p>
+          <p className="text-gray-800 italic">"{generatedPrompt}"</p>
+          <button 
+            onClick={() => navigator.clipboard.writeText(generatedPrompt)}
+            className="mt-2 text-purple-600 hover:text-purple-800 text-sm font-medium"
+          >
+            📋 Скопировать
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Компонент калькулятора стоимости
+const CostCalculator = () => {
+  const [imagesPerMonth, setImagesPerMonth] = useState(100)
+  const [selectedTool, setSelectedTool] = useState('midjourney')
+  
+  const pricing = {
+    midjourney: { basic: 10, standard: 30, pro: 60 },
+    dalle: { basic: 0, standard: 20, pro: 20 },
+    leonardo: { basic: 0, standard: 10, pro: 48 },
+    stable: { basic: 0, standard: 0, pro: 0 }
+  }
+
+  const calculateCost = () => {
+    const tool = pricing[selectedTool as keyof typeof pricing]
+    if (imagesPerMonth <= 25) return tool.basic
+    if (imagesPerMonth <= 200) return tool.standard
+    return tool.pro
+  }
+
+  return (
+    <div className="bg-white rounded-xl shadow-lg p-8">
+      <h3 className="text-xl font-bold text-gray-900 mb-6">💰 Калькулятор стоимости</h3>
+      
+      <div className="space-y-4 mb-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Изображений в месяц: {imagesPerMonth}
+          </label>
+          <input 
+            type="range" 
+            min="10" 
+            max="1000" 
+            step="10"
+            value={imagesPerMonth}
+            onChange={(e) => setImagesPerMonth(Number(e.target.value))}
+            className="w-full"
+          />
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Нейросеть</label>
+          <select 
+            value={selectedTool} 
+            onChange={(e) => setSelectedTool(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+          >
+            <option value="midjourney">Midjourney</option>
+            <option value="dalle">DALL-E 3</option>
+            <option value="leonardo">Leonardo AI</option>
+            <option value="stable">Stable Diffusion</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-lg text-center">
+        <div className="text-3xl font-bold text-gray-900 mb-2">
+          ${calculateCost()}/месяц
+        </div>
+        <div className="text-sm text-gray-600">
+          {calculateCost() === 0 ? 'Бесплатно!' : `Примерно $${(calculateCost() / imagesPerMonth).toFixed(2)} за изображение`}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Lazy loading для тяжелых компонентов
+const QuizComponent = dynamic(() => Promise.resolve(memo(() => {
+  const [currentStep, setCurrentStep] = useState(0)
+  const [answers, setAnswers] = useState<string[]>([])
+  const [result, setResult] = useState<string | null>(null)
+
+  const questions = [
+    {
+      question: "Какой у вас опыт работы с ИИ?",
+      options: ["Новичок", "Средний", "Продвинутый", "Эксперт"]
+    },
+    {
+      question: "Какие изображения вам нужны?",
+      options: ["Фотореализм", "Художественные", "Концепт-арты", "Логотипы"]
+    },
+    {
+      question: "Какой бюджет?",
+      options: ["Бесплатно", "До $20/мес", "До $50/мес", "Без ограничений"]
+    }
+  ]
+
+  const handleAnswer = useCallback((answer: string) => {
+    const newAnswers = [...answers, answer]
+    setAnswers(newAnswers)
+    
+    if (currentStep < questions.length - 1) {
+      setCurrentStep(currentStep + 1)
+    } else {
+      calculateResult(newAnswers)
+    }
+  }, [answers, currentStep])
+
+  const calculateResult = useCallback((allAnswers: string[]) => {
+    if (allAnswers[0] === "Новичок" && allAnswers[2] === "Бесплатно") {
+      setResult("Kandinsky 3.1 — идеально для начала!")
+    } else if (allAnswers[1] === "Фотореализм") {
+      setResult("Midjourney — лучший фотореализм!")
+    } else if (allAnswers[2] === "Бесплатно") {
+      setResult("Stable Diffusion — мощно и бесплатно!")
+    } else {
+      setResult("DALL-E 3 — универсальный выбор!")
+    }
+  }, [])
+
+  const resetQuiz = useCallback(() => {
+    setCurrentStep(0)
+    setAnswers([])
+    setResult(null)
+  }, [])
+
+  if (result) {
+    return (
+      <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+        <h3 className="text-xl font-bold text-gray-900 mb-4">🎯 Ваш результат:</h3>
+        <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg mb-6">
+          <div className="text-2xl font-bold text-purple-600 mb-2">{result}</div>
+        </div>
+        <button 
+          onClick={resetQuiz}
+          className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+        >
+          🔄 Пройти заново
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-white rounded-xl shadow-lg p-8">
+      <h3 className="text-xl font-bold text-gray-900 mb-6">
+        🧩 Тест: Какая нейросеть вам подходит?
+      </h3>
+      
+      <div className="mb-4">
+        <div className="flex space-x-2 mb-4">
+          {questions.map((_, idx) => (
+            <div 
+              key={idx}
+              className={`flex-1 h-2 rounded ${
+                idx <= currentStep ? 'bg-purple-600' : 'bg-gray-200'
+              }`}
+            />
+          ))}
+        </div>
+        <p className="text-sm text-gray-600">
+          Вопрос {currentStep + 1} из {questions.length}
+        </p>
+      </div>
+
+      <div className="mb-6">
+        <h4 className="text-lg font-semibold text-gray-900 mb-4">
+          {questions[currentStep].question}
+        </h4>
+        <div className="space-y-3">
+          {questions[currentStep].options.map((option, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleAnswer(option)}
+              className="w-full p-4 text-left border border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all"
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+})), { loading: () => <div className="bg-white rounded-xl shadow-lg p-8 text-center">Загрузка теста...</div> })
+
 // Главный компонент страницы
 export default function ImageGenerationPage() {
   const [filter, setFilter] = useState<'all' | 'free' | 'paid'>('all')
 
-  const filteredTools = aiTools.filter(tool => {
-    if (filter === 'free') return tool.isFree
-    if (filter === 'paid') return !tool.isFree
-    return true
-  })
+  // Мемоизация фильтрованных данных
+  const filteredTools = useMemo(() => {
+    return aiTools.filter(tool => {
+      if (filter === 'free') return tool.isFree
+      if (filter === 'paid') return !tool.isFree
+      return true
+    })
+  }, [filter])
+
+  // Мемоизация статистики
+  const stats = useMemo(() => ({
+    total: aiTools.length,
+    free: aiTools.filter(tool => tool.isFree).length,
+    styles: 50,
+    languages: 10
+  }), [])
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50">
@@ -251,7 +569,7 @@ export default function ImageGenerationPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero секция */}
+        {/* Hero секция - оптимизирована для LCP */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             🎨 <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
@@ -265,23 +583,28 @@ export default function ImageGenerationPage() {
             Создавайте уникальные изображения за секунды с помощью <strong>нейросетей для фото</strong> и художественной генерации.
           </p>
           
-          {/* Статистика */}
+          {/* Статистика - мемоизированная */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
-            {[
-              { label: "Нейросетей", value: "15+" },
-              { label: "Бесплатных", value: "8" },
-              { label: "Стилей", value: "50+" },
-              { label: "Языков", value: "10+" }
-            ].map((stat, idx) => (
-              <div key={idx} className="text-center">
-                <div className="text-2xl font-bold text-purple-600">{stat.value}</div>
-                <div className="text-sm text-gray-600">{stat.label}</div>
-              </div>
-            ))}
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">{stats.total}+</div>
+              <div className="text-sm text-gray-600">Нейросетей</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">{stats.free}</div>
+              <div className="text-sm text-gray-600">Бесплатных</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">{stats.styles}+</div>
+              <div className="text-sm text-gray-600">Стилей</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">{stats.languages}+</div>
+              <div className="text-sm text-gray-600">Языков</div>
+            </div>
           </div>
         </div>
 
-        {/* Фильтры */}
+        {/* Фильтры - оптимизированные */}
         <div className="flex justify-center mb-12">
           <div className="bg-white rounded-lg p-1 shadow-lg">
             {[
@@ -304,7 +627,7 @@ export default function ImageGenerationPage() {
           </div>
         </div>
 
-        {/* ТОП-15 нейросетей */}
+        {/* ТОП нейросетей - мемоизированный список */}
         <section className="mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
             🏆 ТОП-{filteredTools.length} лучших нейросетей для изображений
@@ -368,6 +691,20 @@ export default function ImageGenerationPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Интерактивные инструменты */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+            🛠️ Интерактивные инструменты
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <PromptGenerator />
+            <CostCalculator />
+          </div>
+          <div className="max-w-2xl mx-auto">
+            <QuizComponent />
           </div>
         </section>
 

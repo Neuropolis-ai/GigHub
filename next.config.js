@@ -28,11 +28,13 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
     webVitalsAttribution: ['CLS', 'LCP'],
+    optimizeCss: true,
   },
   trailingSlash: false,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
+  swcMinify: true,
   headers: async () => {
     return [
       {
@@ -94,11 +96,6 @@ const nextConfig = {
       {
         source: '/neural-networks',
         destination: '/free-neural-networks',
-        permanent: true,
-      },
-      {
-        source: '/ai-tools',
-        destination: '/ai-services',
         permanent: true,
       },
       {
