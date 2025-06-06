@@ -42,13 +42,13 @@ export default function NotFound() {
             <div
               className="mb-8"
             >
-              <h1 className="text-8xl md:text-9xl font-bold text-gradient bg-gradient-to-r from-purple-500 to-blue-600 bg-clip-text text-transparent mb-4">
+              <h1 className="text-8xl md:text-9xl font-bold text-gradient bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-transparent mb-4">
                 404
               </h1>
               <div className="flex items-center justify-center gap-4 mb-6">
-                <Brain className="w-8 h-8 text-purple-500 animate-pulse" />
+                <Brain className="w-8 h-8 text-accent-primary animate-pulse" />
                 <Bot className="w-8 h-8 text-blue-500 animate-bounce" />
-                <Sparkles className="w-8 h-8 text-purple-500 animate-pulse" />
+                <Sparkles className="w-8 h-8 text-accent-primary animate-pulse" />
               </div>
             </div>
 
@@ -71,14 +71,14 @@ export default function NotFound() {
             >
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-purple-500 text-white rounded-xl hover:bg-purple-600 transition-colors font-semibold"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-accent-primary text-white rounded-xl hover:bg-accent-primary/90 transition-colors font-semibold shadow-lg hover:shadow-xl"
               >
                 <Home className="w-5 h-5" />
                 На главную
               </Link>
               <Link
                 href="/ai-services"
-                className="inline-flex items-center gap-2 px-8 py-4 border-2 border-purple-500 text-purple-500 rounded-xl hover:bg-purple-500 hover:text-white transition-colors font-semibold"
+                className="inline-flex items-center gap-2 px-8 py-4 border-2 border-accent-primary text-accent-primary rounded-xl hover:bg-accent-primary hover:text-white transition-colors font-semibold"
               >
                 <Search className="w-5 h-5" />
                 Каталог нейросетей

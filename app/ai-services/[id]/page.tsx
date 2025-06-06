@@ -191,7 +191,7 @@ export default function AIServicePage() {
                     {service.title}
                   </h1>
                   {service.categories && (
-                    <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                    <span className="inline-block bg-accent-primary/10 text-accent-primary px-3 py-1 rounded-full text-sm font-medium">
                       {service.categories.name}
                     </span>
                   )}
@@ -225,7 +225,7 @@ export default function AIServicePage() {
                     service_url: service.service_url!,
                     source_page: 'service_detail_hero'
                   })}
-                  className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg transform hover:scale-105 active:scale-95"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-accent-primary text-white rounded-xl font-semibold hover:bg-accent-primary/90 transition-all shadow-lg transform hover:scale-105 active:scale-95"
                 >
                   Попробовать сервис
                   <ExternalLink className="w-5 h-5" />
@@ -252,7 +252,7 @@ export default function AIServicePage() {
                 </figure>
               ) : (
                 <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl overflow-hidden aspect-video">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent-primary/20 to-blue-500/20" />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-6xl font-bold text-white/30">
                       {service.title ? service.title.charAt(0) : '?'}
@@ -335,7 +335,7 @@ export default function AIServicePage() {
                       service_url: service.service_url!,
                       source_page: 'service_detail_sidebar'
                     })}
-                    className="block w-full px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all transform hover:scale-105 active:scale-95"
+                    className="block w-full px-6 py-3 bg-accent-primary text-white rounded-xl font-semibold hover:bg-accent-primary/90 transition-all transform hover:scale-105 active:scale-95"
                   >
                     Перейти к сервису
                   </a>
@@ -371,7 +371,7 @@ export default function AIServicePage() {
                     <span className="text-gray-600">Категория</span>
                     <Link 
                       href={`/ai-services?category=${service.categories.slug}`}
-                      className="text-blue-600 hover:text-blue-700 font-medium"
+                      className="text-accent-primary hover:text-accent-primary/90 font-medium"
                     >
                       {service.categories.name}
                     </Link>
@@ -446,7 +446,7 @@ export default function AIServicePage() {
                       
                       <Link
                         href={`/ai-services/${relatedService.slug || relatedService.id}`}
-                        className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium"
+                        className="inline-flex items-center gap-1 text-accent-primary hover:text-accent-primary/90 font-medium"
                       >
                         Подробнее
                         <ArrowRight className="w-4 h-4" />
