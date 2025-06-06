@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { notFound } from 'next/navigation'
+import { notFound, useParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Clock, Users, ExternalLink, Star, Tag, Check, X, ArrowRight, Bookmark, Share2 } from 'lucide-react'
@@ -16,6 +16,9 @@ interface FAQItem {
 }
 
 export default function AIServicePage() {
+  const params = useParams()
+  const serviceId = params.id as string
+  
   const [service, setService] = useState<AIServiceWithCategory | null>(null)
   const [loading, setLoading] = useState(true)
   const [isBookmarked, setIsBookmarked] = useState(false)
@@ -58,13 +61,10 @@ export default function AIServicePage() {
   }
 
   useEffect(() => {
-    const pathParts = window.location.pathname.split('/')
-    const serviceId = pathParts[pathParts.length - 1]
-    
     if (serviceId) {
       fetchService(serviceId)
     }
-  }, [])
+  }, [serviceId])
 
   if (loading) {
     return (
