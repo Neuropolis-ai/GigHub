@@ -106,7 +106,7 @@ const ImageGenerationHero = () => {
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) return 0
-        return prev + (100 / 40) // 4 секунды = 40 шагов по 100ms
+        return prev + 2.5 // 4 секунды = 40 шагов по 100ms
       })
     }, 100)
 
@@ -114,7 +114,7 @@ const ImageGenerationHero = () => {
       clearInterval(interval)
       clearInterval(progressInterval)
     }
-  }, [isPaused, currentImageIndex])
+  }, [isPaused])
 
   // Функция для скрола к разделу
   const scrollToSection = (sectionId: string) => {
@@ -134,6 +134,7 @@ const ImageGenerationHero = () => {
       setTimeout(() => {
         setCurrentImageIndex(index)
         setIsAnimating(false)
+        setProgress(0)
       }, 150)
     }
   }
@@ -158,43 +159,43 @@ const ImageGenerationHero = () => {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 <span className="text-gray-900">Лучшие нейросети</span>
                 <br />
-                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
                   для генерации изображений 2025
                 </span>
               </h1>
               
               {/* Анимированная полоска под заголовком */}
-              <div className="w-32 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto lg:mx-0 animate-pulse" />
+              <div className="w-32 h-1 bg-gradient-to-r from-indigo-600 to-blue-500 rounded-full mx-auto lg:mx-0 animate-pulse" />
             </div>
 
             {/* Лид-абзац */}
             <div className="space-y-4 animate-fadeInUp" style={{ animationDelay: '0.4s' }}>
               <p className="text-xl md:text-2xl text-gray-700 leading-relaxed max-w-2xl">
-                Полный обзор <strong className="text-blue-600">ТОП-5 ИИ-генераторов картинок</strong>: 
+                Полный обзор <strong className="text-indigo-600">ТОП-5 ИИ-генераторов картинок</strong>: 
                 Midjourney, DALL-E 3, Stable Diffusion и другие.
               </p>
               <p className="text-lg text-gray-600 leading-relaxed max-w-2xl">
                 Создавайте уникальные изображения за секунды с помощью 
-                <strong className="text-purple-600"> нейросетей для фото</strong> и художественной генерации.
+                <strong className="text-blue-500"> нейросетей для фото</strong> и художественной генерации.
               </p>
             </div>
 
             {/* Быстрые статистики */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-lg mx-auto lg:mx-0 animate-fadeInUp" style={{ animationDelay: '0.6s' }}>
               <div className="text-center lg:text-left">
-                <div className="text-3xl font-bold text-blue-600">5+</div>
+                <div className="text-3xl font-bold text-indigo-600">5+</div>
                 <div className="text-sm text-gray-600">Лучших ИИ</div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-3xl font-bold text-purple-600">3</div>
+                <div className="text-3xl font-bold text-blue-500">3</div>
                 <div className="text-sm text-gray-600">Бесплатных</div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-3xl font-bold text-pink-600">50+</div>
+                <div className="text-3xl font-bold text-indigo-500">50+</div>
                 <div className="text-sm text-gray-600">Стилей</div>
               </div>
               <div className="text-center lg:text-left">
-                <div className="text-3xl font-bold text-indigo-600">10+</div>
+                <div className="text-3xl font-bold text-blue-600">10+</div>
                 <div className="text-sm text-gray-600">Языков</div>
               </div>
             </div>
@@ -203,13 +204,13 @@ const ImageGenerationHero = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fadeInUp" style={{ animationDelay: '0.8s' }}>
               <button
                 onClick={() => scrollToSection('top-ai-tools')}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/25 transform hover:scale-105 transition-all duration-300"
+                className="bg-indigo-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-indigo-700 hover:shadow-xl hover:shadow-indigo-500/25 transform hover:scale-105 transition-all duration-300"
               >
                 🚀 Смотреть ТОП-5
               </button>
               <button
                 onClick={() => scrollToSection('free-tools')}
-                className="bg-white text-gray-800 border-2 border-gray-200 px-8 py-4 rounded-xl font-semibold text-lg hover:border-purple-300 hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                className="bg-white text-gray-800 border-2 border-gray-200 px-8 py-4 rounded-xl font-semibold text-lg hover:border-indigo-300 hover:shadow-xl transform hover:scale-105 transition-all duration-300"
               >
                 💚 Бесплатные варианты
               </button>
@@ -222,7 +223,7 @@ const ImageGenerationHero = () => {
               
               {/* Главное изображение с эффектом карусели */}
               <div 
-                className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl"
+                className="relative w-full h-[31rem] lg:h-[35rem] rounded-3xl overflow-hidden shadow-2xl"
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
               >
@@ -276,7 +277,7 @@ const ImageGenerationHero = () => {
                 {!isPaused && (
                   <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/20">
                     <div 
-                      className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-100 ease-linear"
+                      className="h-full bg-gradient-to-r from-indigo-600 to-blue-500 transition-all duration-100 ease-linear"
                       style={{ width: `${progress}%` }}
                     />
                   </div>
@@ -284,12 +285,12 @@ const ImageGenerationHero = () => {
               </div>
 
               {/* Плавающие мини-карточки */}
-              <div className="absolute -top-6 -right-6 bg-white p-4 rounded-2xl shadow-xl animate-bounce delay-1000 animate-fadeInUp" style={{ animationDelay: '1s' }}>
+              <div className="absolute -top-8 -right-12 bg-white p-4 rounded-2xl shadow-xl animate-bounce delay-1000 animate-fadeInUp" style={{ animationDelay: '1s' }}>
                 <div className="text-2xl">🎨</div>
                 <div className="text-xs font-semibold text-gray-600">Арт</div>
               </div>
               
-              <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl animate-bounce delay-2000 animate-fadeInUp" style={{ animationDelay: '1.2s' }}>
+              <div className="absolute -bottom-8 -left-12 bg-white p-4 rounded-2xl shadow-xl animate-bounce delay-2000 animate-fadeInUp" style={{ animationDelay: '1.2s' }}>
                 <div className="text-2xl">📸</div>
                 <div className="text-xs font-semibold text-gray-600">Фото</div>
               </div>
@@ -313,7 +314,7 @@ const ImageGenerationHero = () => {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="group bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-gray-200 hover:border-purple-300 hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-left animate-fadeInUp"
+                className="group bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-gray-200 hover:border-indigo-300 hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-left animate-fadeInUp"
                 style={{ animationDelay: `${1.2 + index * 0.1}s` }}
               >
                 <div className="flex items-start space-x-4">
@@ -321,7 +322,7 @@ const ImageGenerationHero = () => {
                     {item.icon}
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors duration-300">
+                    <h3 className="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors duration-300">
                       {item.title}
                     </h3>
                     <p className="text-sm text-gray-600 mt-1">
@@ -339,7 +340,7 @@ const ImageGenerationHero = () => {
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
         <button
           onClick={() => scrollToSection('top-ai-tools')}
-          className="text-gray-400 hover:text-purple-600 transition-colors duration-300"
+          className="text-gray-400 hover:text-indigo-600 transition-colors duration-300"
         >
           <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
