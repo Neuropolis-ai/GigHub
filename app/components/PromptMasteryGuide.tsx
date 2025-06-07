@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { CheckCircle, XCircle, Lightbulb, Copy, Wand2, BookOpen, Zap, Star, Eye, Camera, Palette, Sparkles, RefreshCw, Settings } from 'lucide-react';
+import { CheckCircle, XCircle, Lightbulb, Copy, Wand2, BookOpen, Zap, Star, Eye, Camera, Palette, Sparkles, RefreshCw, Settings, Heart } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface PromptExample {
   bad: {
@@ -131,42 +132,63 @@ const PromptMasteryGuide: React.FC = () => {
   };
 
   return (
-    <section className="py-16 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
-      <div className="container mx-auto px-6">
+    <section className="py-20 bg-gradient-to-br from-background via-accent-primary/5 to-accent-secondary/5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Заголовок секции */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 bg-purple-100 rounded-full px-4 py-2 mb-6">
-            <BookOpen className="w-5 h-5 text-purple-600" />
-            <span className="text-purple-600 font-medium">Эксклюзивный гайд</span>
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full border border-accent-primary/20 mb-8 shadow-lg">
+            <BookOpen className="w-5 h-5 text-accent-primary" />
+            <span className="text-accent-primary font-bold">ЭКСКЛЮЗИВНЫЙ ГАЙД</span>
           </div>
           
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Как писать промты, которые работают: мини-гайд для новичков
+          <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-6 leading-tight">
+            Как писать промты, которые работают:{' '}
+            <span className="text-gradient bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">
+              мини-гайд
+            </span>
+            {' '}для новичков
           </h2>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-xl text-text-secondary max-w-4xl mx-auto leading-relaxed">
             Превратите простые идеи в потрясающие изображения с помощью правильных промптов. 
             Изучите секреты профессионалов!
           </p>
-        </div>
+        </motion.div>
 
         {/* Сравнительный блок "Плохо / Хорошо" */}
-        <div className="mb-16">
-          <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center flex items-center justify-center">
-            <Wand2 className="w-6 h-6 mr-2 text-purple-600" />
+        <div className="mb-20">
+          <motion.h3 
+            className="text-3xl font-bold text-text-primary mb-8 text-center flex items-center justify-center gap-3"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <Wand2 className="w-7 h-7 text-accent-primary" />
             Сравнение: простой VS детальный промт
-          </h3>
+          </motion.h3>
 
           {/* Переключатель примеров */}
-          <div className="flex justify-center mb-8">
-            <div className="bg-white rounded-xl p-1 shadow-lg border border-gray-200">
+          <motion.div 
+            className="flex justify-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-xl border border-accent-primary/20">
               {promptExamples.map((example, index) => (
                 <button
                   key={index}
                   onClick={() => setActiveExample(index)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all ${
+                  className={`flex items-center space-x-2 px-6 py-3 rounded-xl transition-all duration-300 ${
                     activeExample === index
-                      ? 'bg-purple-600 text-white shadow-md'
-                      : 'text-gray-600 hover:text-purple-600'
+                      ? 'bg-gradient-to-r from-accent-primary to-accent-secondary text-white shadow-lg transform scale-105'
+                      : 'text-text-secondary hover:text-accent-primary hover:bg-accent-primary/5'
                   }`}
                 >
                   {example.icon}
@@ -174,225 +196,312 @@ const PromptMasteryGuide: React.FC = () => {
                 </button>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Активный пример */}
           <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {/* Плохой пример */}
-            <div className="bg-white rounded-2xl p-8 border-2 border-red-200 shadow-lg relative">
+            <motion.div 
+              className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 border-2 border-red-200/60 shadow-xl relative overflow-hidden"
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-red-100/50 rounded-full -translate-y-16 translate-x-16"></div>
               <div className="absolute top-4 right-4">
-                <div className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold flex items-center">
-                  <XCircle className="w-4 h-4 mr-1" />
+                <div className="bg-red-50 text-red-600 px-4 py-2 rounded-full text-sm font-semibold flex items-center border border-red-200">
+                  <XCircle className="w-4 h-4 mr-2" />
                   Плохо
                 </div>
               </div>
               
-              <h4 className="text-xl font-bold text-gray-900 mb-4">❌ Простой промт</h4>
+              <h4 className="text-2xl font-bold text-text-primary mb-6 flex items-center gap-2">
+                <XCircle className="w-6 h-6 text-red-500" />
+                Простой промт
+              </h4>
               
-              <div className="bg-red-50 rounded-lg p-4 mb-4 border border-red-200">
-                <p className="font-mono text-red-800 text-lg">
+              <div className="bg-red-50/80 rounded-xl p-6 mb-6 border border-red-200/60 relative">
+                <div className="absolute top-2 right-2">
+                  <div className="w-3 h-3 bg-red-400 rounded-full animate-pulse"></div>
+                </div>
+                <p className="font-mono text-red-800 text-lg font-medium">
                   "{promptExamples[activeExample].bad.prompt}"
                 </p>
               </div>
               
-              <p className="text-gray-600 mb-4">{promptExamples[activeExample].bad.description}</p>
+              <p className="text-text-secondary mb-6 leading-relaxed">{promptExamples[activeExample].bad.description}</p>
               
-              <div className="bg-gray-100 rounded-lg p-4 text-center text-gray-600 italic">
-                📷 {promptExamples[activeExample].bad.result}
+              <div className="bg-gray-100/80 rounded-xl p-6 text-center text-text-secondary italic border border-gray-200">
+                <Camera className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                {promptExamples[activeExample].bad.result}
               </div>
-            </div>
+            </motion.div>
 
             {/* Хороший пример */}
-            <div className="bg-white rounded-2xl p-8 border-2 border-green-200 shadow-lg relative">
+            <motion.div 
+              className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 border-2 border-accent-primary/30 shadow-xl relative overflow-hidden"
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20 rounded-full -translate-y-16 translate-x-16"></div>
               <div className="absolute top-4 right-4">
-                <div className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm font-semibold flex items-center">
-                  <CheckCircle className="w-4 h-4 mr-1" />
+                <div className="bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 text-accent-primary px-4 py-2 rounded-full text-sm font-semibold flex items-center border border-accent-primary/30">
+                  <CheckCircle className="w-4 h-4 mr-2" />
                   Хорошо
                 </div>
               </div>
               
-              <h4 className="text-xl font-bold text-gray-900 mb-4">✅ Детальный промт</h4>
+              <h4 className="text-2xl font-bold text-text-primary mb-6 flex items-center gap-2">
+                <CheckCircle className="w-6 h-6 text-accent-primary" />
+                Детальный промт
+              </h4>
               
-              <div className="bg-green-50 rounded-lg p-4 mb-4 border border-green-200">
-                <p className="font-mono text-green-800 text-sm leading-relaxed">
+              <div className="bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 rounded-xl p-6 mb-6 border border-accent-primary/30 relative">
+                <div className="absolute top-2 right-2">
+                  <div className="w-3 h-3 bg-gradient-to-r from-accent-primary to-accent-secondary rounded-full animate-pulse"></div>
+                </div>
+                <p className="font-mono text-text-primary text-sm leading-relaxed font-medium">
                   "{promptExamples[activeExample].good.prompt}"
                 </p>
                 <button
                   onClick={() => copyToClipboard(promptExamples[activeExample].good.prompt)}
-                  className="mt-2 text-xs text-green-600 hover:text-green-800 flex items-center"
+                  className="mt-4 text-sm text-accent-primary hover:text-accent-secondary flex items-center gap-2 transition-colors"
                 >
-                  <Copy className="w-3 h-3 mr-1" />
-                  Скопировать
+                  <Copy className="w-4 h-4" />
+                  Скопировать промт
                 </button>
               </div>
               
-              <p className="text-gray-600 mb-4">{promptExamples[activeExample].good.description}</p>
+              <p className="text-text-secondary mb-6 leading-relaxed">{promptExamples[activeExample].good.description}</p>
               
-              <div className="bg-gradient-to-r from-green-100 to-blue-100 rounded-lg p-4 text-center text-gray-700 font-medium">
-                🌟 {promptExamples[activeExample].good.result}
+              <div className="bg-gradient-to-r from-accent-primary/20 to-accent-secondary/20 rounded-xl p-6 text-center text-text-primary font-medium border border-accent-primary/20">
+                <Sparkles className="w-8 h-8 mx-auto mb-2 text-accent-primary" />
+                {promptExamples[activeExample].good.result}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
 
         {/* Секция "Волшебные слова" */}
-        <div className="mb-16">
-          <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center flex items-center justify-center">
-            <Lightbulb className="w-6 h-6 mr-2 text-yellow-500" />
+        <div className="mb-20">
+          <motion.h3 
+            className="text-3xl font-bold text-text-primary mb-8 text-center flex items-center justify-center gap-3"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <Lightbulb className="w-7 h-7 text-accent-secondary" />
             Волшебные слова для промптов
-          </h3>
+          </motion.h3>
 
           {/* Фильтр по категориям */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
+          <motion.div 
+            className="flex flex-wrap justify-center gap-3 mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
             {categories.map(category => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
                   selectedCategory === category
-                    ? 'bg-purple-600 text-white shadow-md'
-                    : 'bg-white text-gray-600 hover:bg-purple-50 border border-gray-200'
+                    ? 'bg-gradient-to-r from-accent-primary to-accent-secondary text-white shadow-lg transform scale-105'
+                    : 'bg-white/80 text-text-secondary hover:text-accent-primary hover:bg-accent-primary/5 border border-accent-primary/20 shadow-sm hover:shadow-md'
                 }`}
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </button>
             ))}
-          </div>
+          </motion.div>
 
           {/* Сетка волшебных слов */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
             {filteredMagicWords.map((magicWord, index) => (
-              <div
+              <motion.div
                 key={index}
-                className="bg-white rounded-xl p-4 border border-gray-200 hover:shadow-lg transition-all duration-300 cursor-pointer group"
+                className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-accent-primary/20 hover:border-accent-primary/40 hover:shadow-xl transition-all duration-300 cursor-pointer group relative overflow-hidden"
                 onClick={() => copyToClipboard(magicWord.word)}
-                style={{
-                  animationDelay: `${index * 0.1}s`,
-                  animation: 'fadeInUp 0.5s ease-out forwards'
-                }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.05 }}
+                whileHover={{ y: -2 }}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getCategoryColor(magicWord.category)}`}>
+                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-accent-primary/10 to-accent-secondary/10 rounded-full -translate-y-10 translate-x-10 group-hover:scale-150 transition-transform duration-300"></div>
+                
+                <div className="flex items-center justify-between mb-3">
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(magicWord.category)}`}>
                     {magicWord.category}
                   </span>
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     {copiedWord === magicWord.word ? (
-                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <CheckCircle className="w-5 h-5 text-accent-primary" />
                     ) : (
-                      <Copy className="w-4 h-4 text-gray-400" />
+                      <Copy className="w-5 h-5 text-accent-primary/60" />
                     )}
                   </div>
                 </div>
                 
-                <h4 className="font-bold text-gray-900 mb-2 font-mono text-sm">
+                <h4 className="font-bold text-text-primary mb-3 font-mono text-base group-hover:text-accent-primary transition-colors">
                   {magicWord.word}
                 </h4>
                 
-                <p className="text-gray-600 text-xs mb-2 leading-relaxed">
+                <p className="text-text-secondary text-sm mb-4 leading-relaxed">
                   {magicWord.description}
                 </p>
                 
-                <div className="bg-gray-50 rounded-lg p-2 text-xs text-gray-700 italic">
-                  💡 {magicWord.example}
+                <div className="bg-accent-primary/5 rounded-lg p-3 text-sm text-text-secondary italic border border-accent-primary/10">
+                  <Lightbulb className="w-4 h-4 inline mr-2 text-accent-secondary" />
+                  {magicWord.example}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
 
         {/* Практические советы */}
-        <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-200 max-w-4xl mx-auto">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center flex items-center justify-center">
-            <Zap className="w-6 h-6 mr-2 text-blue-500" />
+        <motion.div 
+          className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 lg:p-12 shadow-2xl border border-accent-primary/20 max-w-6xl mx-auto mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h3 className="text-3xl font-bold text-text-primary mb-8 text-center flex items-center justify-center gap-3">
+            <Zap className="w-7 h-7 text-accent-secondary" />
             Профессиональные советы
           </h3>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <h4 className="font-semibold text-gray-900 text-lg">📝 Структура промта:</h4>
-              <div className="space-y-3 text-sm text-gray-700">
-                <div className="flex items-start space-x-2">
-                  <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                  <span><strong>Основной объект:</strong> "портрет девушки"</span>
-                </div>
-                <div className="flex items-start space-x-2">
-                  <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                  <span><strong>Детали и стиль:</strong> "реалистично, детализированно"</span>
-                </div>
-                <div className="flex items-start space-x-2">
-                  <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">3</span>
-                  <span><strong>Освещение:</strong> "мягкое освещение, золотой час"</span>
-                </div>
-                <div className="flex items-start space-x-2">
-                  <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold">4</span>
-                  <span><strong>Качество:</strong> "4K, высокое разрешение"</span>
-                </div>
+          <div className="grid lg:grid-cols-2 gap-8">
+            <div className="space-y-6">
+              <h4 className="font-bold text-text-primary text-xl flex items-center gap-2">
+                <Settings className="w-6 h-6 text-accent-primary" />
+                Структура промта:
+              </h4>
+              <div className="space-y-4 text-sm text-text-secondary">
+                {[
+                  { num: 1, title: 'Основной объект:', desc: '"портрет девушки"' },
+                  { num: 2, title: 'Детали и стиль:', desc: '"реалистично, детализированно"' },
+                  { num: 3, title: 'Освещение:', desc: '"мягкое освещение, золотой час"' },
+                  { num: 4, title: 'Качество:', desc: '"4K, высокое разрешение"' }
+                ].map((item, idx) => (
+                  <motion.div 
+                    key={idx}
+                    className="flex items-start space-x-3"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                  >
+                    <span className="w-8 h-8 bg-gradient-to-r from-accent-primary to-accent-secondary text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                      {item.num}
+                    </span>
+                    <div>
+                      <span className="font-semibold text-text-primary">{item.title}</span>{' '}
+                      <span>{item.desc}</span>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h4 className="font-semibold text-gray-900 text-lg">⚡ Секретные приемы:</h4>
-              <div className="space-y-3 text-sm text-gray-700">
-                <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
-                  <strong>💡 Используйте имена художников:</strong><br />
-                  "in style of Van Gogh", "by Greg Rutkowski"
-                </div>
-                <div className="bg-green-50 p-3 rounded-lg border border-green-200">
-                  <strong>📸 Указывайте параметры камеры:</strong><br />
-                  "50mm lens", "f/1.4", "shallow depth of field"
-                </div>
-                <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-                  <strong>🎬 Добавляйте эмоции:</strong><br />
-                  "serene", "dramatic", "mysterious", "joyful"
-                </div>
-                <div className="bg-purple-50 p-3 rounded-lg border border-purple-200">
-                  <strong>🔧 Технические улучшения:</strong><br />
-                  "trending on ArtStation", "award winning photography"
-                </div>
+            <div className="space-y-6">
+              <h4 className="font-bold text-text-primary text-xl flex items-center gap-2">
+                <Sparkles className="w-6 h-6 text-accent-secondary" />
+                Секретные приемы:
+              </h4>
+              <div className="space-y-4 text-sm">
+                {[
+                  { 
+                    icon: <Lightbulb className="w-5 h-5 text-accent-primary" />, 
+                    title: 'Используйте имена художников:', 
+                    desc: '"in style of Van Gogh", "by Greg Rutkowski"',
+                    bg: 'from-accent-primary/10 to-accent-primary/5',
+                    border: 'border-accent-primary/20'
+                  },
+                  { 
+                    icon: <Camera className="w-5 h-5 text-accent-secondary" />, 
+                    title: 'Указывайте параметры камеры:', 
+                    desc: '"50mm lens", "f/1.4", "shallow depth of field"',
+                    bg: 'from-accent-secondary/10 to-accent-secondary/5',
+                    border: 'border-accent-secondary/20'
+                  },
+                  { 
+                    icon: <Heart className="w-5 h-5 text-accent-primary" />, 
+                    title: 'Добавляйте эмоции:', 
+                    desc: '"serene", "dramatic", "mysterious", "joyful"',
+                    bg: 'from-accent-primary/10 to-accent-secondary/10',
+                    border: 'border-accent-primary/20'
+                  },
+                  { 
+                    icon: <Settings className="w-5 h-5 text-accent-secondary" />, 
+                    title: 'Технические улучшения:', 
+                    desc: '"trending on ArtStation", "award winning photography"',
+                    bg: 'from-accent-secondary/10 to-accent-primary/10',
+                    border: 'border-accent-secondary/20'
+                  }
+                ].map((tip, idx) => (
+                  <motion.div 
+                    key={idx}
+                    className={`bg-gradient-to-r ${tip.bg} p-4 rounded-xl border ${tip.border}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                  >
+                    <div className="flex items-start gap-3">
+                      {tip.icon}
+                      <div>
+                        <div className="font-semibold text-text-primary mb-1">{tip.title}</div>
+                        <div className="text-text-secondary">{tip.desc}</div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
             </div>
           </div>
 
           {/* CTA блок */}
-          <div className="mt-8 bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-6 text-center border border-purple-200">
-            <h4 className="font-bold text-gray-900 text-lg mb-2">
-              🚀 Готовы создать шедевр?
+          <motion.div 
+            className="mt-12 bg-gradient-to-r from-accent-primary/20 to-accent-secondary/20 rounded-2xl p-8 text-center border border-accent-primary/30"
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
+            <h4 className="font-bold text-text-primary text-2xl mb-3 flex items-center justify-center gap-2">
+              <Sparkles className="w-6 h-6 text-accent-primary" />
+              Готовы создать шедевр?
             </h4>
-            <p className="text-gray-600 mb-4">
+            <p className="text-text-secondary mb-6 text-lg">
               Примените эти знания на практике с лучшими нейросетями из нашего рейтинга!
             </p>
-            <div className="flex flex-wrap justify-center gap-2">
-              <span className="bg-white px-3 py-1 rounded-full text-sm text-gray-700 border border-gray-200">
-                #PromptEngineering
-              </span>
-              <span className="bg-white px-3 py-1 rounded-full text-sm text-gray-700 border border-gray-200">
-                #AIArt
-              </span>
-              <span className="bg-white px-3 py-1 rounded-full text-sm text-gray-700 border border-gray-200">
-                #НейросетиДляНовичков
-              </span>
+            <div className="flex flex-wrap justify-center gap-3">
+              {['#PromptEngineering', '#AIArt', '#НейросетиДляНовичков'].map((tag, idx) => (
+                <span key={idx} className="bg-white/80 px-4 py-2 rounded-full text-sm text-text-secondary border border-accent-primary/20 shadow-sm">
+                  {tag}
+                </span>
+              ))}
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Интерактивный генератор промптов */}
-        <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-200 max-w-6xl mx-auto mt-8">
+        <motion.div 
+          className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 lg:p-12 shadow-2xl border border-accent-primary/20 max-w-6xl mx-auto"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
           <SmartPromptGenerator />
-        </div>
+        </motion.div>
       </div>
-
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </section>
   );
 };
@@ -411,6 +520,7 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [additionalText, setAdditionalText] = useState('');
 
   const styles = [
     { value: 'фотореализм', eng: 'photorealistic', icon: '📸' },
@@ -561,14 +671,14 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
   return (
     <div>
       <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center justify-center">
-          <Sparkles className="w-6 h-6 mr-2 text-purple-600" />
+        <h3 className="text-3xl font-bold text-text-primary mb-4 flex items-center justify-center gap-3">
+          <Sparkles className="w-7 h-7 text-accent-primary" />
           Интерактивный генератор промптов
-          <span className="ml-2 text-xs bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 px-3 py-1 rounded-full border border-purple-200">
+          <span className="ml-2 text-sm bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 text-accent-primary px-4 py-2 rounded-full border border-accent-primary/20 shadow-sm">
             AI-powered
           </span>
         </h3>
-        <p className="text-gray-600 max-w-2xl mx-auto">
+        <p className="text-text-secondary max-w-3xl mx-auto text-lg leading-relaxed">
           Создавайте профессиональные промпты за секунды! Выберите параметры или воспользуйтесь случайной генерацией.
         </p>
       </div>
@@ -576,14 +686,15 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
       {/* Основные параметры */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {/* Стиль */}
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-gray-700 flex items-center">
-            🎨 Стиль изображения
+        <div className="space-y-3">
+          <label className="block text-sm font-semibold text-text-primary flex items-center gap-2">
+            <Palette className="w-4 h-4 text-accent-primary" />
+            Стиль изображения
           </label>
           <select 
             value={selectedStyle} 
             onChange={(e) => setSelectedStyle(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm hover:shadow-md transition-all"
+            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm"
           >
             {styles.map(style => (
               <option key={style.value} value={style.value}>
@@ -594,14 +705,15 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
         </div>
 
         {/* Предмет */}
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-gray-700 flex items-center">
-            🖼️ Основной объект
+        <div className="space-y-3">
+          <label className="block text-sm font-semibold text-text-primary flex items-center gap-2">
+            <Camera className="w-4 h-4 text-accent-primary" />
+            Основной объект
           </label>
           <select 
             value={selectedSubject} 
             onChange={(e) => setSelectedSubject(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm hover:shadow-md transition-all"
+            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm"
           >
             {subjects.map(subject => (
               <option key={subject.value} value={subject.value}>
@@ -612,14 +724,15 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
         </div>
 
         {/* Настроение */}
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-gray-700 flex items-center">
-            🎭 Настроение
+        <div className="space-y-3">
+          <label className="block text-sm font-semibold text-text-primary flex items-center gap-2">
+            <Heart className="w-4 h-4 text-accent-secondary" />
+            Настроение
           </label>
           <select 
             value={selectedMood} 
             onChange={(e) => setSelectedMood(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm hover:shadow-md transition-all"
+            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm"
           >
             {moods.map(mood => (
               <option key={mood.value} value={mood.value}>
@@ -630,14 +743,15 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
         </div>
 
         {/* Качество */}
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-gray-700 flex items-center">
-            ⭐ Качество
+        <div className="space-y-3">
+          <label className="block text-sm font-semibold text-text-primary flex items-center gap-2">
+            <Star className="w-4 h-4 text-accent-primary" />
+            Качество
           </label>
           <select 
             value={selectedQuality} 
             onChange={(e) => setSelectedQuality(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm hover:shadow-md transition-all"
+            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm"
           >
             {qualities.map(quality => (
               <option key={quality.value} value={quality.value}>
@@ -648,14 +762,15 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
         </div>
 
         {/* Освещение */}
-        <div className="space-y-2">
-          <label className="block text-sm font-semibold text-gray-700 flex items-center">
-            💡 Освещение
+        <div className="space-y-3">
+          <label className="block text-sm font-semibold text-text-primary flex items-center gap-2">
+            <Lightbulb className="w-4 h-4 text-accent-secondary" />
+            Освещение
           </label>
           <select 
             value={selectedLighting} 
             onChange={(e) => setSelectedLighting(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm hover:shadow-md transition-all"
+            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm"
           >
             {lightings.map(lighting => (
               <option key={lighting.value} value={lighting.value}>
@@ -664,131 +779,147 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
             ))}
           </select>
         </div>
+
+        {/* Художник */}
+        <div className="space-y-3">
+          <label className="block text-sm font-semibold text-text-primary flex items-center gap-2">
+            <Palette className="w-4 h-4 text-accent-primary" />
+            Стиль художника
+          </label>
+          <select 
+            value={selectedArtist} 
+            onChange={(e) => setSelectedArtist(e.target.value)}
+            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm"
+          >
+            {artists.map(artist => (
+              <option key={artist.value} value={artist.value}>
+                {artist.icon} {artist.value}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      {/* Дополнительные настройки */}
-      <div className="mb-8">
-        <button
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          className="flex items-center space-x-2 text-purple-600 hover:text-purple-800 font-medium transition-colors mb-4"
-        >
-          <Settings className="w-4 h-4" />
-          <span>{showAdvanced ? 'Скрыть' : 'Показать'} дополнительные настройки</span>
-        </button>
+      {/* Дополнительные параметры */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {/* Камера */}
+        <div className="space-y-3">
+          <label className="block text-sm font-semibold text-text-primary flex items-center gap-2">
+            <Camera className="w-4 h-4 text-accent-secondary" />
+            Параметры камеры
+          </label>
+          <select 
+            value={selectedCamera} 
+            onChange={(e) => setSelectedCamera(e.target.value)}
+            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm"
+          >
+            {cameras.map(camera => (
+              <option key={camera.value} value={camera.value}>
+                {camera.icon} {camera.value}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        {showAdvanced && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-gray-50 rounded-xl">
-            {/* Художник */}
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 flex items-center">
-                🎨 Стиль художника
-              </label>
-              <select 
-                value={selectedArtist} 
-                onChange={(e) => setSelectedArtist(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm"
-              >
-                {artists.map(artist => (
-                  <option key={artist.value} value={artist.value}>
-                    {artist.icon} {artist.value}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Камера */}
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 flex items-center">
-                📸 Параметры камеры
-              </label>
-              <select 
-                value={selectedCamera} 
-                onChange={(e) => setSelectedCamera(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm"
-              >
-                {cameras.map(camera => (
-                  <option key={camera.value} value={camera.value}>
-                    {camera.icon} {camera.value}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        )}
+        {/* Дополнительный текст */}
+        <div className="space-y-3">
+          <label className="block text-sm font-semibold text-text-primary flex items-center gap-2">
+            <Settings className="w-4 h-4 text-accent-primary" />
+            Дополнительные детали
+          </label>
+          <input 
+            type="text" 
+            value={additionalText}
+            onChange={(e) => setAdditionalText(e.target.value)}
+            placeholder="Добавьте свои детали..."
+            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm placeholder-text-secondary/60"
+          />
+        </div>
       </div>
 
       {/* Кнопки управления */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-8">
-        <button 
+      <div className="flex flex-wrap justify-center gap-4 mb-8">
+        <button
           onClick={generatePrompt}
-          disabled={isGenerating}
-          className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl flex items-center justify-center space-x-2"
+          className="px-8 py-4 bg-gradient-to-r from-accent-primary to-accent-secondary text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
         >
-          {isGenerating ? (
-            <>
-              <RefreshCw className="w-5 h-5 animate-spin" />
-              <span>Генерируем...</span>
-            </>
-          ) : (
-            <>
-              <Wand2 className="w-5 h-5" />
-              <span>Сгенерировать промпт</span>
-            </>
-          )}
+          <Sparkles className="w-5 h-5" />
+          Создать промт
         </button>
-
-        <button 
+        
+        <button
           onClick={randomizeSettings}
-          className="px-6 py-4 border-2 border-purple-600 text-purple-600 rounded-xl font-semibold hover:bg-purple-50 transition-all flex items-center justify-center space-x-2"
+          className="px-8 py-4 bg-white/80 border border-accent-primary/30 text-accent-primary rounded-xl font-semibold hover:bg-accent-primary/5 hover:shadow-md transition-all duration-300 flex items-center gap-2 backdrop-blur-sm"
         >
           <RefreshCw className="w-5 h-5" />
-          <span>Случайные настройки</span>
+          Случайно
         </button>
       </div>
 
-      {/* Результаты */}
       {(generatedPrompt || englishPrompt) && (
-        <div className="space-y-4 mb-8">
+        <div className="space-y-6 mb-8">
           {/* Русский промпт */}
-          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 border border-blue-200">
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="font-semibold text-gray-900 flex items-center">
-                🇷🇺 Промпт на русском языке
+          <div className="bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 rounded-2xl p-6 border border-accent-primary/30 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="font-bold text-text-primary flex items-center gap-2 text-lg">
+                <span className="text-lg">🇷🇺</span>
+                Промпт на русском языке
               </h4>
               <button 
                 onClick={() => copyToClipboard(generatedPrompt, 'russian')}
-                className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
                   copied === 'russian'
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+                    ? 'bg-accent-primary/20 text-accent-primary border border-accent-primary/30' 
+                    : 'bg-white/80 text-accent-primary hover:bg-accent-primary/5 border border-accent-primary/20 hover:border-accent-primary/40'
                 }`}
               >
-                {copied === 'russian' ? '✓ Скопировано!' : '📋 Скопировать'}
+                {copied === 'russian' ? (
+                  <span className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    Скопировано!
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <Copy className="w-4 h-4" />
+                    Скопировать
+                  </span>
+                )}
               </button>
             </div>
-            <p className="text-gray-800 italic leading-relaxed">
+            <p className="text-text-primary italic leading-relaxed text-lg">
               "{generatedPrompt}"
             </p>
           </div>
 
           {/* Английский промпт */}
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="font-semibold text-gray-900 flex items-center">
-                🇺🇸 Промпт на английском языке
+          <div className="bg-gradient-to-r from-accent-secondary/10 to-accent-primary/10 rounded-2xl p-6 border border-accent-secondary/30 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="font-bold text-text-primary flex items-center gap-2 text-lg">
+                <span className="text-lg">🇺🇸</span>
+                Промпт на английском языке
               </h4>
               <button 
                 onClick={() => copyToClipboard(englishPrompt, 'english')}
-                className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
                   copied === 'english'
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-green-100 text-green-800 hover:bg-green-200'
+                    ? 'bg-accent-secondary/20 text-accent-secondary border border-accent-secondary/30' 
+                    : 'bg-white/80 text-accent-secondary hover:bg-accent-secondary/5 border border-accent-secondary/20 hover:border-accent-secondary/40'
                 }`}
               >
-                {copied === 'english' ? '✓ Скопировано!' : '📋 Скопировать'}
+                {copied === 'english' ? (
+                  <span className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4" />
+                    Скопировано!
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <Copy className="w-4 h-4" />
+                    Скопировать
+                  </span>
+                )}
               </button>
             </div>
-            <p className="text-gray-800 italic leading-relaxed font-mono text-sm">
+            <p className="text-text-primary italic leading-relaxed font-mono text-base">
               "{englishPrompt}"
             </p>
           </div>
@@ -797,26 +928,31 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
 
       {/* Примеры промптов */}
       <div>
-        <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-          💡 Примеры готовых промптов
+        <h4 className="text-xl font-bold text-text-primary mb-6 flex items-center gap-2">
+          <Lightbulb className="w-5 h-5 text-accent-primary" />
+          Примеры готовых промптов
         </h4>
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-3 gap-6">
           {promptExamples.map((example, idx) => (
-            <div key={idx} className="bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition-all cursor-pointer group">
-              <div className="space-y-3">
+            <div key={idx} className="bg-white/80 border border-accent-primary/20 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 cursor-pointer group backdrop-blur-sm hover:border-accent-primary/40">
+              <div className="space-y-4">
                 <div 
                   onClick={() => setGeneratedPrompt(example.rus)}
-                  className="bg-blue-50 p-3 rounded-lg border border-blue-200 group-hover:border-blue-300 transition-all"
+                  className="bg-accent-primary/5 p-4 rounded-xl border border-accent-primary/20 group-hover:border-accent-primary/30 transition-all"
                 >
-                  <span className="text-xs text-blue-600 font-medium">🇷🇺 Русский:</span>
-                  <p className="text-sm text-gray-700 mt-1">"{example.rus}"</p>
+                  <span className="text-sm text-accent-primary font-medium flex items-center gap-2">
+                    <span>🇷🇺</span> Русский:
+                  </span>
+                  <p className="text-sm text-text-secondary mt-2">"{example.rus}"</p>
                 </div>
                 <div 
                   onClick={() => setEnglishPrompt(example.eng)}
-                  className="bg-green-50 p-3 rounded-lg border border-green-200 group-hover:border-green-300 transition-all"
+                  className="bg-accent-secondary/5 p-4 rounded-xl border border-accent-secondary/20 group-hover:border-accent-secondary/30 transition-all"
                 >
-                  <span className="text-xs text-green-600 font-medium">🇺🇸 English:</span>
-                  <p className="text-sm text-gray-700 mt-1 font-mono">"{example.eng}"</p>
+                  <span className="text-sm text-accent-secondary font-medium flex items-center gap-2">
+                    <span>🇺🇸</span> English:
+                  </span>
+                  <p className="text-sm text-text-secondary mt-2 font-mono">"{example.eng}"</p>
                 </div>
               </div>
             </div>

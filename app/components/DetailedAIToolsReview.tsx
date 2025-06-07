@@ -333,7 +333,7 @@ const DetailedAIToolsReview = () => {
                   <div>
                     <h4 className="text-2xl font-bold text-text-primary mb-6 flex items-center gap-3">
                       <Palette className="w-6 h-6 text-accent-primary" />
-                      🎨 Примеры работ и промпты
+                      Примеры работ и промпты
                     </h4>
                     
                     <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl">
@@ -382,7 +382,7 @@ const DetailedAIToolsReview = () => {
                   <div>
                     <h4 className="text-2xl font-bold text-text-primary mb-6 flex items-center gap-3">
                       <Settings className="w-6 h-6 text-accent-primary" />
-                      📊 Характеристики и оценка
+                      Характеристики и оценка
                     </h4>
                     
                     <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl mb-6">
@@ -390,13 +390,13 @@ const DetailedAIToolsReview = () => {
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div className="flex items-center gap-2">
                           <DollarSign className="w-4 h-4 text-accent-primary" />
-                          <span className="text-text-secondary">💰 Цена</span>
+                          <span className="text-text-secondary">Цена</span>
                         </div>
                         <div className="font-medium text-text-primary">{tool.characteristics.price}</div>
                         
                         <div className="flex items-center gap-2">
                           <Globe className="w-4 h-4 text-accent-primary" />
-                          <span className="text-text-secondary">💬 Платформа</span>
+                          <span className="text-text-secondary">Платформа</span>
                         </div>
                         <div className="font-medium text-text-primary">{tool.characteristics.platform}</div>
                         
@@ -408,7 +408,7 @@ const DetailedAIToolsReview = () => {
                         
                         <div className="flex items-center gap-2">
                           <Target className="w-4 h-4 text-accent-primary" />
-                          <span className="text-text-secondary">🎯 Лучше для</span>
+                          <span className="text-text-secondary">Лучше для</span>
                         </div>
                         <div className="font-medium text-text-primary">{tool.characteristics.bestFor}</div>
                         
@@ -422,7 +422,7 @@ const DetailedAIToolsReview = () => {
                       <div className="mt-4 pt-4 border-t border-gray-200">
                         <div className="flex items-center gap-2 mb-2">
                           <Languages className="w-4 h-4 text-accent-primary" />
-                          <span className="text-text-secondary font-medium">🌍 Поддерживаемые языки:</span>
+                          <span className="text-text-secondary font-medium">Поддерживаемые языки:</span>
                         </div>
                         <div className="text-sm text-text-primary">
                           {tool.characteristics.languages.join(', ')}
@@ -432,7 +432,10 @@ const DetailedAIToolsReview = () => {
 
                     {/* Objective Assessment */}
                     <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl">
-                      <h5 className="text-lg font-bold text-text-primary mb-4">⚖️ Объективная оценка</h5>
+                      <h5 className="text-lg font-bold text-text-primary mb-4 flex items-center gap-2">
+                        <Award className="w-5 h-5 text-accent-primary" />
+                        Объективная оценка
+                      </h5>
                       
                       <div className="grid md:grid-cols-2 gap-6">
                         {/* Pros */}
