@@ -298,7 +298,7 @@ const InteractiveComparisonTable: React.FC = () => {
   const hasActiveFilters = freeVersionFilter !== 'all' || categoryFilter !== 'all' || searchQuery !== '';
 
   return (
-    <section className="py-16 bg-gradient-to-br from-blue-50 to-indigo-50">
+    <section id="comparison-table" className="py-16 bg-gradient-to-br from-blue-50 to-indigo-50">
       <div className="container mx-auto px-6">
         {/* Заголовок секции */}
         <div className="text-center mb-12">

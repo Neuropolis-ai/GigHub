@@ -177,7 +177,7 @@ const AdvancedFAQSection: React.FC = () => {
   };
 
   return (
-    <section className="py-16 bg-gradient-to-br from-background via-accent-primary/5 to-accent-secondary/5">
+    <section id="faq" className="py-16 bg-gradient-to-br from-background via-accent-primary/5 to-accent-secondary/5">
       <div className="container mx-auto px-6">
         {/* Hero Header */}
         <motion.div 

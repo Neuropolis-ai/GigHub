@@ -132,7 +132,7 @@ const PromptMasteryGuide: React.FC = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-background via-accent-primary/5 to-accent-secondary/5">
+    <section id="prompt-guide" className="py-20 bg-gradient-to-br from-background via-accent-primary/5 to-accent-secondary/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Заголовок секции */}
         <motion.div 

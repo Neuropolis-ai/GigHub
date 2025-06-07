@@ -201,7 +201,7 @@ const AuthorAndCommentsSection: React.FC = () => {
   });
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 via-blue-50/80 to-purple-50/80 relative overflow-hidden">
+    <section id="expert-reviews" className="py-20 bg-gradient-to-br from-gray-50 via-blue-50/80 to-purple-50/80 relative overflow-hidden">
       {/* Декоративные элементы фона */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-10 left-10 w-20 h-20 bg-gradient-to-br from-blue-200/20 to-purple-200/20 rounded-full blur-xl"></div>
