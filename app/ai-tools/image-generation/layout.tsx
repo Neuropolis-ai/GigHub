@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://gighub.ru'),
@@ -55,6 +56,57 @@ export default function ImageGenerationLayout({
 }) {
   return (
     <>
+      {/* Google Analytics 4 */}
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'GA_MEASUREMENT_ID', {
+            page_title: 'Лучшие нейросети для изображений 2025',
+            page_location: window.location.href,
+            content_group1: 'AI Tools',
+            content_group2: 'Image Generation',
+            custom_map: {
+              'custom_parameter_1': 'ai_tools_category'
+            }
+          });
+
+          // Отслеживание времени на странице
+          let startTime = Date.now();
+          
+          // Отслеживание скролла
+          let maxScroll = 0;
+          window.addEventListener('scroll', function() {
+            let scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+            if (scrollPercent > maxScroll) {
+              maxScroll = scrollPercent;
+              if (scrollPercent >= 25 || scrollPercent >= 50 || scrollPercent >= 75 || scrollPercent >= 90) {
+                gtag('event', 'scroll', {
+                  event_category: 'engagement',
+                  event_label: scrollPercent + '%',
+                  value: scrollPercent
+                });
+              }
+            }
+          });
+
+          // Отслеживание времени при уходе со страницы
+          window.addEventListener('beforeunload', function() {
+            let timeOnPage = Math.round((Date.now() - startTime) / 1000);
+            gtag('event', 'time_on_page', {
+              event_category: 'engagement',
+              event_label: 'seconds',
+              value: timeOnPage
+            });
+          });
+        `}
+      </Script>
+
       {/* JSON-LD разметка для SEO */}
       <script
         type="application/ld+json"

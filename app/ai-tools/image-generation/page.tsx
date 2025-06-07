@@ -84,6 +84,13 @@ const aiTools: AITool[] = [
   }
 ]
 
+// Функция отслеживания кликов
+const trackEvent = (eventName: string, parameters: any) => {
+  if (typeof window !== 'undefined' && (window as any).gtag) {
+    (window as any).gtag('event', eventName, parameters);
+  }
+}
+
 // Компонент системы оценок
 const RatingSystem = ({ toolId, initialRating }: { toolId: number, initialRating: number }) => {
   const [userRating, setUserRating] = useState(0)
@@ -129,66 +136,82 @@ const RatingSystem = ({ toolId, initialRating }: { toolId: number, initialRating
 }
 
 // Компонент карточки нейросети
-const AIToolCard = ({ tool }: { tool: AITool }) => (
-  <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
-    <div className="p-6">
-      {/* Заголовок и рейтинг */}
-      <div className="flex justify-between items-start mb-4">
-        <h3 className="text-xl font-bold text-gray-900">{tool.name}</h3>
-        <div className="flex items-center bg-yellow-50 px-3 py-1 rounded-full">
-          <span className="text-yellow-600 mr-1">⭐</span>
-          <span className="font-semibold text-yellow-700">{tool.rating}/10</span>
+const AIToolCard = ({ tool }: { tool: AITool }) => {
+  
+  const handleToolClick = () => {
+    trackEvent('view_ai_tool', {
+      tool_name: tool.name.toLowerCase().replace(/\s+/g, '_'),
+      tool_category: 'image_generation',
+      tool_price: tool.price,
+      tool_rating: tool.rating,
+      event_category: 'engagement'
+    });
+  }
+
+  return (
+    <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
+      <div className="p-6">
+        {/* Заголовок и рейтинг */}
+        <div className="flex justify-between items-start mb-4">
+          <h3 className="text-xl font-bold text-gray-900">{tool.name}</h3>
+          <div className="flex items-center bg-yellow-50 px-3 py-1 rounded-full">
+            <span className="text-yellow-600 mr-1">⭐</span>
+            <span className="font-semibold text-yellow-700">{tool.rating}/10</span>
+          </div>
         </div>
-      </div>
 
-      {/* Цена и статус */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-2">
-          <span className="text-lg font-semibold text-gray-900">{tool.price}</span>
-          {tool.isFree && (
-            <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-              Бесплатно
-            </span>
-          )}
+        {/* Цена и статус */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-2">
+            <span className="text-lg font-semibold text-gray-900">{tool.price}</span>
+            {tool.isFree && (
+              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                Бесплатно
+              </span>
+            )}
+          </div>
+          <div className="flex space-x-1">
+            {tool.languages.map((lang, idx) => (
+              <span key={idx} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                {lang}
+              </span>
+            ))}
+          </div>
         </div>
-        <div className="flex space-x-1">
-          {tool.languages.map((lang, idx) => (
-            <span key={idx} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
-              {lang}
-            </span>
-          ))}
+
+        {/* Возможности */}
+        <div className="mb-4">
+          <h4 className="text-sm font-semibold text-gray-700 mb-2">Возможности:</h4>
+          <div className="space-y-1">
+            {tool.features.slice(0, 3).map((feature, idx) => (
+              <div key={idx} className="flex items-center text-sm text-gray-600">
+                <span className="text-green-500 mr-2">✓</span>
+                {feature}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Возможности */}
-      <div className="mb-4">
-        <h4 className="text-sm font-semibold text-gray-700 mb-2">Возможности:</h4>
-        <div className="space-y-1">
-          {tool.features.slice(0, 3).map((feature, idx) => (
-            <div key={idx} className="flex items-center text-sm text-gray-600">
-              <span className="text-green-500 mr-2">✓</span>
-              {feature}
-            </div>
-          ))}
+        {/* Лучше всего для */}
+        <div className="mb-4">
+          <span className="text-sm font-semibold text-purple-700">Лучше всего для:</span>
+          <p className="text-sm text-gray-600 mt-1">{tool.bestFor}</p>
         </div>
+
+        {/* Кнопка действия с отслеживанием */}
+        <button 
+          onClick={handleToolClick}
+          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-200 mb-3"
+        >
+          Попробовать {tool.name}
+        </button>
+
+        {/* Система оценок */}
+        <RatingSystem toolId={tool.id} initialRating={tool.rating} />
       </div>
-
-      {/* Лучше всего для */}
-      <div className="mb-4">
-        <span className="text-sm font-semibold text-purple-700">Лучше всего для:</span>
-        <p className="text-sm text-gray-600 mt-1">{tool.bestFor}</p>
-      </div>
-
-      {/* Кнопка действия */}
-      <button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-200 mb-3">
-        Попробовать {tool.name}
-      </button>
-
-      {/* Система оценок */}
-      <RatingSystem toolId={tool.id} initialRating={tool.rating} />
     </div>
-  </div>
-)
+  )
+}
 
 // Компонент сравнительной таблицы
 const ComparisonTable = () => (
