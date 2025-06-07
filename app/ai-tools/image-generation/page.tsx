@@ -867,7 +867,7 @@ export default function ImageGenerationPage() {
   }), [])
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50">
+    <main className="min-h-screen bg-gradient-to-br from-accent-primary/5 via-background to-accent-secondary/5">
       <NextSeo {...seoConfig} />
       <ArticleJsonLd
         url="https://gighub.ru/ai-tools/image-generation"
@@ -886,12 +886,12 @@ export default function ImageGenerationPage() {
       {/* Хлебные крошки */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-          <nav className="text-sm text-gray-500">
-            <Link href="/" className="hover:text-purple-600">Главная</Link>
+          <nav className="text-sm text-text-secondary">
+            <Link href="/" className="hover:text-accent-primary">Главная</Link>
             <span className="mx-2">/</span>
-            <Link href="/ai-tools" className="hover:text-purple-600">ИИ-инструменты</Link>
+            <Link href="/ai-tools" className="hover:text-accent-primary">ИИ-инструменты</Link>
             <span className="mx-2">/</span>
-            <span className="text-gray-900">Нейросети для изображений</span>
+            <span className="text-text-primary">Нейросети для изображений</span>
           </nav>
         </div>
       </div>
@@ -899,14 +899,14 @@ export default function ImageGenerationPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero секция - оптимизирована для LCP */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-            🎨 <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary mb-6 leading-tight">
+            🎨 <span className="bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">
               Лучшие нейросети
             </span>
             <br />
             для изображений 2025
           </h1>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8 leading-relaxed">
+          <p className="text-xl text-text-secondary max-w-4xl mx-auto mb-8 leading-relaxed">
             Полный обзор <strong>ТОП-5 ИИ-генераторов картинок</strong>: Midjourney, DALL-E 3, Stable Diffusion и другие. 
             Создавайте уникальные изображения за секунды с помощью <strong>нейросетей для фото</strong> и художественной генерации.
           </p>
@@ -914,20 +914,20 @@ export default function ImageGenerationPage() {
           {/* Статистика - мемоизированная */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{stats.total}+</div>
-              <div className="text-sm text-gray-600">Нейросетей</div>
+              <div className="text-2xl font-bold text-accent-primary">{stats.total}+</div>
+              <div className="text-sm text-text-secondary">Нейросетей</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{stats.free}</div>
-              <div className="text-sm text-gray-600">Бесплатных</div>
+              <div className="text-2xl font-bold text-accent-primary">{stats.free}</div>
+              <div className="text-sm text-text-secondary">Бесплатных</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{stats.styles}+</div>
-              <div className="text-sm text-gray-600">Стилей</div>
+              <div className="text-2xl font-bold text-accent-primary">{stats.styles}+</div>
+              <div className="text-sm text-text-secondary">Стилей</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{stats.languages}+</div>
-              <div className="text-sm text-gray-600">Языков</div>
+              <div className="text-2xl font-bold text-accent-primary">{stats.languages}+</div>
+              <div className="text-sm text-text-secondary">Языков</div>
             </div>
           </div>
         </div>
