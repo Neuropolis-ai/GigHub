@@ -602,7 +602,7 @@ export default function ImageGenerationPage() {
             для изображений 2025
           </h1>
           <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8 leading-relaxed">
-            Полный обзор <strong>ТОП-15 ИИ-генераторов картинок</strong>: Midjourney, DALL-E 3, Stable Diffusion и другие. 
+            Полный обзор <strong>ТОП-5 ИИ-генераторов картинок</strong>: Midjourney, DALL-E 3, Stable Diffusion и другие. 
             Создавайте уникальные изображения за секунды с помощью <strong>нейросетей для фото</strong> и художественной генерации.
           </p>
           

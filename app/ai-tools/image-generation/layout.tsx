@@ -3,12 +3,12 @@ import Script from 'next/script'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://gighub.ru'),
-  title: 'Лучшие нейросети для изображений 2025 — ТОП-15 ИИ-генераторов картинок',
-  description: 'Полный обзор лучших нейросетей для создания изображений: Midjourney, DALL-E 3, Stable Diffusion. Бесплатные и платные ИИ-генераторы с примерами и сравнением качества.',
+  title: 'Лучшие нейросети для изображений 2025 — ТОП-5 ИИ-генераторов картинок',
+  description: 'Полный обзор лучших нейросетей для создания изображений: Midjourney, DALL-E 3, Stable Diffusion, Leonardo AI, Playground AI. Бесплатные и платные ИИ-генераторы с примерами и сравнением качества.',
   keywords: 'нейросети для изображений, нейросеть фото, ИИ генератор картинок, нейросеть онлайн, создание изображений ИИ, Midjourney, DALL-E, Stable Diffusion, бесплатные нейросети',
   openGraph: {
-    title: 'Лучшие нейросети для изображений 2025 — ТОП-15 ИИ-генераторов',
-    description: 'Полный обзор ТОП-15 нейросетей для создания изображений. Midjourney, DALL-E 3, Stable Diffusion и другие лучшие ИИ-генераторы 2025 года.',
+    title: 'Лучшие нейросети для изображений 2025 — ТОП-5 ИИ-генераторов',
+    description: 'Полный обзор ТОП-5 нейросетей для создания изображений. Midjourney, DALL-E 3, Stable Diffusion, Leonardo AI и Playground AI — лучшие ИИ-генераторы 2025 года.',
     url: 'https://gighub.ru/ai-tools/image-generation',
     siteName: 'GigHub - Каталог лучших ИИ-сервисов',
     images: [
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Лучшие нейросети для изображений 2025',
-    description: 'ТОП-15 ИИ-генераторов для создания изображений: Midjourney, DALL-E 3, Stable Diffusion и другие',
+    description: 'ТОП-5 ИИ-генераторов для создания изображений: Midjourney, DALL-E 3, Stable Diffusion, Leonardo AI и Playground AI',
     images: ['/twitter-image-ai-images.jpg'],
     creator: '@gighub_ru',
   },
@@ -114,8 +114,8 @@ export default function ImageGenerationLayout({
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": "Лучшие нейросети для изображений 2025 — ТОП-15 ИИ-генераторов картинок",
-            "description": "Полный обзор ТОП-15 нейросетей для создания изображений: Midjourney, DALL-E 3, Stable Diffusion и другие",
+            "headline": "Лучшие нейросети для изображений 2025 — ТОП-5 ИИ-генераторов картинок",
+            "description": "Полный обзор ТОП-5 нейросетей для создания изображений: Midjourney, DALL-E 3, Stable Diffusion, Leonardo AI и Playground AI",
             "image": "https://gighub.ru/og-image-ai-images.jpg",
             "author": {
               "@type": "Organization",
