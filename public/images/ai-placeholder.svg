@@ -1,0 +1,50 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366F1;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Фон -->
+  <rect width="400" height="400" fill="url(#bg)"/>
+  
+  <!-- Центральный AI-символ -->
+  <g transform="translate(200,200)">
+    <!-- Основной круг -->
+    <circle cx="0" cy="0" r="80" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.6)" stroke-width="2"/>
+    
+    <!-- Нейронные связи -->
+    <g stroke="rgba(255,255,255,0.8)" stroke-width="2" fill="rgba(255,255,255,0.9)">
+      <!-- Центральный узел -->
+      <circle cx="0" cy="0" r="8"/>
+      
+      <!-- Узлы первого кольца -->
+      <circle cx="30" cy="0" r="6"/>
+      <circle cx="-30" cy="0" r="6"/>
+      <circle cx="0" cy="30" r="6"/>
+      <circle cx="0" cy="-30" r="6"/>
+      
+      <!-- Узлы второго кольца -->
+      <circle cx="21" cy="21" r="4"/>
+      <circle cx="-21" cy="21" r="4"/>
+      <circle cx="21" cy="-21" r="4"/>
+      <circle cx="-21" cy="-21" r="4"/>
+      
+      <!-- Соединения -->
+      <line x1="0" y1="0" x2="30" y2="0"/>
+      <line x1="0" y1="0" x2="-30" y2="0"/>
+      <line x1="0" y1="0" x2="0" y2="30"/>
+      <line x1="0" y1="0" x2="0" y2="-30"/>
+      <line x1="0" y1="0" x2="21" y2="21"/>
+      <line x1="0" y1="0" x2="-21" y2="21"/>
+      <line x1="0" y1="0" x2="21" y2="-21"/>
+      <line x1="0" y1="0" x2="-21" y2="-21"/>
+    </g>
+  </g>
+  
+  <!-- Текст -->
+  <text x="200" y="320" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-family="Arial, sans-serif" font-size="24" font-weight="bold">AI Generated</text>
+  <text x="200" y="350" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-family="Arial, sans-serif" font-size="16">Image Example</text>
+</svg> 

@@ -56,25 +56,25 @@ const navigationItems: NavigationItem[] = [
 const demoImages = [
   {
     url: '/images/midjourney-example.jpg',
-    alt: 'Пример изображения Midjourney',
+    alt: 'Пример изображения Midjourney - фотореалистичный портрет',
     watermark: 'Midjourney',
     style: 'Фотореализм'
   },
   {
-    url: '/images/dalle-example.jpg', 
-    alt: 'Пример изображения DALL-E 3',
+    url: '/images/dalle-example.webp', 
+    alt: 'Пример изображения DALL-E 3 - робот в стиле Pixar',
     watermark: 'DALL-E 3',
     style: 'Концепт-арт'
   },
   {
-    url: '/images/stable-diffusion-example.jpg',
-    alt: 'Пример изображения Stable Diffusion',
+    url: '/images/stable-diffusion-example.webp',
+    alt: 'Пример изображения Stable Diffusion - аниме персонаж',
     watermark: 'Stable Diffusion',
     style: 'Аниме'
   },
   {
     url: '/images/leonardo-example.jpg',
-    alt: 'Пример изображения Leonardo AI',
+    alt: 'Пример изображения Leonardo AI - игровая графика',
     watermark: 'Leonardo AI',
     style: 'Игровая графика'
   }
@@ -83,19 +83,38 @@ const demoImages = [
 const ImageGenerationHero = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
+  const [progress, setProgress] = useState(0)
 
   // Автоматическая смена изображений
   useEffect(() => {
+    if (isPaused) {
+      setProgress(0)
+      return
+    }
+
     const interval = setInterval(() => {
       setIsAnimating(true)
       setTimeout(() => {
         setCurrentImageIndex((prev) => (prev + 1) % demoImages.length)
         setIsAnimating(false)
+        setProgress(0)
       }, 300)
     }, 4000)
 
-    return () => clearInterval(interval)
-  }, [])
+    // Прогресс-бар
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) return 0
+        return prev + (100 / 40) // 4 секунды = 40 шагов по 100ms
+      })
+    }, 100)
+
+    return () => {
+      clearInterval(interval)
+      clearInterval(progressInterval)
+    }
+  }, [isPaused, currentImageIndex])
 
   // Функция для скрола к разделу
   const scrollToSection = (sectionId: string) => {
@@ -105,6 +124,17 @@ const ImageGenerationHero = () => {
         behavior: 'smooth',
         block: 'start'
       })
+    }
+  }
+
+  // Функция для смены изображения
+  const handleImageChange = (index: number) => {
+    if (index !== currentImageIndex) {
+      setIsAnimating(true)
+      setTimeout(() => {
+        setCurrentImageIndex(index)
+        setIsAnimating(false)
+      }, 150)
     }
   }
 
@@ -121,10 +151,10 @@ const ImageGenerationHero = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
           {/* Левая колонка - текстовый контент */}
-          <div className="text-center lg:text-left space-y-8">
+          <div className="text-center lg:text-left space-y-8 animate-fadeInUp">
             
             {/* H1 Заголовок */}
-            <div className="space-y-4">
+            <div className="space-y-4 animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 <span className="text-gray-900">Лучшие нейросети</span>
                 <br />
@@ -138,7 +168,7 @@ const ImageGenerationHero = () => {
             </div>
 
             {/* Лид-абзац */}
-            <div className="space-y-4">
+            <div className="space-y-4 animate-fadeInUp" style={{ animationDelay: '0.4s' }}>
               <p className="text-xl md:text-2xl text-gray-700 leading-relaxed max-w-2xl">
                 Полный обзор <strong className="text-blue-600">ТОП-5 ИИ-генераторов картинок</strong>: 
                 Midjourney, DALL-E 3, Stable Diffusion и другие.
@@ -150,7 +180,7 @@ const ImageGenerationHero = () => {
             </div>
 
             {/* Быстрые статистики */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-lg mx-auto lg:mx-0">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-lg mx-auto lg:mx-0 animate-fadeInUp" style={{ animationDelay: '0.6s' }}>
               <div className="text-center lg:text-left">
                 <div className="text-3xl font-bold text-blue-600">5+</div>
                 <div className="text-sm text-gray-600">Лучших ИИ</div>
@@ -170,7 +200,7 @@ const ImageGenerationHero = () => {
             </div>
 
             {/* CTA кнопки */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fadeInUp" style={{ animationDelay: '0.8s' }}>
               <button
                 onClick={() => scrollToSection('top-ai-tools')}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/25 transform hover:scale-105 transition-all duration-300"
@@ -187,16 +217,20 @@ const ImageGenerationHero = () => {
           </div>
 
           {/* Правая колонка - визуальный якорь */}
-          <div className="relative">
+          <div className="relative animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
             <div className="relative w-full max-w-lg mx-auto">
               
               {/* Главное изображение с эффектом карусели */}
-              <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl">
+              <div 
+                className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl"
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+              >
                 <div 
                   className={`transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}
                 >
                   <Image
-                    src={demoImages[currentImageIndex]?.url || '/images/ai-placeholder.jpg'}
+                    src={demoImages[currentImageIndex]?.url || '/images/ai-placeholder.svg'}
                     alt={demoImages[currentImageIndex]?.alt || 'Пример ИИ изображения'}
                     fill
                     className="object-cover"
@@ -219,7 +253,7 @@ const ImageGenerationHero = () => {
                   {demoImages.map((_, index) => (
                     <button
                       key={index}
-                      onClick={() => setCurrentImageIndex(index)}
+                      onClick={() => handleImageChange(index)}
                       className={`w-3 h-3 rounded-full transition-all duration-300 ${
                         index === currentImageIndex 
                           ? 'bg-white shadow-lg' 
@@ -228,15 +262,34 @@ const ImageGenerationHero = () => {
                     />
                   ))}
                 </div>
+
+                {/* Индикатор паузы */}
+                {isPaused && (
+                  <div className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full backdrop-blur-sm">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                )}
+
+                {/* Индикатор прогресса */}
+                {!isPaused && (
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/20">
+                    <div 
+                      className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-100 ease-linear"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Плавающие мини-карточки */}
-              <div className="absolute -top-6 -right-6 bg-white p-4 rounded-2xl shadow-xl animate-bounce delay-1000">
+              <div className="absolute -top-6 -right-6 bg-white p-4 rounded-2xl shadow-xl animate-bounce delay-1000 animate-fadeInUp" style={{ animationDelay: '1s' }}>
                 <div className="text-2xl">🎨</div>
                 <div className="text-xs font-semibold text-gray-600">Арт</div>
               </div>
               
-              <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl animate-bounce delay-2000">
+              <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl animate-bounce delay-2000 animate-fadeInUp" style={{ animationDelay: '1.2s' }}>
                 <div className="text-2xl">📸</div>
                 <div className="text-xs font-semibold text-gray-600">Фото</div>
               </div>
@@ -245,7 +298,7 @@ const ImageGenerationHero = () => {
         </div>
 
         {/* Блок навигации / Оглавление */}
-        <div className="mt-16 lg:mt-24">
+        <div className="mt-16 lg:mt-24 animate-fadeInUp" style={{ animationDelay: '1s' }}>
           <div className="text-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               🗺️ Навигация по странице
@@ -256,11 +309,12 @@ const ImageGenerationHero = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {navigationItems.map((item) => (
+            {navigationItems.map((item, index) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="group bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-gray-200 hover:border-purple-300 hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-left"
+                className="group bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-gray-200 hover:border-purple-300 hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-left animate-fadeInUp"
+                style={{ animationDelay: `${1.2 + index * 0.1}s` }}
               >
                 <div className="flex items-start space-x-4">
                   <div className="text-3xl group-hover:scale-110 transition-transform duration-300">
