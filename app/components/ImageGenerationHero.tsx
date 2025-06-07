@@ -1,354 +1,298 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
+import { ArrowRight, Sparkles, Play, Award, TrendingUp, Users, Star } from 'lucide-react'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
+import Image from 'next/image'
 
-// Типы для навигации
-interface NavigationItem {
-  id: string
-  title: string
-  description: string
-  icon: string
-}
-
-// Данные для навигации по странице
-const navigationItems: NavigationItem[] = [
-  {
-    id: 'top-ai-tools',
-    title: 'ТОП-5 нейросетей',
-    description: 'Лучшие ИИ-генераторы 2025',
-    icon: '🏆'
-  },
-  {
-    id: 'comparison-table',
-    title: 'Сравнительная таблица',
-    description: 'Все характеристики в одном месте',
-    icon: '📊'
-  },
-  {
-    id: 'free-tools',
-    title: 'Бесплатные сервисы',
-    description: 'Генерация без платной подписки',
-    icon: '💚'
-  },
-  {
-    id: 'prompt-guide',
-    title: 'Как писать промпты',
-    description: 'Секреты эффективных запросов',
-    icon: '💡'
-  },
-  {
-    id: 'interactive-tools',
-    title: 'Интерактивные инструменты',
-    description: 'Калькуляторы и генераторы',
-    icon: '🛠️'
-  },
-  {
-    id: 'faq',
-    title: 'Частые вопросы',
-    description: 'Ответы на популярные вопросы',
-    icon: '❓'
-  }
-]
-
-// Данные для демонстрационных изображений
-const demoImages = [
-  {
-    url: '/images/midjourney-example.jpg',
-    alt: 'Пример изображения Midjourney - фотореалистичный портрет',
-    watermark: 'Midjourney',
-    style: 'Фотореализм'
-  },
-  {
-    url: '/images/dalle-example.webp', 
-    alt: 'Пример изображения DALL-E 3 - робот в стиле Pixar',
-    watermark: 'DALL-E 3',
-    style: 'Концепт-арт'
-  },
-  {
-    url: '/images/stable-diffusion-example.webp',
-    alt: 'Пример изображения Stable Diffusion - аниме персонаж',
-    watermark: 'Stable Diffusion',
-    style: 'Аниме'
-  },
-  {
-    url: '/images/leonardo-example.jpg',
-    alt: 'Пример изображения Leonardo AI - игровая графика',
-    watermark: 'Leonardo AI',
-    style: 'Игровая графика'
-  }
-]
-
-const ImageGenerationHero = () => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [isAnimating, setIsAnimating] = useState(false)
-  const [isPaused, setIsPaused] = useState(false)
-  const [progress, setProgress] = useState(0)
-
-  // Автоматическая смена изображений
-  useEffect(() => {
-    if (isPaused) {
-      setProgress(0)
-      return
-    }
-
-    const interval = setInterval(() => {
-      setIsAnimating(true)
-      setTimeout(() => {
-        setCurrentImageIndex((prev) => (prev + 1) % demoImages.length)
-        setIsAnimating(false)
-        setProgress(0)
-      }, 300)
-    }, 4000)
-
-    // Прогресс-бар
-    const progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) return 0
-        return prev + 2.5 // 4 секунды = 40 шагов по 100ms
-      })
-    }, 100)
-
-    return () => {
-      clearInterval(interval)
-      clearInterval(progressInterval)
-    }
-  }, [isPaused])
-
-  // Функция для скрола к разделу
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      })
-    }
-  }
-
-  // Функция для смены изображения
-  const handleImageChange = (index: number) => {
-    if (index !== currentImageIndex) {
-      setIsAnimating(true)
-      setTimeout(() => {
-        setCurrentImageIndex(index)
-        setIsAnimating(false)
-        setProgress(0)
-      }, 150)
-    }
-  }
-
+export default function ImageGenerationHero() {
   return (
-    <section className="relative min-h-[90vh] bg-gradient-to-br from-blue-50 via-white to-purple-50 overflow-hidden">
-      {/* Декоративные элементы фона */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-200 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-purple-200 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-pink-100 rounded-full blur-3xl animate-pulse delay-2000" />
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-accent-primary/5 via-background to-accent-secondary/5">
+      {/* Enhanced Animated Background */}
+      <div className="absolute inset-0">
+        <motion.div 
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-accent-primary/20 to-accent-secondary/10 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.7, 0.3]
+          }}
+          transition={{ 
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div 
+          className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-tl from-accent-secondary/20 to-accent-primary/10 rounded-full blur-3xl"
+          animate={{ 
+            scale: [1.2, 1, 1.2],
+            opacity: [0.2, 0.6, 0.2]
+          }}
+          transition={{ 
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-12 items-center py-20">
           
-          {/* Левая колонка - текстовый контент */}
-          <div className="text-center lg:text-left space-y-8 animate-fadeInUp">
-            
-            {/* H1 Заголовок */}
-            <div className="space-y-4 animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                <span className="text-gray-900">Лучшие нейросети</span>
-                <br />
-                <span className="bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
-                  для генерации изображений 2025
-                </span>
-              </h1>
+          {/* Left Content */}
+          <div className="text-center lg:text-left">
+            {/* Badge */}
+            <motion.div 
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white/90 backdrop-blur-sm rounded-full border border-accent-primary/20 text-sm text-text-secondary shadow-lg mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <Award className="w-5 h-5 text-accent-primary" />
+              <span className="font-semibold">ТОП-5 нейросетей 2025 года</span>
+            </motion.div>
+
+            {/* Main Headline */}
+            <motion.h1 
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight mb-8"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <span className="text-text-primary">Лучшие</span>
+              <br />
+              <span className="text-gradient bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">
+                нейросети
+              </span>
+              <br />
+              <span className="text-text-primary">для изображений</span>
+            </motion.h1>
+
+            {/* Subtitle */}
+            <motion.p 
+              className="text-lg sm:text-xl text-text-secondary mb-10 leading-relaxed max-w-2xl mx-auto lg:mx-0"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
+              Полный гид по 15+ лучшим ИИ-инструментам для создания изображений. 
+              Сравнения, цены, примеры и экспертные рекомендации от профессионалов.
+            </motion.p>
+
+            {/* Stats Row */}
+            <motion.div 
+              className="grid grid-cols-3 gap-6 mb-10"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
+              <div className="text-center lg:text-left">
+                <div className="text-3xl font-bold text-accent-primary">15+</div>
+                <div className="text-sm text-text-secondary">Нейросетей</div>
+              </div>
+              <div className="text-center lg:text-left">
+                <div className="text-3xl font-bold text-accent-secondary">50M+</div>
+                <div className="text-sm text-text-secondary">Пользователей</div>
+              </div>
+              <div className="text-center lg:text-left">
+                <div className="text-3xl font-bold text-green-500">95%</div>
+                <div className="text-sm text-text-secondary">Точность</div>
+              </div>
+            </motion.div>
+
+            {/* CTA Buttons */}
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.0 }}
+            >
+              <Link href="#top-ai-tools">
+                <motion.button 
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full sm:w-auto px-8 py-4 min-h-[56px] bg-gradient-to-r from-accent-primary to-accent-secondary text-white rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl hover:from-accent-primary/90 hover:to-accent-secondary/90 transition-all duration-300 group"
+                >
+                  <span className="flex items-center justify-center gap-3">
+                    <Sparkles className="w-6 h-6" />
+                    Смотреть рейтинг
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </motion.button>
+              </Link>
               
-              {/* Анимированная полоска под заголовком */}
-              <div className="w-32 h-1 bg-gradient-to-r from-indigo-600 to-blue-500 rounded-full mx-auto lg:mx-0 animate-pulse" />
-            </div>
+              <Link href="#comparison-table">
+                <motion.button 
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full sm:w-auto px-8 py-4 min-h-[56px] bg-white/90 backdrop-blur-sm text-text-primary rounded-xl font-semibold text-lg border border-gray-200/60 hover:border-accent-primary/40 hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl group"
+                >
+                  <span className="flex items-center justify-center gap-3">
+                    <Play className="w-5 h-5 text-accent-primary" />
+                    Сравнить сервисы
+                  </span>
+                </motion.button>
+              </Link>
+            </motion.div>
 
-            {/* Лид-абзац */}
-            <div className="space-y-4 animate-fadeInUp" style={{ animationDelay: '0.4s' }}>
-              <p className="text-xl md:text-2xl text-gray-700 leading-relaxed max-w-2xl">
-                Полный обзор <strong className="text-indigo-600">ТОП-5 ИИ-генераторов картинок</strong>: 
-                Midjourney, DALL-E 3, Stable Diffusion и другие.
-              </p>
-              <p className="text-lg text-gray-600 leading-relaxed max-w-2xl">
-                Создавайте уникальные изображения за секунды с помощью 
-                <strong className="text-blue-500"> нейросетей для фото</strong> и художественной генерации.
-              </p>
-            </div>
-
-            {/* Быстрые статистики */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-lg mx-auto lg:mx-0 animate-fadeInUp" style={{ animationDelay: '0.6s' }}>
-              <div className="text-center lg:text-left">
-                <div className="text-3xl font-bold text-indigo-600">5+</div>
-                <div className="text-sm text-gray-600">Лучших ИИ</div>
+            {/* Trust Indicators */}
+            <motion.div 
+              className="flex items-center justify-center lg:justify-start gap-6 mt-10 text-sm text-text-secondary"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 1.2 }}
+            >
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4 text-accent-primary" />
+                <span>100К+ читателей</span>
               </div>
-              <div className="text-center lg:text-left">
-                <div className="text-3xl font-bold text-blue-500">3</div>
-                <div className="text-sm text-gray-600">Бесплатных</div>
+              <div className="flex items-center gap-2">
+                <Star className="w-4 h-4 text-yellow-500" />
+                <span>4.9/5 рейтинг</span>
               </div>
-              <div className="text-center lg:text-left">
-                <div className="text-3xl font-bold text-indigo-500">50+</div>
-                <div className="text-sm text-gray-600">Стилей</div>
+              <div className="flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-green-500" />
+                <span>Обновляется еженедельно</span>
               </div>
-              <div className="text-center lg:text-left">
-                <div className="text-3xl font-bold text-blue-600">10+</div>
-                <div className="text-sm text-gray-600">Языков</div>
-              </div>
-            </div>
-
-            {/* CTA кнопки */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fadeInUp" style={{ animationDelay: '0.8s' }}>
-              <button
-                onClick={() => scrollToSection('top-ai-tools')}
-                className="bg-indigo-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-indigo-700 hover:shadow-xl hover:shadow-indigo-500/25 transform hover:scale-105 transition-all duration-300"
-              >
-                🚀 Смотреть ТОП-5
-              </button>
-              <button
-                onClick={() => scrollToSection('free-tools')}
-                className="bg-white text-gray-800 border-2 border-gray-200 px-8 py-4 rounded-xl font-semibold text-lg hover:border-indigo-300 hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-              >
-                💚 Бесплатные варианты
-              </button>
-            </div>
+            </motion.div>
           </div>
 
-          {/* Правая колонка - визуальный якорь */}
-          <div className="relative animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
-            <div className="relative w-full max-w-lg mx-auto">
-              
-              {/* Главное изображение с эффектом карусели */}
-              <div 
-                className="relative w-full h-[31rem] lg:h-[35rem] rounded-3xl overflow-hidden shadow-2xl"
-                onMouseEnter={() => setIsPaused(true)}
-                onMouseLeave={() => setIsPaused(false)}
-              >
-                <div 
-                  className={`transition-opacity duration-300 ${isAnimating ? 'opacity-0' : 'opacity-100'}`}
+          {/* Right Content - Visual Elements */}
+          <div className="relative">
+            <motion.div
+              className="relative"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+            >
+              {/* Main Image Grid */}
+              <div className="grid grid-cols-2 gap-4">
+                {/* Midjourney Example */}
+                <motion.div 
+                  className="relative h-48 rounded-2xl overflow-hidden shadow-2xl"
+                  whileHover={{ scale: 1.05, rotate: 2 }}
+                  transition={{ duration: 0.3 }}
                 >
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-500 opacity-90" />
                   <Image
-                    src={demoImages[currentImageIndex]?.url || '/images/ai-placeholder.svg'}
-                    alt={demoImages[currentImageIndex]?.alt || 'Пример ИИ изображения'}
+                    src="/images/midjourney-example.jpg"
+                    alt="Midjourney AI art example"
                     fill
                     className="object-cover"
-                    priority
                   />
-                  
-                  {/* Водяной знак */}
-                  <div className="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-2 rounded-lg backdrop-blur-sm">
-                    <div className="text-sm font-semibold">
-                      {demoImages[currentImageIndex]?.watermark}
-                    </div>
-                    <div className="text-xs text-gray-300">
-                      {demoImages[currentImageIndex]?.style}
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3">
+                      <div className="font-bold text-purple-600">Midjourney</div>
+                      <div className="text-sm text-gray-600">Фотореализм 10/10</div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
 
-                {/* Индикаторы изображений */}
-                <div className="absolute bottom-4 right-4 flex space-x-2">
-                  {demoImages.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleImageChange(index)}
-                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                        index === currentImageIndex 
-                          ? 'bg-white shadow-lg' 
-                          : 'bg-white/50 hover:bg-white/75'
-                      }`}
-                    />
-                  ))}
-                </div>
-
-                {/* Индикатор паузы */}
-                {isPaused && (
-                  <div className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full backdrop-blur-sm">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
+                {/* DALL-E Example */}
+                <motion.div 
+                  className="relative h-48 rounded-2xl overflow-hidden shadow-2xl mt-8"
+                  whileHover={{ scale: 1.05, rotate: -2 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 to-teal-500 opacity-90" />
+                  <Image
+                    src="/images/dalle-example.webp"
+                    alt="DALL-E 3 AI art example"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3">
+                      <div className="font-bold text-emerald-600">DALL-E 3</div>
+                      <div className="text-sm text-gray-600">Понимание 10/10</div>
+                    </div>
                   </div>
-                )}
+                </motion.div>
 
-                {/* Индикатор прогресса */}
-                {!isPaused && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/20">
-                    <div 
-                      className="h-full bg-gradient-to-r from-indigo-600 to-blue-500 transition-all duration-100 ease-linear"
-                      style={{ width: `${progress}%` }}
-                    />
+                {/* Leonardo Example */}
+                <motion.div 
+                  className="relative h-48 rounded-2xl overflow-hidden shadow-2xl -mt-4"
+                  whileHover={{ scale: 1.05, rotate: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-600 to-red-500 opacity-90" />
+                  <Image
+                    src="/images/leonardo-example.jpg"
+                    alt="Leonardo AI art example"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3">
+                      <div className="font-bold text-orange-600">Leonardo AI</div>
+                      <div className="text-sm text-gray-600">Скорость 10/10</div>
+                    </div>
                   </div>
-                )}
+                </motion.div>
+
+                {/* Stable Diffusion Example */}
+                <motion.div 
+                  className="relative h-48 rounded-2xl overflow-hidden shadow-2xl"
+                  whileHover={{ scale: 1.05, rotate: -1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-indigo-500 opacity-90" />
+                  <Image
+                    src="/images/stable-diffusion-example.webp"
+                    alt="Stable Diffusion AI art example"
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3">
+                      <div className="font-bold text-blue-600">Stable Diffusion</div>
+                      <div className="text-sm text-gray-600">Свобода 10/10</div>
+                    </div>
+                  </div>
+                </motion.div>
               </div>
 
-              {/* Плавающие мини-карточки */}
-              <div className="absolute -top-8 -right-12 bg-white p-4 rounded-2xl shadow-xl animate-bounce delay-1000 animate-fadeInUp" style={{ animationDelay: '1s' }}>
-                <div className="text-2xl">🎨</div>
-                <div className="text-xs font-semibold text-gray-600">Арт</div>
-              </div>
-              
-              <div className="absolute -bottom-8 -left-12 bg-white p-4 rounded-2xl shadow-xl animate-bounce delay-2000 animate-fadeInUp" style={{ animationDelay: '1.2s' }}>
-                <div className="text-2xl">📸</div>
-                <div className="text-xs font-semibold text-gray-600">Фото</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Блок навигации / Оглавление */}
-        <div className="mt-16 lg:mt-24 animate-fadeInUp" style={{ animationDelay: '1s' }}>
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              🗺️ Навигация по странице
-            </h2>
-            <p className="text-gray-600">
-              Быстро перейдите к интересующему разделу
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {navigationItems.map((item, index) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="group bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-gray-200 hover:border-indigo-300 hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-left animate-fadeInUp"
-                style={{ animationDelay: `${1.2 + index * 0.1}s` }}
+              {/* Floating Stats */}
+              <motion.div
+                className="absolute -top-4 -right-4 bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-xl border border-gray-200/50"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.5 }}
+                whileHover={{ scale: 1.05 }}
               >
-                <div className="flex items-start space-x-4">
-                  <div className="text-3xl group-hover:scale-110 transition-transform duration-300">
-                    {item.icon}
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors duration-300">
-                      {item.title}
-                    </h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      {item.description}
-                    </p>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-accent-primary">9.8</div>
+                  <div className="text-sm text-text-secondary">Средний рейтинг</div>
+                  <div className="flex items-center gap-1 mt-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 text-yellow-500 fill-current" />
+                    ))}
                   </div>
                 </div>
-              </button>
-            ))}
+              </motion.div>
+
+              <motion.div
+                className="absolute -bottom-4 -left-4 bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-xl border border-gray-200/50"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.7 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-500">+60%</div>
+                  <div className="text-sm text-text-secondary">Рост в 2024</div>
+                  <TrendingUp className="w-5 h-5 text-green-500 mx-auto mt-1" />
+                </div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </div>
 
-      {/* Стрелка вниз для скрола */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <button
-          onClick={() => scrollToSection('top-ai-tools')}
-          className="text-gray-400 hover:text-indigo-600 transition-colors duration-300"
-        >
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </button>
+      {/* Bottom Wave */}
+      <div className="absolute bottom-0 left-0 right-0">
+        <svg className="w-full h-20 text-white fill-current" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+        </svg>
       </div>
     </section>
   )
 }
-
-export default ImageGenerationHero 

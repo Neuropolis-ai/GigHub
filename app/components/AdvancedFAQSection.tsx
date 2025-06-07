@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, HelpCircle, MessageCircle, Star, CheckCircle, AlertCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, HelpCircle, MessageCircle, Star, CheckCircle, AlertCircle, Search } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface FAQItem {
   id: string;
@@ -133,12 +134,12 @@ const AdvancedFAQSection: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories = [
-    { key: 'all', label: 'Все вопросы', icon: '📋' },
-    { key: 'legal', label: 'Правовые', icon: '⚖️' },
-    { key: 'technical', label: 'Технические', icon: '🔧' },
-    { key: 'pricing', label: 'Цены', icon: '💰' },
-    { key: 'usage', label: 'Использование', icon: '🎨' },
-    { key: 'quality', label: 'Качество', icon: '⭐' }
+    { id: 'all', name: 'Все вопросы', icon: '📋' },
+    { id: 'legal', name: 'Правовые', icon: '⚖️' },
+    { id: 'technical', name: 'Технические', icon: '🔧' },
+    { id: 'pricing', name: 'Цены', icon: '💰' },
+    { id: 'usage', name: 'Использование', icon: '🎨' },
+    { id: 'quality', name: 'Качество', icon: '⭐' }
   ];
 
   const filteredFAQ = faqData.filter(item => {
@@ -178,108 +179,127 @@ const AdvancedFAQSection: React.FC = () => {
   return (
     <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
       <div className="container mx-auto px-6">
-        {/* Заголовок секции */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Ответы на частые вопросы
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Собрали ответы на самые важные вопросы о нейросетях для генерации изображений. 
-            Не нашли ответ? Напишите в комментариях!
-          </p>
-        </div>
+        {/* Hero Header */}
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full border border-accent-primary/20 mb-8 shadow-lg">
+            <HelpCircle className="w-5 h-5 text-accent-primary" />
+            <span className="text-accent-primary font-bold">ЭКСПЕРТНЫЕ ОТВЕТЫ</span>
+          </div>
 
-        {/* Популярные вопросы */}
-        <div className="mb-12">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-            <Star className="w-6 h-6 mr-2 text-yellow-500" />
-            Самые популярные вопросы
+          <h2 className="text-5xl md:text-6xl font-bold text-text-primary mb-8 leading-tight">
+            Часто задаваемые{' '}
+            <span className="text-gradient bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">
+              вопросы
+            </span>
+          </h2>
+          
+          <p className="text-xl text-text-secondary max-w-4xl mx-auto leading-relaxed">
+            Исчерпывающие ответы на самые популярные вопросы о нейросетях для генерации изображений от экспертов с 5+ летним опытом
+          </p>
+        </motion.div>
+
+        {/* Popular Questions */}
+        <motion.div 
+          className="mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <h3 className="text-3xl font-bold text-text-primary mb-8 text-center flex items-center justify-center gap-3">
+            <Star className="w-8 h-8 text-accent-primary" />
+            ТОП-3 самых популярных вопросов
           </h3>
-          <div className="grid md:grid-cols-3 gap-4">
-            {popularQuestions.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => setOpenQuestion(openQuestion === item.id ? null : item.id)}
-                className="bg-white rounded-xl p-6 border-2 border-yellow-200 shadow-lg hover:shadow-xl transition-all cursor-pointer group"
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {popularQuestions.map((faq, index) => (
+              <motion.div
+                key={index}
+                className="group bg-white/80 backdrop-blur-sm rounded-3xl border-2 border-accent-primary/20 p-8 shadow-xl hover:shadow-2xl hover:shadow-accent-primary/20 transition-all duration-300 hover:border-accent-primary/40"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                whileHover={{ y: -5 }}
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${getCategoryColor(item.category)}`}>
-                    {getCategoryIcon(item.category)}
-                    <span className="ml-1 capitalize">{item.category}</span>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                    {index + 1}
                   </div>
-                  <Star className="w-5 h-5 text-yellow-500 fill-current" />
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center">
+                    <Star className="w-5 h-5 text-white" />
+                  </div>
                 </div>
                 
-                <h4 className="font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
-                  {item.question}
+                <h4 className="text-xl font-bold text-text-primary mb-4 group-hover:text-accent-primary transition-colors">
+                  {faq.question}
                 </h4>
                 
-                {openQuestion === item.id && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <p className="text-gray-700 leading-relaxed">{item.answer}</p>
-                    <div className="flex flex-wrap gap-2 mt-3">
-                      {item.tags.map((tag, idx) => (
-                        <span key={idx} className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                <div className="flex justify-end mt-3">
-                  {openQuestion === item.id ? (
-                    <ChevronUp className="w-5 h-5 text-gray-400" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-gray-400" />
-                  )}
+                <p className="text-text-secondary leading-relaxed">
+                  {faq.answer}
+                </p>
+
+                <div className="flex flex-wrap gap-2 mt-6">
+                  {faq.tags.map((tag, tagIndex) => (
+                    <span 
+                      key={tagIndex} 
+                      className="px-3 py-1 bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 text-accent-primary rounded-lg text-sm font-medium border border-accent-primary/20"
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Фильтры и поиск */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 mb-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            {/* Поиск */}
-            <div className="flex-1 max-w-md">
+        {/* Search and Filters */}
+        <motion.div 
+          className="bg-white/80 backdrop-blur-sm rounded-3xl border border-gray-200/50 p-8 mb-12 shadow-xl"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-text-secondary" />
               <input
                 type="text"
-                placeholder="Поиск по вопросам и ответам..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Поиск по вопросам, ответам и тегам..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary transition-all text-lg"
               />
             </div>
 
-            {/* Категории */}
+            {/* Category Filter */}
             <div className="flex flex-wrap gap-2">
-              {categories.map(category => (
+              {categories.map((category) => (
                 <button
-                  key={category.key}
-                  onClick={() => setSelectedCategory(category.key)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                    selectedCategory === category.key
-                      ? 'bg-blue-600 text-white shadow-md'
-                      : 'bg-gray-100 text-gray-600 hover:bg-blue-50'
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                    selectedCategory === category.id
+                      ? 'bg-gradient-to-r from-accent-primary to-accent-secondary text-white shadow-lg'
+                      : 'bg-gray-100 text-text-secondary hover:bg-accent-primary/10 hover:text-accent-primary'
                   }`}
                 >
-                  <span>{category.icon}</span>
-                  <span>{category.label}</span>
+                  <span className="text-lg">{category.icon}</span>
+                  <span className="hidden sm:inline">{category.name}</span>
                 </button>
               ))}
             </div>
           </div>
-
-          {/* Статистика */}
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <p className="text-sm text-gray-600">
-              Показано <span className="font-semibold text-blue-600">{filteredFAQ.length}</span> из{' '}
-              <span className="font-semibold">{faqData.length}</span> вопросов
-            </p>
-          </div>
-        </div>
+        </motion.div>
 
         {/* Основной список вопросов */}
         <div className="space-y-4">

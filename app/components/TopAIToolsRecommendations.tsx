@@ -1,258 +1,328 @@
-'use client';
+'use client'
 
-import React from 'react';
-import { Star, ExternalLink, ChevronRight, Trophy, Rocket, Settings } from 'lucide-react';
+import { useState } from 'react'
+import Image from 'next/image'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Star, Crown, Zap, Users, Award, TrendingUp, ChevronRight, Heart, Bookmark } from 'lucide-react'
 
-interface RecommendationCard {
-  id: string;
-  name: string;
-  logo: string;
-  badge: string;
-  badgeIcon: React.ReactNode;
-  description: string;
-  detailsAnchor: string;
-  externalUrl: string;
-  rating: number;
-  features: string[];
-  gradientColors: string;
+interface AITool {
+  id: number
+  name: string
+  rating: number
+  price: string
+  isFree: boolean
+  description: string
+  features: string[]
+  pros: string[]
+  cons: string[]
+  logo: string
+  gradient: string
+  iconBg: string
+  badgeColor: string
+  userCount: string
+  monthlyGrowth: string
 }
 
-const topAITools: RecommendationCard[] = [
+const topTools: AITool[] = [
   {
-    id: 'midjourney',
-    name: 'Midjourney',
-    logo: '/images/midjourney-logo.svg',
-    badge: 'Лучшее качество',
-    badgeIcon: <Trophy className="w-4 h-4" />,
-    description: 'Непревзойденный фотореализм и художественная выразительность для профессионалов.',
-    detailsAnchor: '#midjourney-review',
-    externalUrl: 'https://midjourney.com',
-    rating: 4.9,
-    features: ['Фотореализм', 'Художественный стиль', 'Discord интеграция'],
-    gradientColors: 'from-purple-600 to-pink-600'
+    id: 1,
+    name: "Midjourney",
+    rating: 9.8,
+    price: "$10-120/месяц",
+    isFree: false,
+    description: "Лидер фотореалистичной генерации с непревзойденным качеством и художественными возможностями",
+    features: ["V6 фотореализм", "Художественные стили", "--niji для аниме", "Discord интеграция"],
+    pros: ["Лучшее качество на рынке", "Огромное сообщество", "Постоянные обновления"],
+    cons: ["Нет бесплатного доступа", "Только Discord интерфейс", "Очереди в пиковые часы"],
+    logo: "/images/midjourney-example.jpg",
+    gradient: "from-purple-500 to-pink-500",
+    iconBg: "bg-gradient-to-br from-purple-500 to-pink-500",
+    badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
+    userCount: "15M+",
+    monthlyGrowth: "+25%"
   },
   {
-    id: 'dalle',
-    name: 'DALL-E 3',
-    logo: '/images/dalle-logo.svg',
-    badge: 'Самый простой старт',
-    badgeIcon: <Rocket className="w-4 h-4" />,
-    description: 'Интуитивный интерфейс и понимание естественного языка для быстрого старта.',
-    detailsAnchor: '#dalle-review',
-    externalUrl: 'https://openai.com/dall-e-3',
-    rating: 4.8,
-    features: ['ChatGPT интеграция', 'Понимание текста', 'Безопасность'],
-    gradientColors: 'from-green-500 to-teal-600'
+    id: 2,
+    name: "DALL-E 3",
+    rating: 9.5,
+    price: "$20/месяц",
+    isFree: true,
+    description: "Интегрирован с ChatGPT, лучше всех понимает сложные промпты и русский язык",
+    features: ["ChatGPT интеграция", "Русский язык", "Качественный текст", "Диалоговые промпты"],
+    pros: ["Понимание контекста", "Простота использования", "Высокое качество текста"],
+    cons: ["Ограничения бесплатной версии", "Требует подписку Plus", "Медленная генерация"],
+    logo: "/images/dalle-example.webp",
+    gradient: "from-emerald-500 to-teal-500",
+    iconBg: "bg-gradient-to-br from-emerald-500 to-teal-500",
+    badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
+    userCount: "100M+",
+    monthlyGrowth: "+40%"
   },
   {
-    id: 'stablediffusion',
-    name: 'Stable Diffusion 3',
-    logo: '/images/stablediffusion-logo.svg',
-    badge: 'Полная свобода',
-    badgeIcon: <Settings className="w-4 h-4" />,
-    description: 'Открытый код и полный контроль над процессом генерации для энтузиастов ИИ.',
-    detailsAnchor: '#stablediffusion-review',
-    externalUrl: 'https://stability.ai/stable-diffusion',
-    rating: 4.6,
-    features: ['Открытый код', 'Локальная установка', 'Кастомные модели'],
-    gradientColors: 'from-orange-500 to-red-600'
+    id: 3,
+    name: "Leonardo AI",
+    rating: 9.3,
+    price: "$10-48/месяц",
+    isFree: true,
+    description: "Универсальная платформа с множеством моделей и real-time генерацией",
+    features: ["Real-time генерация", "150 токенов/день", "Множество моделей", "Редактирование"],
+    pros: ["Хорошее бесплатное предложение", "Быстрая генерация", "Простой интерфейс"],
+    cons: ["Ограниченные модели в free", "Очереди", "Менее художественный стиль"],
+    logo: "/images/leonardo-example.jpg",
+    gradient: "from-orange-500 to-red-500",
+    iconBg: "bg-gradient-to-br from-orange-500 to-red-500",
+    badgeColor: "bg-orange-100 text-orange-800 border-orange-200",
+    userCount: "5M+",
+    monthlyGrowth: "+60%"
   }
-];
+]
 
-const TopAIToolsRecommendations: React.FC = () => {
+const TopAIToolsRecommendations = () => {
+  const [selectedTool, setSelectedTool] = useState<number>(1)
+  const [bookmarkedTools, setBookmarkedTools] = useState<Set<number>>(new Set())
+
+  const toggleBookmark = (toolId: number) => {
+    const newBookmarks = new Set(bookmarkedTools)
+    if (newBookmarks.has(toolId)) {
+      newBookmarks.delete(toolId)
+    } else {
+      newBookmarks.add(toolId)
+    }
+    setBookmarkedTools(newBookmarks)
+  }
+
   return (
-    <section className="py-16 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
-      {/* Декоративные элементы фона */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-accent-primary rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-accent-secondary rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-purple-500 rounded-full blur-2xl"></div>
-      </div>
-
-      <div className="container mx-auto px-6 relative">
-        {/* Заголовок секции */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center space-x-2 bg-accent-primary/10 rounded-full px-4 py-2 mb-6">
-            <Star className="w-5 h-5 text-accent-primary" />
-            <span className="text-accent-primary font-medium">Выбор экспертов GigHub</span>
+    <section className="py-16 bg-gradient-to-br from-accent-primary/5 via-background to-accent-secondary/5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 rounded-full border border-accent-primary/20 mb-6">
+            <Crown className="w-5 h-5 text-accent-primary" />
+            <span className="text-accent-primary font-semibold">ТОП-3 ВЫБОРА ЭКСПЕРТОВ</span>
           </div>
-          
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Топ-3 нейросети 2025
+
+          <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-6 leading-tight">
+            Лучшие нейросети для{' '}
+            <span className="text-gradient bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">
+              создания изображений
+            </span>
           </h2>
           
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Мы протестировали десятки ИИ-инструментов и выбрали лучшие решения 
-            для разных задач и уровней опыта
+          <p className="text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed">
+            Проверенные лидеры рынка с миллионами пользователей и высочайшим качеством генерации
           </p>
-        </div>
+        </motion.div>
 
-        {/* Карточки топ-3 инструментов */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {topAITools.map((tool, index) => (
-            <div
+        {/* Tools Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+          {topTools.map((tool, index) => (
+            <motion.div
               key={tool.id}
-              className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden"
-              style={{
-                animationDelay: `${index * 0.2}s`,
-                animation: 'slideInUp 0.8s ease-out forwards'
-              }}
+              className={`group relative bg-white/80 backdrop-blur-sm rounded-3xl border border-gray-200/50 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-accent-primary/10 hover:border-accent-primary/30 cursor-pointer ${
+                selectedTool === tool.id ? 'ring-2 ring-accent-primary/50 shadow-xl' : ''
+              }`}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.2 }}
+              onClick={() => setSelectedTool(tool.id)}
+              whileHover={{ y: -5 }}
             >
-              {/* Градиентная полоса сверху */}
-              <div className={`h-1 bg-gradient-to-r ${tool.gradientColors}`}></div>
-              
-              <div className="p-8">
-                {/* Заголовок карточки */}
-                <div className="flex items-start justify-between mb-6">
-                  <div className="flex items-center space-x-4">
-                    {/* Логотип-плейсхолдер */}
-                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${tool.gradientColors} flex items-center justify-center text-white font-bold text-xl shadow-lg`}>
-                      {tool.name.charAt(0)}
-                    </div>
-                    
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-900 mb-1">
-                        {tool.name}
-                      </h3>
-                      
-                      {/* Рейтинг */}
-                      <div className="flex items-center space-x-1">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${
-                              i < Math.floor(tool.rating)
-                                ? 'text-yellow-400 fill-current'
-                                : 'text-gray-300'
-                            }`}
-                          />
-                        ))}
-                        <span className="text-sm text-gray-600 ml-1">
-                          {tool.rating}
-                        </span>
+              {/* Position Badge */}
+              <div className="absolute top-4 left-4 z-10">
+                <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold ${
+                  index === 0 ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-white shadow-lg' :
+                  index === 1 ? 'bg-gradient-to-r from-gray-300 to-gray-400 text-white shadow-md' :
+                  'bg-gradient-to-r from-orange-300 to-yellow-400 text-white shadow-md'
+                }`}>
+                  {index === 0 && <Crown className="w-4 h-4" />}
+                  #{index + 1}
+                </div>
+              </div>
+
+              {/* Bookmark Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  toggleBookmark(tool.id)
+                }}
+                className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-all duration-200 group-bookmark"
+              >
+                <Bookmark 
+                  className={`w-5 h-5 transition-colors ${
+                    bookmarkedTools.has(tool.id) 
+                      ? 'text-accent-primary fill-current' 
+                      : 'text-gray-400 group-bookmark-hover:text-accent-primary'
+                  }`} 
+                />
+              </button>
+
+              {/* Hero Image */}
+              <div className="relative h-48 overflow-hidden">
+                <div className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-90`} />
+                <Image
+                  src={tool.logo}
+                  alt={`${tool.name} example`}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                
+                {/* Stats Overlay */}
+                <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                  <div className="flex items-center gap-2 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full">
+                    <Users className="w-4 h-4 text-accent-primary" />
+                    <span className="text-sm font-semibold text-text-primary">{tool.userCount}</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full">
+                    <TrendingUp className="w-4 h-4 text-green-500" />
+                    <span className="text-sm font-semibold text-green-600">{tool.monthlyGrowth}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                {/* Header */}
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-accent-primary transition-colors">
+                      {tool.name}
+                    </h3>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1 px-3 py-1 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                        <span className="font-bold text-yellow-700">{tool.rating}</span>
                       </div>
+                      {tool.isFree && (
+                        <span className="px-3 py-1 bg-green-100 text-green-800 rounded-lg text-sm font-medium border border-green-200">
+                          Есть бесплатно
+                        </span>
+                      )}
                     </div>
                   </div>
-                </div>
-
-                {/* Номинация */}
-                <div className="mb-4">
-                  <div className={`inline-flex items-center space-x-2 bg-gradient-to-r ${tool.gradientColors} text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg`}>
-                    {tool.badgeIcon}
-                    <span>{tool.badge}</span>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-accent-primary">{tool.price}</div>
                   </div>
                 </div>
 
-                {/* Описание */}
-                <p className="text-gray-700 mb-6 leading-relaxed">
+                {/* Description */}
+                <p className="text-text-secondary mb-6 leading-relaxed">
                   {tool.description}
                 </p>
 
-                {/* Ключевые особенности */}
-                <div className="mb-8">
-                  <div className="flex flex-wrap gap-2">
-                    {tool.features.map((feature, idx) => (
-                      <span
-                        key={idx}
-                        className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-                      >
-                        {feature}
-                      </span>
+                {/* Features */}
+                <div className="mb-6">
+                  <h4 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-accent-primary" />
+                    Ключевые возможности:
+                  </h4>
+                  <div className="space-y-2">
+                    {tool.features.slice(0, 3).map((feature, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-accent-primary" />
+                        <span className="text-sm text-text-secondary">{feature}</span>
+                      </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Кнопки CTA */}
-                <div className="space-y-3">
-                  <a
-                    href={tool.detailsAnchor}
-                    className="group w-full flex items-center justify-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-xl font-semibold transition-all duration-300 border-2 border-transparent hover:border-gray-300"
-                  >
-                    <span>Подробный обзор</span>
-                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                  </a>
-                  
-                  <a
-                    href={tool.externalUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`group w-full flex items-center justify-center space-x-2 bg-gradient-to-r ${tool.gradientColors} hover:shadow-lg text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105`}
-                  >
-                    <span>Перейти на сайт</span>
-                    <ExternalLink className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
-                  </a>
-                </div>
+                {/* CTA Button */}
+                <motion.button
+                  className="w-full px-6 py-3 bg-gradient-to-r from-accent-primary to-accent-secondary text-white rounded-xl font-semibold hover:from-accent-primary/90 hover:to-accent-secondary/90 transition-all duration-300 shadow-lg hover:shadow-xl group flex items-center justify-center gap-2"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span>Попробовать {tool.name}</span>
+                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
               </div>
-
-              {/* Декоративный блик */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-10 transform -skew-x-12 group-hover:animate-shine pointer-events-none"></div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        {/* Дополнительная информация */}
-        <div className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 rounded-2xl p-8 border border-accent-primary/20">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Почему стоит доверять нашему выбору?
-            </h3>
-            
-            <div className="grid md:grid-cols-3 gap-6 text-center">
-              <div className="space-y-2">
-                <div className="w-12 h-12 bg-accent-primary/20 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <Star className="w-6 h-6 text-accent-primary" />
-                </div>
-                <h4 className="font-semibold text-gray-900">50+ часов тестирования</h4>
-                <p className="text-gray-600 text-sm">Детальный анализ каждого инструмента</p>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="w-12 h-12 bg-accent-secondary/20 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <Trophy className="w-6 h-6 text-accent-secondary" />
-                </div>
-                <h4 className="font-semibold text-gray-900">Экспертная оценка</h4>
-                <p className="text-gray-600 text-sm">Команда профессиональных дизайнеров</p>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <Settings className="w-6 h-6 text-purple-500" />
-                </div>
-                <h4 className="font-semibold text-gray-900">Актуальные данные</h4>
-                <p className="text-gray-600 text-sm">Регулярное обновление рейтингов</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Detailed Info Section */}
+        <AnimatePresence mode="wait">
+          {selectedTool && (
+            <motion.div
+              key={selectedTool}
+              className="bg-white/80 backdrop-blur-sm rounded-3xl border border-gray-200/50 p-8 shadow-xl"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.4 }}
+            >
+              {(() => {
+                const tool = topTools.find(t => t.id === selectedTool)
+                if (!tool) return null
+
+                return (
+                  <div className="grid lg:grid-cols-2 gap-12">
+                    {/* Pros */}
+                    <div>
+                      <h4 className="text-xl font-bold text-text-primary mb-6 flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center">
+                          <Heart className="w-5 h-5 text-green-600" />
+                        </div>
+                        Преимущества {tool.name}
+                      </h4>
+                      <div className="space-y-4">
+                        {tool.pros.map((pro, idx) => (
+                          <motion.div
+                            key={idx}
+                            className="flex items-start gap-3 p-4 bg-green-50/50 rounded-xl border border-green-100"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: idx * 0.1 }}
+                          >
+                            <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <div className="w-2 h-2 rounded-full bg-green-500" />
+                            </div>
+                            <span className="text-text-secondary">{pro}</span>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Cons */}
+                    <div>
+                      <h4 className="text-xl font-bold text-text-primary mb-6 flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
+                          <Award className="w-5 h-5 text-amber-600" />
+                        </div>
+                        Ограничения и особенности
+                      </h4>
+                      <div className="space-y-4">
+                        {tool.cons.map((con, idx) => (
+                          <motion.div
+                            key={idx}
+                            className="flex items-start gap-3 p-4 bg-amber-50/50 rounded-xl border border-amber-100"
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: idx * 0.1 }}
+                          >
+                            <div className="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <div className="w-2 h-2 rounded-full bg-amber-500" />
+                            </div>
+                            <span className="text-text-secondary">{con}</span>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })()}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-
-      <style jsx>{`
-        @keyframes slideInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes shine {
-          0% {
-            transform: translateX(-100%) skewX(-12deg);
-          }
-          100% {
-            transform: translateX(300%) skewX(-12deg);
-          }
-        }
-
-        .animate-shine {
-          animation: shine 0.8s ease-out;
-        }
-      `}</style>
     </section>
-  );
-};
+  )
+}
 
-export default TopAIToolsRecommendations; 
+export default TopAIToolsRecommendations
