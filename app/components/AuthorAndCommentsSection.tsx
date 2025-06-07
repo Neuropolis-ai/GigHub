@@ -225,28 +225,28 @@ const AuthorAndCommentsSection: React.FC = () => {
             <div className="flex flex-col lg:flex-row lg:items-start gap-6 -mt-16">
               {/* Аватар автора */}
               <div className="relative group">
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-accent-primary via-accent-secondary to-accent-primary p-1.5 shadow-2xl group-hover:shadow-accent-primary/30 transition-all duration-300">
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-600 via-purple-600 to-blue-600 p-1.5 shadow-2xl group-hover:shadow-blue-600/30 transition-all duration-300">
                   <div className="w-full h-full rounded-full bg-white flex items-center justify-center relative overflow-hidden">
-                    <User className="w-12 h-12 text-text-secondary" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-accent-primary/5 to-transparent"></div>
+                    <User className="w-12 h-12 text-gray-500" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-blue-600/5 to-transparent"></div>
                   </div>
                 </div>
-                <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-gradient-to-br from-accent-secondary to-accent-primary rounded-full border-4 border-white flex items-center justify-center shadow-lg">
+                <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full border-4 border-white flex items-center justify-center shadow-lg">
                   <CheckCircle className="w-5 h-5 text-white" />
                 </div>
                 {/* Пульсирующий эффект */}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-600/20 to-purple-600/20 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
 
               {/* Информация об авторе */}
               <div className="flex-1">
                 <div className="mb-4">
-                  <h3 className="text-2xl font-bold text-text-primary mb-1 flex items-center">
+                  <h3 className="text-3xl font-bold text-gray-900 mb-2 flex items-center">
                     {authorData.name}
-                    <CheckCircle className="w-5 h-5 text-accent-primary ml-2" />
+                    <CheckCircle className="w-6 h-6 text-blue-600 ml-2" />
                   </h3>
-                  <p className="text-lg text-accent-primary font-semibold mb-2">{authorData.title}</p>
-                  <p className="text-text-secondary leading-relaxed max-w-3xl">{authorData.bio}</p>
+                  <p className="text-xl text-blue-600 font-semibold mb-4">{authorData.title}</p>
+                  <p className="text-gray-600 leading-relaxed max-w-3xl text-lg">{authorData.bio}</p>
                 </div>
 
                 {/* Статистика автора */}
@@ -271,6 +271,20 @@ const AuthorAndCommentsSection: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Дата последнего обновления */}
+                <div className="mb-6">
+                  <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-purple-50 p-3 rounded-lg border border-blue-200">
+                    <Calendar className="w-4 h-4 text-purple-600" />
+                    <span className="text-sm text-gray-600">
+                      <span className="font-semibold text-gray-900">Последнее обновление:</span> {new Date().toLocaleDateString('ru-RU', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}
+                    </span>
+                  </div>
+                </div>
+
                 {/* Квалификация */}
                 <div className="mb-6">
                   <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
@@ -283,31 +297,6 @@ const AuthorAndCommentsSection: React.FC = () => {
                         <CheckCircle className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
                         <span>{credential}</span>
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Социальные сети */}
-                <div>
-                  <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                    <ExternalLink className="w-4 h-4 text-purple-600" />
-                    Найти автора:
-                  </h4>
-                  <div className="flex flex-wrap gap-3">
-                    {authorData.socialLinks.map((link, idx) => (
-                      <a
-                        key={idx}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 rounded-lg transition-all group border border-blue-200 hover:border-blue-300"
-                      >
-                        {link.icon}
-                        <span className="text-sm font-medium text-blue-600 group-hover:text-purple-600">
-                          {link.platform}
-                        </span>
-                        <ExternalLink className="w-3 h-3 text-blue-500" />
-                      </a>
                     ))}
                   </div>
                 </div>

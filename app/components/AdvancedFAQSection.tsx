@@ -192,14 +192,14 @@ const AdvancedFAQSection: React.FC = () => {
             <span className="text-accent-primary font-bold">ЭКСПЕРТНЫЕ ОТВЕТЫ</span>
           </div>
 
-          <h2 className="text-5xl md:text-6xl font-bold text-text-primary mb-8 leading-tight">
+          <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-8 leading-tight">
             Часто задаваемые{' '}
-            <span className="text-gradient bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">
+            <span className="text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               вопросы
             </span>
           </h2>
           
-          <p className="text-xl text-text-secondary max-w-4xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
             Исчерпывающие ответы на самые популярные вопросы о нейросетях для генерации изображений от экспертов с 5+ летним опытом
           </p>
         </motion.div>
@@ -271,13 +271,13 @@ const AdvancedFAQSection: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Search */}
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-text-secondary pointer-events-none z-10" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" />
               <input
                 type="text"
                 placeholder="Поиск по вопросам, ответам и тегам..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-white border border-accent-primary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary transition-all text-lg shadow-sm"
+                className="w-full pl-12 pr-4 py-4 bg-white border border-blue-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-lg shadow-sm"
               />
             </div>
 
