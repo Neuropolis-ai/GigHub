@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, HelpCircle, MessageCircle, Star, CheckCircle, AlertCircle, Search } from 'lucide-react';
+import { ChevronDown, ChevronUp, HelpCircle, MessageCircle, Star, CheckCircle, AlertCircle, Search, Settings } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface FAQItem {
@@ -134,12 +134,12 @@ const AdvancedFAQSection: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories = [
-    { id: 'all', name: 'Все вопросы', icon: '📋' },
-    { id: 'legal', name: 'Правовые', icon: '⚖️' },
-    { id: 'technical', name: 'Технические', icon: '🔧' },
-    { id: 'pricing', name: 'Цены', icon: '💰' },
-    { id: 'usage', name: 'Использование', icon: '🎨' },
-    { id: 'quality', name: 'Качество', icon: '⭐' }
+    { id: 'all', name: 'Все вопросы', icon: <HelpCircle className="w-4 h-4" /> },
+    { id: 'legal', name: 'Правовые', icon: <AlertCircle className="w-4 h-4" /> },
+    { id: 'technical', name: 'Технические', icon: <Settings className="w-4 h-4" /> },
+    { id: 'pricing', name: 'Цены', icon: <Star className="w-4 h-4" /> },
+    { id: 'usage', name: 'Использование', icon: <MessageCircle className="w-4 h-4" /> },
+    { id: 'quality', name: 'Качество', icon: <CheckCircle className="w-4 h-4" /> }
   ];
 
   const filteredFAQ = faqData.filter(item => {
@@ -157,9 +157,9 @@ const AdvancedFAQSection: React.FC = () => {
   const getCategoryColor = (category: string) => {
     const colors = {
       'legal': 'bg-red-100 text-red-800 border-red-200',
-      'technical': 'bg-blue-100 text-blue-800 border-blue-200',
-      'pricing': 'bg-green-100 text-green-800 border-green-200',
-      'usage': 'bg-purple-100 text-purple-800 border-purple-200',
+      'technical': 'bg-accent-primary/10 text-accent-primary border-accent-primary/30',
+      'pricing': 'bg-accent-secondary/10 text-accent-secondary border-accent-secondary/30',
+      'usage': 'bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 text-accent-primary border-accent-primary/30',
       'quality': 'bg-yellow-100 text-yellow-800 border-yellow-200'
     };
     return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-800 border-gray-200';
@@ -177,7 +177,7 @@ const AdvancedFAQSection: React.FC = () => {
   };
 
   return (
-    <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
+    <section className="py-16 bg-gradient-to-br from-background via-accent-primary/5 to-accent-secondary/5">
       <div className="container mx-auto px-6">
         {/* Hero Header */}
         <motion.div 
@@ -232,7 +232,7 @@ const AdvancedFAQSection: React.FC = () => {
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white font-bold text-xl shadow-lg">
                     {index + 1}
                   </div>
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-secondary to-accent-primary flex items-center justify-center">
                     <Star className="w-5 h-5 text-white" />
                   </div>
                 </div>
@@ -262,7 +262,7 @@ const AdvancedFAQSection: React.FC = () => {
 
         {/* Search and Filters */}
         <motion.div 
-          className="bg-white/80 backdrop-blur-sm rounded-3xl border border-gray-200/50 p-8 mb-12 shadow-xl"
+          className="bg-white/80 backdrop-blur-sm rounded-3xl border border-accent-primary/20 p-8 mb-12 shadow-xl"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -277,7 +277,7 @@ const AdvancedFAQSection: React.FC = () => {
                 placeholder="Поиск по вопросам, ответам и тегам..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary transition-all text-lg"
+                className="w-full pl-12 pr-4 py-4 bg-white border border-accent-primary/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary transition-all text-lg shadow-sm"
               />
             </div>
 
@@ -290,10 +290,10 @@ const AdvancedFAQSection: React.FC = () => {
                   className={`flex items-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all duration-300 ${
                     selectedCategory === category.id
                       ? 'bg-gradient-to-r from-accent-primary to-accent-secondary text-white shadow-lg'
-                      : 'bg-gray-100 text-text-secondary hover:bg-accent-primary/10 hover:text-accent-primary'
+                      : 'bg-white/80 text-text-secondary hover:bg-accent-primary/10 hover:text-accent-primary border border-accent-primary/20'
                   }`}
                 >
-                  <span className="text-lg">{category.icon}</span>
+                  {category.icon}
                   <span className="hidden sm:inline">{category.name}</span>
                 </button>
               ))}
@@ -306,7 +306,7 @@ const AdvancedFAQSection: React.FC = () => {
           {filteredFAQ.map((item, index) => (
             <div
               key={item.id}
-              className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-all"
+              className="bg-white/80 backdrop-blur-sm rounded-xl shadow-md border border-accent-primary/20 overflow-hidden hover:shadow-lg hover:border-accent-primary/40 transition-all"
               style={{
                 animationDelay: `${index * 0.1}s`,
                 animation: 'fadeInUp 0.5s ease-out forwards'
@@ -314,7 +314,7 @@ const AdvancedFAQSection: React.FC = () => {
             >
               <button
                 onClick={() => setOpenQuestion(openQuestion === item.id ? null : item.id)}
-                className="w-full p-6 text-left hover:bg-gray-50 transition-colors"
+                className="w-full p-6 text-left hover:bg-accent-primary/5 transition-colors"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -324,37 +324,37 @@ const AdvancedFAQSection: React.FC = () => {
                         <span className="ml-1 capitalize">{item.category}</span>
                       </div>
                       {item.isPopular && (
-                        <div className="flex items-center text-yellow-600">
+                        <div className="flex items-center text-accent-secondary">
                           <Star className="w-4 h-4 fill-current" />
                           <span className="text-xs font-medium ml-1">Популярный</span>
                         </div>
                       )}
                     </div>
-                    <h4 className="text-lg font-semibold text-gray-900 mb-1">
+                    <h4 className="text-lg font-semibold text-text-primary mb-1">
                       {item.question}
                     </h4>
                   </div>
                   <div className="ml-4">
                     {openQuestion === item.id ? (
-                      <ChevronUp className="w-5 h-5 text-gray-400" />
+                      <ChevronUp className="w-5 h-5 text-accent-primary" />
                     ) : (
-                      <ChevronDown className="w-5 h-5 text-gray-400" />
+                      <ChevronDown className="w-5 h-5 text-text-secondary" />
                     )}
                   </div>
                 </div>
               </button>
 
               {openQuestion === item.id && (
-                <div className="px-6 pb-6 border-t border-gray-100 bg-gray-50">
+                <div className="px-6 pb-6 border-t border-accent-primary/20 bg-gradient-to-r from-accent-primary/5 to-accent-secondary/5">
                   <div className="pt-4">
-                    <p className="text-gray-700 leading-relaxed mb-4">
+                    <p className="text-text-secondary leading-relaxed mb-4">
                       {item.answer}
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {item.tags.map((tag, idx) => (
                         <span
                           key={idx}
-                          className="bg-white text-gray-600 px-3 py-1 rounded-full text-sm border border-gray-200 hover:border-blue-300 transition-colors cursor-pointer"
+                          className="bg-white text-accent-primary px-3 py-1 rounded-full text-sm border border-accent-primary/30 hover:border-accent-primary/60 transition-colors cursor-pointer font-medium"
                           onClick={() => setSearchQuery(tag)}
                         >
                           #{tag}
@@ -371,11 +371,11 @@ const AdvancedFAQSection: React.FC = () => {
         {/* Пустое состояние */}
         {filteredFAQ.length === 0 && (
           <div className="text-center py-12">
-            <HelpCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            <HelpCircle className="w-16 h-16 text-accent-primary/60 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-text-primary mb-2">
               Вопросы не найдены
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-text-secondary mb-4">
               Попробуйте изменить фильтры или поисковый запрос
             </p>
             <button
@@ -383,7 +383,7 @@ const AdvancedFAQSection: React.FC = () => {
                 setSelectedCategory('all');
                 setSearchQuery('');
               }}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-gradient-to-r from-accent-primary to-accent-secondary text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all transform hover:scale-105"
             >
               Сбросить фильтры
             </button>
@@ -391,19 +391,21 @@ const AdvancedFAQSection: React.FC = () => {
         )}
 
         {/* Призыв к действию */}
-        <div className="mt-12 bg-gradient-to-r from-blue-100 to-purple-100 rounded-2xl p-8 text-center border border-blue-200">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">
+        <div className="mt-12 bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 rounded-2xl p-8 text-center border border-accent-primary/20">
+          <h3 className="text-2xl font-bold text-text-primary mb-4">
             Не нашли ответ на свой вопрос?
           </h3>
-          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+          <p className="text-text-secondary mb-6 max-w-2xl mx-auto">
             Задайте его в комментариях ниже! Наши эксперты обязательно ответят и добавят ваш вопрос в этот раздел.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium">
-              💬 Задать вопрос в комментариях
+            <button className="bg-gradient-to-r from-accent-primary to-accent-secondary text-white px-6 py-3 rounded-lg hover:shadow-lg transition-all font-medium flex items-center justify-center gap-2 transform hover:scale-105">
+              <MessageCircle className="w-5 h-5" />
+              Задать вопрос в комментариях
             </button>
-            <button className="border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors font-medium">
-              📧 Написать в поддержку
+            <button className="border-2 border-accent-primary text-accent-primary px-6 py-3 rounded-lg hover:bg-accent-primary/5 transition-colors font-medium flex items-center justify-center gap-2">
+              <HelpCircle className="w-5 h-5" />
+              Написать в поддержку
             </button>
           </div>
         </div>
