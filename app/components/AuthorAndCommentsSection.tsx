@@ -116,7 +116,7 @@ const AuthorAndCommentsSection: React.FC = () => {
   const [newComment, setNewComment] = useState('');
   const [activeReply, setActiveReply] = useState<string | null>(null);
   const [replyText, setReplyText] = useState('');
-  const [sortBy, setSortBy] = useState<'recent' | 'popular'>('recent');
+  const [sortBy, setSortBy] = useState<'date' | 'rating'>('date');
 
   const handleLike = (commentId: string, replyId?: string) => {
     setComments(prevComments =>
@@ -194,10 +194,10 @@ const AuthorAndCommentsSection: React.FC = () => {
   };
 
   const sortedComments = [...comments].sort((a, b) => {
-    if (sortBy === 'popular') {
+    if (sortBy === 'rating') {
       return b.likes - a.likes;
     }
-    return 0; // для 'recent' порядок уже правильный
+    return 0; // для 'date' порядок уже правильный
   });
 
   return (
@@ -313,18 +313,18 @@ const AuthorAndCommentsSection: React.FC = () => {
                 <span className="text-sm text-text-secondary font-medium">Сортировка:</span>
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as 'recent' | 'popular')}
-                  className="text-sm border-2 border-accent-primary/20 rounded-xl px-4 py-2 focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer"
+                  onChange={(e) => setSortBy(e.target.value as 'date' | 'rating')}
+                  className="px-4 py-2 border-2 border-accent-primary/20 rounded-xl focus:outline-none focus:ring-1 focus:ring-accent-primary/30 focus:border-accent-primary bg-white/90 backdrop-blur-sm text-sm font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer shadow-sm hover:shadow-sm transition-all duration-300"
                   style={{
                     backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
                     backgroundPosition: 'right 0.5rem center',
                     backgroundRepeat: 'no-repeat',
-                    backgroundSize: '1.2em 1.2em',
-                    paddingRight: '2.2rem'
+                    backgroundSize: '1.5em 1.5em',
+                    paddingRight: '2.5rem'
                   }}
                 >
-                  <option value="recent">Новые</option>
-                  <option value="popular">Популярные</option>
+                  <option value="date">По дате</option>
+                  <option value="rating">По рейтингу</option>
                 </select>
               </div>
             </div>

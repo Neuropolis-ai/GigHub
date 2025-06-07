@@ -333,7 +333,7 @@ const InteractiveComparisonTable: React.FC = () => {
               <select
                 value={freeVersionFilter}
                 onChange={(e) => setFreeVersionFilter(e.target.value as any)}
-                className="px-4 py-3 border-2 border-accent-primary/20 rounded-xl focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary text-sm bg-white/90 backdrop-blur-sm min-w-[160px] shadow-sm hover:shadow-md transition-all duration-300 font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer"
+                className="px-4 py-3 border-2 border-accent-primary/20 rounded-xl focus:outline-none focus:ring-1 focus:ring-accent-primary/30 focus:border-accent-primary text-sm bg-white/90 backdrop-blur-sm min-w-[160px] shadow-sm hover:shadow-sm transition-all duration-300 font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer"
                 style={{
                   backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
                   backgroundPosition: 'right 0.5rem center',
@@ -352,7 +352,7 @@ const InteractiveComparisonTable: React.FC = () => {
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value as any)}
-                className="px-4 py-3 border-2 border-accent-primary/20 rounded-xl focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary text-sm bg-white/90 backdrop-blur-sm min-w-[160px] shadow-sm hover:shadow-md transition-all duration-300 font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer"
+                className="px-4 py-3 border-2 border-accent-primary/20 rounded-xl focus:outline-none focus:ring-1 focus:ring-accent-primary/30 focus:border-accent-primary text-sm bg-white/90 backdrop-blur-sm min-w-[160px] shadow-sm hover:shadow-sm transition-all duration-300 font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer"
                 style={{
                   backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
                   backgroundPosition: 'right 0.5rem center',
