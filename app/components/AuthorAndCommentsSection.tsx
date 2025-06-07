@@ -214,15 +214,9 @@ const AuthorAndCommentsSection: React.FC = () => {
         
         {/* Карточка автора */}
         <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-blue-200/30 overflow-hidden mb-12 relative">
-          {/* Градиентный заголовок с анимированным фоном */}
-          <div className="relative h-32 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-size-200 animate-gradient-x overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-            <div className="absolute top-4 right-4 w-16 h-16 bg-white/20 rounded-full blur-lg"></div>
-            <div className="absolute bottom-4 left-8 w-20 h-20 bg-white/15 rounded-full blur-xl"></div>
-          </div>
           
-          <div className="px-8 pb-8">
-            <div className="flex flex-col lg:flex-row lg:items-start gap-6 -mt-16">
+          <div className="px-8 py-8">
+            <div className="flex flex-col lg:flex-row lg:items-start gap-6">
               {/* Аватар автора */}
               <div className="relative group">
                 <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-600 via-purple-600 to-blue-600 p-1.5 shadow-2xl group-hover:shadow-blue-600/30 transition-all duration-300">
