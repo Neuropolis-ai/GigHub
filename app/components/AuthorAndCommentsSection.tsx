@@ -201,25 +201,41 @@ const AuthorAndCommentsSection: React.FC = () => {
   });
 
   return (
-    <section className="py-16 bg-gradient-to-br from-background via-accent-primary/5 to-accent-secondary/5">
-      <div className="container mx-auto px-6">
+    <section className="py-20 bg-gradient-to-br from-background via-accent-primary/8 to-accent-secondary/8 relative overflow-hidden">
+      {/* Декоративные элементы фона */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-10 left-10 w-20 h-20 bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20 rounded-full blur-xl"></div>
+        <div className="absolute top-32 right-16 w-32 h-32 bg-gradient-to-br from-accent-secondary/15 to-accent-primary/15 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-20 left-1/4 w-40 h-40 bg-gradient-to-br from-accent-primary/10 to-accent-secondary/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 right-10 w-24 h-24 bg-gradient-to-br from-accent-secondary/20 to-accent-primary/20 rounded-full blur-xl"></div>
+      </div>
+      
+      <div className="container mx-auto px-6 relative z-10">
         
         {/* Карточка автора */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-accent-primary/20 overflow-hidden mb-12">
-          <div className="bg-gradient-to-r from-accent-primary to-accent-secondary h-24"></div>
+        <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-accent-primary/30 overflow-hidden mb-12 relative">
+          {/* Градиентный заголовок с анимированным фоном */}
+          <div className="relative h-32 bg-gradient-to-r from-accent-primary via-accent-secondary to-accent-primary bg-size-200 animate-gradient-x overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+            <div className="absolute top-4 right-4 w-16 h-16 bg-white/20 rounded-full blur-lg"></div>
+            <div className="absolute bottom-4 left-8 w-20 h-20 bg-white/15 rounded-full blur-xl"></div>
+          </div>
           
           <div className="px-8 pb-8">
-            <div className="flex flex-col lg:flex-row lg:items-start gap-6 -mt-12">
+            <div className="flex flex-col lg:flex-row lg:items-start gap-6 -mt-16">
               {/* Аватар автора */}
-              <div className="relative">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-accent-primary to-accent-secondary p-1 shadow-lg">
-                  <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-                    <User className="w-10 h-10 text-text-secondary" />
+              <div className="relative group">
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-accent-primary via-accent-secondary to-accent-primary p-1.5 shadow-2xl group-hover:shadow-accent-primary/30 transition-all duration-300">
+                  <div className="w-full h-full rounded-full bg-white flex items-center justify-center relative overflow-hidden">
+                    <User className="w-12 h-12 text-text-secondary" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-accent-primary/5 to-transparent"></div>
                   </div>
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-gradient-to-br from-accent-secondary to-accent-primary rounded-full border-4 border-white flex items-center justify-center">
-                  <CheckCircle className="w-4 h-4 text-white" />
+                <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-gradient-to-br from-accent-secondary to-accent-primary rounded-full border-4 border-white flex items-center justify-center shadow-lg">
+                  <CheckCircle className="w-5 h-5 text-white" />
                 </div>
+                {/* Пульсирующий эффект */}
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20 animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
 
               {/* Информация об авторе */}
@@ -530,4 +546,25 @@ const AuthorAndCommentsSection: React.FC = () => {
   );
 };
 
-export default AuthorAndCommentsSection; 
+export default AuthorAndCommentsSection;
+
+{/* Дополнительные CSS стили */}
+<style jsx global>{`
+  @keyframes gradient-x {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  .animate-gradient-x {
+    background-size: 200% 200%;
+    animation: gradient-x 6s ease infinite;
+  }
+  
+  .bg-size-200 {
+    background-size: 200% 200%;
+  }
+`}</style> 

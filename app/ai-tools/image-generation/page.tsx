@@ -71,48 +71,6 @@ export default function ImageGenerationPage() {
       {/* Блок доверия с автором и комментариями */}
       <AuthorAndCommentsSection />
 
-      {/* Заключение */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <section className="text-center bg-white rounded-xl shadow-lg p-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">
-            🎯 Заключение: Выбираем лучшую нейросеть для изображений
-          </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
-            <strong>Нейросети для генерации изображений</strong> в 2025 году достигли невероятного уровня развития. 
-            Будущее создания визуального контента уже здесь — выбирайте подходящий инструмент и творите без границ!
-          </p>
-          
-          {/* Наши рекомендации */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {[
-              { icon: "🎨", title: "Для художников", tool: "Midjourney", desc: "Непревзойденное качество" },
-              { icon: "💼", title: "Для бизнеса", tool: "Adobe Firefly", desc: "Профессиональные инструменты" },
-              { icon: "🆓", title: "Для экономии", tool: "Stable Diffusion", desc: "Бесплатно и мощно" },
-              { icon: "🇷🇺", title: "Для русских", tool: "Kandinsky 3.1", desc: "Понимает наш язык" },
-              { icon: "👶", title: "Для новичков", tool: "DALL-E 3", desc: "Простой старт" },
-              { icon: "⚡", title: "Для энтузиастов", tool: "Stable Diffusion 3", desc: "Полная свобода" }
-            ].map((rec, idx) => (
-              <div key={idx} className="bg-gray-50 rounded-lg p-4 text-center">
-                <div className="text-2xl mb-2">{rec.icon}</div>
-                <div className="font-semibold text-gray-900">{rec.title}</div>
-                <div className="text-purple-600 font-medium">{rec.tool}</div>
-                <div className="text-sm text-gray-600">{rec.desc}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* CTA кнопки */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-            <Link href="/ai-tools" className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all">
-              Смотреть все ИИ-инструменты
-            </Link>
-            <Link href="/ai-tools?category=free" className="border-2 border-purple-600 text-purple-600 px-8 py-3 rounded-lg font-medium hover:bg-purple-50 transition-all">
-              Только бесплатные
-            </Link>
-          </div>
-        </section>
-      </div>
-
       {/* JSON-LD структурированные данные */}
       <script
         type="application/ld+json"
