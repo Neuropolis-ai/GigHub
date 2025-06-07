@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, memo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import ImageGenerationHero from '../../components/ImageGenerationHero'
 
 // FAQ данные для JSON-LD
 const faqData = [
@@ -813,42 +814,10 @@ export default function ImageGenerationPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero секция - оптимизирована для LCP */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary mb-6 leading-tight">
-            🎨 <span className="bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">
-              Лучшие нейросети
-            </span>
-            <br />
-            для изображений 2025
-          </h1>
-          <p className="text-xl text-text-secondary max-w-4xl mx-auto mb-8 leading-relaxed">
-            Полный обзор <strong>ТОП-5 ИИ-генераторов картинок</strong>: Midjourney, DALL-E 3, Stable Diffusion и другие. 
-            Создавайте уникальные изображения за секунды с помощью <strong>нейросетей для фото</strong> и художественной генерации.
-          </p>
-          
-          {/* Статистика - мемоизированная */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-accent-primary">{stats.total}+</div>
-              <div className="text-sm text-text-secondary">Нейросетей</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-accent-primary">{stats.free}</div>
-              <div className="text-sm text-text-secondary">Бесплатных</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-accent-primary">{stats.styles}+</div>
-              <div className="text-sm text-text-secondary">Стилей</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-accent-primary">{stats.languages}+</div>
-              <div className="text-sm text-text-secondary">Языков</div>
-            </div>
-          </div>
-        </div>
+      {/* Hero-компонент */}
+      <ImageGenerationHero />
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Фильтры - оптимизированные */}
         <div className="flex justify-center mb-12">
           <div className="bg-white rounded-lg p-1 shadow-lg">
@@ -873,7 +842,7 @@ export default function ImageGenerationPage() {
         </div>
 
         {/* ТОП нейросетей - мемоизированный список */}
-        <section className="mb-16">
+        <section id="top-ai-tools" className="mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
             🏆 ТОП-{filteredTools.length} лучших нейросетей для изображений
           </h2>
@@ -884,8 +853,20 @@ export default function ImageGenerationPage() {
           </div>
         </section>
 
+        {/* Бесплатные сервисы */}
+        <section id="free-tools" className="mb-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+            💚 Лучшие бесплатные нейросети для изображений
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {aiTools.filter(tool => tool.isFree).map((tool) => (
+              <AIToolCard key={`free-${tool.id}`} tool={tool} />
+            ))}
+          </div>
+        </section>
+
         {/* Сравнительная таблица */}
-        <section className="mb-16">
+        <section id="comparison-table" className="mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
             🎯 Как выбрать идеальную нейросеть для ваших задач?
           </h2>
@@ -893,7 +874,7 @@ export default function ImageGenerationPage() {
         </section>
 
         {/* Лучшие практики */}
-        <section className="mb-16">
+        <section id="prompt-guide" className="mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
             💡 Лучшие практики работы с нейросетями для изображений
           </h2>
@@ -940,7 +921,7 @@ export default function ImageGenerationPage() {
         </section>
 
         {/* Интерактивные инструменты */}
-        <section className="mb-16">
+        <section id="interactive-tools" className="mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
             🛠️ Интерактивные инструменты
           </h2>
@@ -954,7 +935,7 @@ export default function ImageGenerationPage() {
         </section>
 
         {/* FAQ */}
-        <section className="mb-16">
+        <section id="faq" className="mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
             ❓ Часто задаваемые вопросы
           </h2>
@@ -1015,6 +996,25 @@ export default function ImageGenerationPage() {
           <p className="text-xs text-gray-400 mt-4">*Последнее обновление: Январь 2025</p>
         </section>
       </div>
+
+      {/* Структурированные данные для SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faqData.map((faq) => ({
+              "@type": "Question",
+              "name": faq.questionName,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": faq.acceptedAnswerText
+              }
+            }))
+          })
+        }}
+      />
     </main>
   )
 } 
