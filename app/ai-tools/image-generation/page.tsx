@@ -4,6 +4,97 @@ import { useState, useMemo, useCallback, memo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
+import { NextSeo, ArticleJsonLd, FAQPageJsonLd } from 'next-seo'
+
+// SEO конфигурация
+const seoConfig = {
+  title: "Лучшие нейросети для изображений 2025 — ТОП-15 ИИ-генераторов картинок",
+  description: "Полный обзор ТОП-15 ИИ-генераторов картинок: Midjourney, DALL-E 3, Stable Diffusion и другие. Сравнение возможностей, цен, примеры работ. Бесплатные и платные варианты для создания уникальных изображений.",
+  canonical: "https://gighub.ru/ai-tools/image-generation",
+  additionalMetaTags: [
+    {
+      name: 'keywords',
+      content: 'нейросети для изображений, AI генератор картинок, Midjourney, DALL-E, Stable Diffusion, генерация изображений, искусственный интеллект, ИИ художник, нейросеть рисует'
+    },
+    {
+      name: 'author',
+      content: 'GigHub Team'
+    },
+    {
+      name: 'robots',
+      content: 'index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large'
+    },
+    {
+      property: 'article:published_time',
+      content: '2025-01-01T00:00:00Z'
+    },
+    {
+      property: 'article:modified_time',
+      content: '2025-01-15T12:00:00Z'
+    },
+    {
+      property: 'article:section',
+      content: 'AI Tools'
+    },
+    {
+      property: 'article:tag',
+      content: 'нейросети, генерация изображений, Midjourney, DALL-E, Stable Diffusion'
+    }
+  ],
+  openGraph: {
+    type: 'article',
+    locale: 'ru_RU',
+    url: 'https://gighub.ru/ai-tools/image-generation',
+    title: 'ТОП-15 лучших нейросетей для генерации изображений 2025',
+    description: 'Подробный обзор и сравнение AI-генераторов изображений: Midjourney, DALL-E 3, Stable Diffusion и других. Выбирайте лучший инструмент для создания уникальных картинок.',
+    images: [
+      {
+        url: 'https://gighub.ru/images/ai-image-generation-cover.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Нейросети для генерации изображений - обзор лучших AI-инструментов 2025',
+        type: 'image/jpeg'
+      }
+    ],
+    siteName: 'GigHub - Каталог ИИ-инструментов',
+    article: {
+      publishedTime: '2025-01-01T00:00:00Z',
+      modifiedTime: '2025-01-15T12:00:00Z',
+      section: 'AI Tools',
+      authors: ['https://gighub.ru/authors/gighub-team'],
+      tags: ['нейросети', 'генерация изображений', 'AI', 'Midjourney', 'DALL-E', 'Stable Diffusion']
+    }
+  },
+  twitter: {
+    handle: '@gighub_ru',
+    site: '@gighub_ru',
+    cardType: 'summary_large_image'
+  }
+};
+
+// FAQ данные для JSON-LD
+const faqData = [
+  {
+    questionName: "Какая нейросеть лучше всего подходит для начинающих?",
+    acceptedAnswerText: "Для начинающих рекомендуется Leonardo AI или DALL-E 3. Leonardo AI предоставляет 150 бесплатных токенов в день и имеет простой интерфейс, а DALL-E 3 интегрирован с ChatGPT и понимает русский язык."
+  },
+  {
+    questionName: "Можно ли использовать изображения коммерчески?",
+    acceptedAnswerText: "Да, большинство нейросетей позволяют коммерческое использование сгенерированных изображений. Однако условия различаются: Midjourney и DALL-E 3 разрешают коммерческое использование при наличии подписки, Stable Diffusion полностью свободен для любого использования."
+  },
+  {
+    questionName: "Какие нейросети поддерживают русский язык?",
+    acceptedAnswerText: "Русский язык поддерживают: Kandinsky 3.1 (разработан в России), DALL-E 3 (через ChatGPT), Leonardo AI и Stable Diffusion. Midjourney работает только с английскими промптами, но можно использовать переводчик."
+  },
+  {
+    questionName: "Сколько времени занимает генерация изображения?",
+    acceptedAnswerText: "Время генерации зависит от нейросети: DALL-E 3 - 10-30 секунд, Leonardo AI - 5-15 секунд, Midjourney - 30-60 секунд, Stable Diffusion - 5-30 секунд в зависимости от настроек и мощности компьютера."
+  },
+  {
+    questionName: "Нужен ли мощный компьютер для работы с нейросетями?",
+    acceptedAnswerText: "Для большинства онлайн-сервисов (Midjourney, DALL-E 3, Leonardo AI) мощный компьютер не нужен - все вычисления происходят на серверах. Мощная видеокарта нужна только для локального запуска Stable Diffusion."
+  }
+];
 
 // Интерфейсы для типизации
 interface AITool {
@@ -135,7 +226,7 @@ const RatingSystem = ({ toolId, initialRating }: { toolId: number, initialRating
   )
 }
 
-// Компонент карточки нейросети
+// Модернизированный компонент карточки нейросети
 const AIToolCard = ({ tool }: { tool: AITool }) => {
   
   const handleToolClick = () => {
@@ -149,61 +240,83 @@ const AIToolCard = ({ tool }: { tool: AITool }) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
-      <div className="p-6">
-        {/* Заголовок и рейтинг */}
-        <div className="flex justify-between items-start mb-4">
-          <h3 className="text-xl font-bold text-gray-900">{tool.name}</h3>
-          <div className="flex items-center bg-yellow-50 px-3 py-1 rounded-full">
-            <span className="text-yellow-600 mr-1">⭐</span>
-            <span className="font-semibold text-yellow-700">{tool.rating}/10</span>
+    <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/50 hover:border-blue-300/50 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/10 overflow-hidden animate-fadeInUp">
+      {/* Градиентный фон при hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      
+      {/* Контент карточки */}
+      <div className="relative p-6">
+        {/* Заголовок с логотипом */}
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+              {tool.name[0]}
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+                {tool.name}
+              </h3>
+              <div className="flex items-center space-x-2 mt-1">
+                <div className="flex items-center bg-yellow-50 px-2 py-1 rounded-lg border border-yellow-200">
+                  <span className="text-yellow-600 mr-1">⭐</span>
+                  <span className="font-semibold text-yellow-700 text-sm">{tool.rating}/10</span>
+                </div>
+                {tool.isFree && (
+                  <span className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 px-2 py-1 rounded-lg text-xs font-medium border border-green-200">
+                    Бесплатно
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Цена и статус */}
+        {/* Цена и языки */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
             <span className="text-lg font-semibold text-gray-900">{tool.price}</span>
-            {tool.isFree && (
-              <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                Бесплатно
-              </span>
-            )}
           </div>
-          <div className="flex space-x-1">
+          <div className="flex flex-wrap gap-1">
             {tool.languages.map((lang, idx) => (
-              <span key={idx} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+              <span key={idx} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-lg text-xs font-medium border border-blue-200">
                 {lang}
               </span>
             ))}
           </div>
         </div>
 
-        {/* Возможности */}
+        {/* Возможности с иконками */}
         <div className="mb-4">
-          <h4 className="text-sm font-semibold text-gray-700 mb-2">Возможности:</h4>
-          <div className="space-y-1">
+          <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
+            <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+            Возможности:
+          </h4>
+          <div className="space-y-2">
             {tool.features.slice(0, 3).map((feature, idx) => (
-              <div key={idx} className="flex items-center text-sm text-gray-600">
-                <span className="text-green-500 mr-2">✓</span>
-                {feature}
+              <div key={idx} className="flex items-center text-sm text-gray-600 group-hover:text-gray-700 transition-colors">
+                <span className="text-green-500 mr-2 font-bold">✓</span>
+                <span className="flex-1">{feature}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Лучше всего для */}
-        <div className="mb-4">
-          <span className="text-sm font-semibold text-purple-700">Лучше всего для:</span>
-          <p className="text-sm text-gray-600 mt-1">{tool.bestFor}</p>
+        <div className="mb-6 p-3 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-100">
+          <span className="text-sm font-semibold text-purple-700 flex items-center mb-1">
+            🎯 Лучше всего для:
+          </span>
+          <p className="text-sm text-gray-700 font-medium">{tool.bestFor}</p>
         </div>
 
-        {/* Кнопка действия с отслеживанием */}
+        {/* Кнопка действия с современным дизайном */}
         <button 
           onClick={handleToolClick}
-          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-200 mb-3"
+          className="btn-modern w-full mb-4"
         >
-          Попробовать {tool.name}
+          <span className="relative z-10">
+            🚀 Попробовать {tool.name}
+          </span>
         </button>
 
         {/* Система оценок */}
@@ -213,37 +326,103 @@ const AIToolCard = ({ tool }: { tool: AITool }) => {
   )
 }
 
-// Компонент сравнительной таблицы
-const ComparisonTable = () => (
-  <div className="overflow-x-auto bg-white rounded-xl shadow-lg">
-    <table className="w-full">
-      <thead className="bg-gray-50">
-        <tr>
-          <th className="px-6 py-4 text-left font-semibold text-gray-900">Задача</th>
-          <th className="px-6 py-4 text-left font-semibold text-gray-900">Лучший выбор</th>
-          <th className="px-6 py-4 text-left font-semibold text-gray-900">Альтернатива</th>
-          <th className="px-6 py-4 text-left font-semibold text-gray-900">Бесплатный вариант</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-gray-200">
-        {[
-          ["Фотореализм", "Midjourney V6", "DALL-E 3", "Stable Diffusion"],
-          ["Художественные стили", "Midjourney", "Leonardo AI", "Kandinsky 3.1"],
-          ["Быстрое создание", "Leonardo AI", "Playground AI", "Craiyon"],
-          ["Профессиональный дизайн", "Adobe Firefly", "Midjourney", "Stable Diffusion"],
-          ["Русский язык", "Kandinsky 3.1", "DALL-E 3", "Bing Creator"],
-        ].map(([task, best, alt, free], idx) => (
-          <tr key={idx} className="hover:bg-gray-50">
-            <td className="px-6 py-4 font-medium text-gray-900">{task}</td>
-            <td className="px-6 py-4 text-green-600 font-medium">{best}</td>
-            <td className="px-6 py-4 text-blue-600">{alt}</td>
-            <td className="px-6 py-4 text-purple-600">{free}</td>
-          </tr>
+// Адаптивный компонент сравнительной таблицы
+const ComparisonTable = () => {
+  const comparisonData = [
+    { task: "Фотореализм", best: "Midjourney V6", alt: "DALL-E 3", free: "Stable Diffusion" },
+    { task: "Художественные стили", best: "Midjourney", alt: "Leonardo AI", free: "Kandinsky 3.1" },
+    { task: "Быстрое создание", best: "Leonardo AI", alt: "Playground AI", free: "Craiyon" },
+    { task: "Профессиональный дизайн", best: "Adobe Firefly", alt: "Midjourney", free: "Stable Diffusion" },
+    { task: "Русский язык", best: "Kandinsky 3.1", alt: "DALL-E 3", free: "Bing Creator" }
+  ];
+
+  return (
+    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white/80 backdrop-blur-sm shadow-xl">
+      {/* Desktop версия */}
+      <div className="hidden lg:block">
+        <table className="w-full">
+          <thead className="bg-gradient-to-r from-blue-50 to-purple-50">
+            <tr>
+              <th className="px-6 py-4 text-left font-semibold text-gray-900 border-b border-gray-200">
+                <span className="flex items-center">
+                  🎯 Задача
+                </span>
+              </th>
+              <th className="px-6 py-4 text-left font-semibold text-gray-900 border-b border-gray-200">
+                <span className="flex items-center">
+                  🏆 Лучший выбор
+                </span>
+              </th>
+              <th className="px-6 py-4 text-left font-semibold text-gray-900 border-b border-gray-200">
+                <span className="flex items-center">
+                  🔄 Альтернатива
+                </span>
+              </th>
+              <th className="px-6 py-4 text-left font-semibold text-gray-900 border-b border-gray-200">
+                <span className="flex items-center">
+                  🆓 Бесплатный вариант
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {comparisonData.map((item, idx) => (
+              <tr key={idx} className="hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-purple-50/50 transition-all duration-200">
+                <td className="px-6 py-4 font-semibold text-gray-900">{item.task}</td>
+                <td className="px-6 py-4">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
+                    {item.best}
+                  </span>
+                </td>
+                <td className="px-6 py-4">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200">
+                    {item.alt}
+                  </span>
+                </td>
+                <td className="px-6 py-4">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 border border-purple-200">
+                    {item.free}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      
+      {/* Mobile версия - карточки */}
+      <div className="lg:hidden space-y-4 p-4">
+        {comparisonData.map((item, index) => (
+          <div key={index} className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl p-4 border border-gray-200">
+            <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+              🎯 {item.task}
+            </h4>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">🏆 Лучший:</span>
+                <span className="font-medium text-green-600 bg-green-100 px-2 py-1 rounded-lg text-sm">
+                  {item.best}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">🔄 Альтернатива:</span>
+                <span className="font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded-lg text-sm">
+                  {item.alt}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">🆓 Бесплатный:</span>
+                <span className="font-medium text-purple-600 bg-purple-100 px-2 py-1 rounded-lg text-sm">
+                  {item.free}
+                </span>
+              </div>
+            </div>
+          </div>
         ))}
-      </tbody>
-    </table>
-  </div>
-)
+      </div>
+    </div>
+  )
+}
 
 // Компонент FAQ
 const FAQSection = () => {
@@ -296,33 +475,78 @@ const FAQSection = () => {
   )
 }
 
-// Компонент генератора промптов
+// Улучшенный компонент генератора промптов
 const PromptGenerator = () => {
   const [selectedStyle, setSelectedStyle] = useState('фотореализм')
   const [selectedSubject, setSelectedSubject] = useState('портрет')
   const [selectedMood, setSelectedMood] = useState('яркий')
+  const [selectedQuality, setSelectedQuality] = useState('высокое качество')
+  const [selectedLighting, setSelectedLighting] = useState('естественное освещение')
   const [generatedPrompt, setGeneratedPrompt] = useState('')
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [copied, setCopied] = useState(false)
 
-  const styles = ['фотореализм', 'аниме', 'цифровое искусство', 'живопись маслом', 'акварель']
-  const subjects = ['портрет', 'пейзаж', 'животное', 'архитектура', 'фэнтези']
-  const moods = ['яркий', 'темный', 'мечтательный', 'драматичный', 'спокойный']
+  const styles = [
+    'фотореализм', 'аниме', 'цифровое искусство', 'живопись маслом', 
+    'акварель', 'карандашный эскиз', '3D рендер', 'пиксель-арт'
+  ]
+  const subjects = [
+    'портрет', 'пейзаж', 'животное', 'архитектура', 'фэнтези', 
+    'автомобиль', 'еда', 'космос', 'подводный мир', 'город'
+  ]
+  const moods = [
+    'яркий', 'темный', 'мечтательный', 'драматичный', 'спокойный',
+    'мистический', 'романтичный', 'энергичный', 'меланхоличный'
+  ]
+  const qualities = [
+    'высокое качество', '4K', '8K', 'гиперреалистично', 'детализированно',
+    'кинематографично', 'профессиональное фото', 'студийное качество'
+  ]
+  const lightings = [
+    'естественное освещение', 'студийное освещение', 'золотой час', 
+    'синий час', 'неоновое освещение', 'драматичные тени', 'мягкий свет'
+  ]
 
-  const generatePrompt = () => {
-    const prompt = `${selectedSubject} в стиле ${selectedStyle}, ${selectedMood} настроение, высокое качество, детализированно, профессиональное освещение`
-    setGeneratedPrompt(prompt)
+  const generatePrompt = async () => {
+    setIsGenerating(true)
+    
+    // Симуляция AI-генерации с задержкой
+    setTimeout(() => {
+      const prompt = `${selectedSubject} в стиле ${selectedStyle}, ${selectedMood} настроение, ${selectedQuality}, ${selectedLighting}, детализированно, профессиональная работа, мастерски выполнено`
+      setGeneratedPrompt(prompt)
+      setIsGenerating(false)
+    }, 1500)
   }
 
+  const copyToClipboard = async () => {
+    await navigator.clipboard.writeText(generatedPrompt)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  const promptExamples = [
+    "портрет девушки в стиле аниме, мечтательное настроение",
+    "пейзаж космоса в стиле цифрового искусства, драматичное настроение",
+    "автомобиль в стиле фотореализма, энергичное настроение"
+  ]
+
   return (
-    <div className="bg-white rounded-xl shadow-lg p-8">
-      <h3 className="text-xl font-bold text-gray-900 mb-6">🎨 Генератор промптов</h3>
+    <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-200/50 shadow-xl">
+      <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+        🎨 Умный генератор промптов
+        <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">AI-powered</span>
+      </h3>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      {/* Параметры генерации */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Стиль</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+            🎭 Стиль
+          </label>
           <select 
             value={selectedStyle} 
             onChange={(e) => setSelectedStyle(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
           >
             {styles.map(style => (
               <option key={style} value={style}>{style}</option>
@@ -331,11 +555,13 @@ const PromptGenerator = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Предмет</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+            🖼️ Предмет
+          </label>
           <select 
             value={selectedSubject} 
             onChange={(e) => setSelectedSubject(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
           >
             {subjects.map(subject => (
               <option key={subject} value={subject}>{subject}</option>
@@ -344,38 +570,102 @@ const PromptGenerator = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Настроение</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+            🎭 Настроение
+          </label>
           <select 
             value={selectedMood} 
             onChange={(e) => setSelectedMood(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
           >
             {moods.map(mood => (
               <option key={mood} value={mood}>{mood}</option>
             ))}
           </select>
         </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+            ⭐ Качество
+          </label>
+          <select 
+            value={selectedQuality} 
+            onChange={(e) => setSelectedQuality(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
+          >
+            {qualities.map(quality => (
+              <option key={quality} value={quality}>{quality}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+            💡 Освещение
+          </label>
+          <select 
+            value={selectedLighting} 
+            onChange={(e) => setSelectedLighting(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/80 backdrop-blur-sm"
+          >
+            {lightings.map(lighting => (
+              <option key={lighting} value={lighting}>{lighting}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      
+      {/* Сгенерированный промпт */}
+      <div className="bg-white rounded-xl p-4 mb-4 border-2 border-dashed border-gray-200 min-h-[80px] flex items-center">
+        {generatedPrompt ? (
+          <div className="w-full">
+            <p className="text-gray-800 italic mb-2">"{generatedPrompt}"</p>
+            <div className="flex space-x-2">
+              <button 
+                onClick={copyToClipboard}
+                className={`text-sm px-3 py-1 rounded-lg transition-all ${
+                  copied 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-purple-100 text-purple-800 hover:bg-purple-200'
+                }`}
+              >
+                {copied ? '✓ Скопировано!' : '📋 Скопировать'}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className="text-gray-500 italic w-full text-center">
+            {isGenerating ? '🔄 Генерируем промпт...' : "Выберите параметры и нажмите 'Сгенерировать'"}
+          </p>
+        )}
       </div>
 
+      {/* Кнопка генерации */}
       <button 
         onClick={generatePrompt}
-        className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-200 mb-4"
+        disabled={isGenerating}
+        className="btn-modern w-full mb-4 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        🎯 Сгенерировать промпт
+        <span className="relative z-10">
+          {isGenerating ? '🔄 Генерируем...' : '🎯 Сгенерировать промпт'}
+        </span>
       </button>
 
-      {generatedPrompt && (
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <p className="text-sm font-medium text-gray-700 mb-2">Ваш промпт:</p>
-          <p className="text-gray-800 italic">"{generatedPrompt}"</p>
-          <button 
-            onClick={() => navigator.clipboard.writeText(generatedPrompt)}
-            className="mt-2 text-purple-600 hover:text-purple-800 text-sm font-medium"
-          >
-            📋 Скопировать
-          </button>
+      {/* Примеры промптов */}
+      <div className="mt-4">
+        <h4 className="text-sm font-semibold text-gray-700 mb-2">💡 Примеры популярных промптов:</h4>
+        <div className="space-y-2">
+          {promptExamples.map((example, idx) => (
+            <button
+              key={idx}
+              onClick={() => setGeneratedPrompt(example)}
+              className="w-full text-left p-2 text-xs text-gray-600 bg-white/50 rounded-lg hover:bg-white/80 transition-all border border-gray-200 hover:border-purple-300"
+            >
+              "{example}"
+            </button>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   )
 }
@@ -578,6 +868,21 @@ export default function ImageGenerationPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50">
+      <NextSeo {...seoConfig} />
+      <ArticleJsonLd
+        url="https://gighub.ru/ai-tools/image-generation"
+        title="Лучшие нейросети для изображений 2025 — ТОП-15 ИИ-генераторов картинок"
+        images={['https://gighub.ru/images/ai-image-generation-cover.jpg']}
+        datePublished="2025-01-01T00:00:00Z"
+        dateModified="2025-01-15T12:00:00Z"
+        authorName="GigHub Team"
+        publisherName="GigHub"
+        publisherLogo="https://gighub.ru/logo.png"
+        description="Полный обзор лучших ИИ-инструментов для генерации изображений: Midjourney, DALL-E 3, Stable Diffusion и другие"
+        isAccessibleForFree={true}
+      />
+      <FAQPageJsonLd mainEntity={faqData} />
+
       {/* Хлебные крошки */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
