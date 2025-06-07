@@ -18,151 +18,259 @@ import {
   Globe,
   Clock,
   Shield,
-  Sparkles
+  Sparkles,
+  ChevronLeft,
+  ExternalLink,
+  Palette,
+  Camera,
+  Settings,
+  Cpu,
+  Languages,
+  Target
 } from 'lucide-react'
 
-interface DetailedTool {
-  id: number
+interface AITool {
+  id: string
   name: string
   rating: number
   price: string
   isFree: boolean
   description: string
-  shortDescription: string
-  features: string[]
+  platform: string
+  complexity: string
+  bestFor: string
+  languages: string[]
+  examples: {
+    image: string
+    title: string
+    prompt: string
+  }[]
+  characteristics: {
+    price: string
+    platform: string
+    complexity: string
+    bestFor: string
+    rating: string
+    languages: string[]
+  }
   pros: string[]
   cons: string[]
-  logo: string
   gradient: string
-  userCount: string
-  monthlyGrowth: string
-  supportedLanguages: string[]
-  generationTime: string
-  pricing: {
-    plan: string
-    price: string
-    features: string[]
-  }[]
-  specialty: string
-  trustScore: number
+  bgGradient: string
+  icon: string
+  tryLink: string
 }
 
-const detailedTools: DetailedTool[] = [
+const aiTools: AITool[] = [
   {
-    id: 1,
-    name: "Midjourney",
-    rating: 9.8,
-    price: "$10-120/месяц",
+    id: 'midjourney',
+    name: 'Midjourney',
+    rating: 4.9,
+    price: 'От $10/месяц',
     isFree: false,
-    description: "Абсолютный лидер в области генерации изображений с помощью ИИ. Midjourney v6 устанавливает новые стандарты фотореализма и художественной выразительности.",
-    shortDescription: "Лучшее качество генерации на рынке",
-    features: ["V6 архитектура", "Фотореализм 8K", "Аниме режим --niji", "Discord интеграция", "Инструменты редактирования"],
-    pros: ["Непревзойденное качество", "Огромное сообщество художников", "Постоянные обновления", "Лучший фотореализм"],
-    cons: ["Нет бесплатного доступа", "Только Discord интерфейс", "Очереди в пиковые часы", "Высокая стоимость"],
-    logo: "/images/midjourney-example.jpg",
-    gradient: "from-purple-600 via-pink-500 to-rose-400",
-    userCount: "15M+",
-    monthlyGrowth: "+25%",
-    supportedLanguages: ["Английский"],
-    generationTime: "30-60 секунд",
-    specialty: "Художественная генерация",
-    trustScore: 98,
-    pricing: [
+    description: 'Революционная нейросеть, которая устанавливает новые стандарты качества в генерации изображений. Специализируется на создании высокодетализированных фотореалистичных и художественных изображений через Discord-интерфейс.',
+    platform: 'Discord, Web',
+    complexity: 'Средний уровень',
+    bestFor: 'Фотореализм, концепт-арт',
+    languages: ['Английский'],
+    examples: [
       {
-        plan: "Basic",
-        price: "$10/месяц",
-        features: ["~200 изображений", "Базовые функции", "Доступ к галерее"]
+        image: '/images/midjourney-example.jpg',
+        title: 'Фотореализм',
+        prompt: 'портрет молодой женщины, фотореализм, мягкое освещение, детализированно --v 6'
       },
       {
-        plan: "Standard", 
-        price: "$30/месяц",
-        features: ["~900 изображений", "Приватные галереи", "Fast mode"]
+        image: '/images/midjourney-example.jpg',
+        title: 'Концепт-арт',
+        prompt: 'futuristic city, cyberpunk style, neon lights, detailed architecture --v 6'
       },
       {
-        plan: "Pro",
-        price: "$60/месяц", 
-        features: ["~1800 изображений", "Скрытые промпты", "Максимальная скорость"]
+        image: '/images/midjourney-example.jpg',
+        title: 'Художественный стиль',
+        prompt: 'oil painting of a forest, impressionist style, warm colors --v 6'
+      },
+      {
+        image: '/images/midjourney-example.jpg',
+        title: 'Аниме (Niji)',
+        prompt: 'anime girl, beautiful eyes, soft lighting --niji 6'
       }
-    ]
+    ],
+    characteristics: {
+      price: 'От $10/месяц',
+      platform: 'Discord, Web',
+      complexity: 'Средний уровень',
+      bestFor: 'Фотореализм, концепт-арт',
+      rating: '4.9/5.0',
+      languages: ['Английский']
+    },
+    pros: [
+      'Непревзойденное качество изображений',
+      'Понимание сложных художественных концепций',
+      'Активное сообщество с миллионами примеров',
+      'Регулярные обновления и улучшения',
+      'Специальный режим Niji для аниме'
+    ],
+    cons: [
+      'Отсутствие бесплатного тарифа',
+      'Интерфейс только через Discord',
+      'Очереди в часы пиковой нагрузки',
+      'Работает только на английском языке'
+    ],
+    gradient: 'from-accent-primary to-purple-600',
+    bgGradient: 'from-accent-primary/10 to-purple-100/50',
+    icon: 'M',
+    tryLink: 'https://midjourney.com'
   },
   {
-    id: 2,
-    name: "DALL-E 3",
-    rating: 9.5,
-    price: "$20/месяц",
+    id: 'dalle3',
+    name: 'DALL-E 3',
+    rating: 4.8,
+    price: 'От $20/месяц (ChatGPT Plus)',
     isFree: true,
-    description: "Самая умная нейросеть от OpenAI, интегрированная с ChatGPT. Лучше всех понимает сложные промпты и создает качественный текст на изображениях.",
-    shortDescription: "Самое умное понимание промптов",
-    features: ["ChatGPT интеграция", "Русский язык", "Качественный текст", "Диалоговые промпты", "Безопасная генерация"],
-    pros: ["Понимание контекста", "Простота использования", "Высокое качество текста", "Интеграция с ChatGPT"],
-    cons: ["Ограничения бесплатной версии", "Требует подписку Plus", "Медленная генерация", "Строгая модерация"],
-    logo: "/images/dalle-example.webp",
-    gradient: "from-emerald-600 via-teal-500 to-cyan-400",
-    userCount: "100M+",
-    monthlyGrowth: "+40%",
-    supportedLanguages: ["Русский", "Английский", "Более 50 языков"],
-    generationTime: "10-30 секунд",
-    specialty: "Понимание промптов",
-    trustScore: 95,
-    pricing: [
+    description: 'Самая интуитивная нейросеть от OpenAI с интеграцией в ChatGPT. Понимает естественный язык на русском, создает качественные изображения и умеет генерировать текст на изображениях лучше конкурентов.',
+    platform: 'Web, API',
+    complexity: 'Для новичков',
+    bestFor: 'Универсальные задачи, текст на изображениях',
+    languages: ['Русский', 'Английский', '50+ языков'],
+    examples: [
       {
-        plan: "Бесплатно",
-        price: "0₽",
-        features: ["2 изображения в день", "Базовое качество", "Bing Image Creator"]
+        image: '/images/dalle-example.webp',
+        title: 'Pixar стиль',
+        prompt: 'робот в стиле Pixar, добрые глаза, мягкие цвета, детская анимация'
       },
       {
-        plan: "ChatGPT Plus",
-        price: "$20/месяц",
-        features: ["50 изображений/час", "Высокое качество", "Полный доступ"]
+        image: '/images/dalle-example.webp',
+        title: 'Текст на изображении',
+        prompt: 'красивая вывеска кафе "Утренний кофе", винтажный стиль'
+      },
+      {
+        image: '/images/dalle-example.webp',
+        title: 'Фотореализм',
+        prompt: 'профессиональное фото еды, стейк с гарниром, ресторанная подача'
+      },
+      {
+        image: '/images/dalle-example.webp',
+        title: 'Иллюстрация',
+        prompt: 'детская книжная иллюстрация, дружелюбный дракон в лесу'
       }
-    ]
+    ],
+    characteristics: {
+      price: 'От $20/месяц (ChatGPT Plus)',
+      platform: 'Web, API',
+      complexity: 'Для новичков',
+      bestFor: 'Универсальные задачи, текст на изображениях',
+      rating: '4.8/5.0',
+      languages: ['Русский', 'Английский', '50+ языков']
+    },
+    pros: [
+      'Понимает русский язык',
+      'Интеграция с ChatGPT для улучшения промптов',
+      'Отличная генерация текста на изображениях',
+      'Простой и интуитивный интерфейс',
+      'Высокий уровень безопасности контента'
+    ],
+    cons: [
+      'Требует подписку ChatGPT Plus ($20/мес)',
+      'Ограничения в бесплатной версии',
+      'Менее художественный стиль по сравнению с Midjourney',
+      'Лимиты на количество изображений'
+    ],
+    gradient: 'from-accent-secondary to-green-600',
+    bgGradient: 'from-accent-secondary/10 to-green-100/50',
+    icon: 'D',
+    tryLink: 'https://chat.openai.com'
   },
   {
-    id: 3,
-    name: "Stable Diffusion 3",
-    rating: 9.3,
-    price: "Бесплатно",
+    id: 'stable-diffusion',
+    name: 'Stable Diffusion 3',
+    rating: 4.6,
+    price: 'Бесплатно',
     isFree: true,
-    description: "Революционная открытая модель, которая дает полный контроль над процессом генерации. Тысячи кастомных моделей и бесконечные возможности.",
-    shortDescription: "Полная свобода и контроль",
-    features: ["Открытый код", "Кастомные модели", "ControlNet", "Локальная установка", "Неограниченная генерация"],
-    pros: ["Полностью бесплатно", "Максимальный контроль", "Огромное сообщество", "Кастомные модели"],
-    cons: ["Сложность установки", "Требует мощный ПК", "Нужны технические знания", "Нестабильное качество"],
-    logo: "/images/stable-diffusion-example.webp",
-    gradient: "from-orange-600 via-red-500 to-pink-400",
-    userCount: "50M+",
-    monthlyGrowth: "+60%",
-    supportedLanguages: ["Русский", "Английский", "Все языки"],
-    generationTime: "5-30 секунд",
-    specialty: "Открытые возможности",
-    trustScore: 93,
-    pricing: [
+    description: 'Революционная open-source нейросеть, предоставляющая полную свободу творчества. Работает локально на вашем компьютере, поддерживает тысячи кастомных моделей и не имеет ограничений на использование.',
+    platform: 'Windows, Mac, Linux, Colab',
+    complexity: 'Для продвинутых',
+    bestFor: 'Экспериментирование, кастомизация',
+    languages: ['Английский', 'Все языки (зависит от модели)'],
+    examples: [
       {
-        plan: "Локально",
-        price: "Бесплатно",
-        features: ["Неограниченная генерация", "Все модели", "Полный контроль"]
+        image: '/images/stable-diffusion-example.webp',
+        title: 'Живопись',
+        prompt: 'beautiful woman, renaissance painting style, oil on canvas, detailed brushwork'
       },
       {
-        plan: "Cloud",
-        price: "От $0.10",
-        features: ["Облачные вычисления", "Готовая настройка", "API доступ"]
+        image: '/images/stable-diffusion-example.webp',
+        title: 'Аниме',
+        prompt: 'anime style, magical girl, flowing hair, starry background'
+      },
+      {
+        image: '/images/stable-diffusion-example.webp',
+        title: 'Фотография',
+        prompt: 'portrait photography, professional lighting, shallow depth of field'
+      },
+      {
+        image: '/images/stable-diffusion-example.webp',
+        title: 'Абстракция',
+        prompt: 'abstract art, flowing colors, digital painting, vibrant'
       }
-    ]
+    ],
+    characteristics: {
+      price: 'Бесплатно',
+      platform: 'Windows, Mac, Linux, Colab',
+      complexity: 'Для продвинутых',
+      bestFor: 'Экспериментирование, кастомизация',
+      rating: '4.6/5.0',
+      languages: ['Английский', 'Все языки (зависит от модели)']
+    },
+    pros: [
+      'Полностью бесплатно и открытый код',
+      'Тысячи специализированных моделей',
+      'Работа без интернета (локально)',
+      'Полный контроль над всеми параметрами',
+      'Активное сообщество разработчиков'
+    ],
+    cons: [
+      'Требует мощный компьютер (8GB+ VRAM)',
+      'Сложность установки для новичков',
+      'Необходимы технические знания',
+      'Нет официальной поддержки'
+    ],
+    gradient: 'from-orange-500 to-red-600',
+    bgGradient: 'from-orange-100/50 to-red-100/50',
+    icon: 'S',
+    tryLink: 'https://stability.ai'
   }
 ]
 
 const DetailedAIToolsReview = () => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'pricing' | 'comparison'>('overview')
-  const [selectedTool, setSelectedTool] = useState<number>(1)
+  const [selectedTool, setSelectedTool] = useState<string>('midjourney')
+  const [activeImageIndex, setActiveImageIndex] = useState<{[key: string]: number}>({
+    'midjourney': 0,
+    'dalle3': 0,
+    'stable-diffusion': 0
+  })
 
-  const tabs = [
-    { id: 'overview', label: 'Обзор', icon: Star },
-    { id: 'pricing', label: 'Тарифы', icon: DollarSign },
-    { id: 'comparison', label: 'Сравнение', icon: Award }
-  ]
+  const handleImageNext = (toolId: string) => {
+    const tool = aiTools.find(t => t.id === toolId)
+    if (!tool) return
+    
+    setActiveImageIndex(prev => ({
+      ...prev,
+      [toolId]: (prev[toolId] + 1) % tool.examples.length
+    }))
+  }
+
+  const handleImagePrev = (toolId: string) => {
+    const tool = aiTools.find(t => t.id === toolId)
+    if (!tool) return
+    
+    setActiveImageIndex(prev => ({
+      ...prev,
+      [toolId]: prev[toolId] === 0 ? tool.examples.length - 1 : prev[toolId] - 1
+    }))
+  }
 
   return (
-    <section className="py-20 bg-gradient-to-br from-background via-accent-primary/5 to-accent-secondary/5">
+    <section className="py-20 bg-gradient-to-br from-background via-accent-primary/5 to-accent-secondary/5" id="detailed-reviews">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div 
@@ -174,296 +282,208 @@ const DetailedAIToolsReview = () => {
         >
           <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 backdrop-blur-sm rounded-full border border-accent-primary/20 mb-8 shadow-lg">
             <Sparkles className="w-5 h-5 text-accent-primary" />
-            <span className="text-accent-primary font-bold">ЭКСПЕРТНЫЙ АНАЛИЗ</span>
+            <span className="text-accent-primary font-bold">ДЕТАЛЬНЫЙ АНАЛИЗ</span>
           </div>
 
-          <h2 className="text-5xl md:text-6xl font-bold text-text-primary mb-8 leading-tight">
-            Детальные{' '}
+          <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-6 leading-tight">
+            Полный обзор и сравнение{' '}
             <span className="text-gradient bg-gradient-to-r from-accent-primary to-accent-secondary bg-clip-text text-transparent">
-              обзоры
+              AI-генераторов
             </span>
-            {' '}нейросетей
+            {' '}изображений
           </h2>
           
           <p className="text-xl text-text-secondary max-w-4xl mx-auto leading-relaxed">
-            Глубокий анализ возможностей, цен и особенностей каждой платформы от экспертов 
-            с 5+ летним опытом в области ИИ
+            Детальный анализ каждой нейросети с примерами работ, промптами, преимуществами и ключевыми характеристиками
           </p>
         </motion.div>
 
-        {/* Navigation Tabs */}
-        <div className="flex justify-center mb-12">
-          <div className="inline-flex bg-white/80 backdrop-blur-sm rounded-2xl p-2 border border-gray-200/50 shadow-xl">
-            {tabs.map((tab) => {
-              const Icon = tab.icon
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    activeTab === tab.id
-                      ? 'bg-gradient-to-r from-accent-primary to-accent-secondary text-white shadow-lg'
-                      : 'text-text-secondary hover:text-accent-primary hover:bg-accent-primary/10'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  {tab.label}
-                </button>
-              )
-            })}
-          </div>
-        </div>
+        {/* Tools */}
+        <div className="space-y-20">
+          {aiTools.map((tool, index) => (
+            <motion.div
+              key={tool.id}
+              className={`relative overflow-hidden rounded-3xl bg-gradient-to-br ${tool.bgGradient} border border-white/20 shadow-2xl`}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+            >
+              <div className="p-8 lg:p-12">
+                {/* Tool Header */}
+                <div className="flex items-start gap-6 mb-8">
+                  <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${tool.gradient} flex items-center justify-center text-white font-bold text-3xl shadow-xl`}>
+                    {tool.icon}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-4 mb-3">
+                      <h3 className="text-4xl font-bold text-text-primary">{tool.name}</h3>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-5 h-5 text-yellow-500 fill-current" />
+                        <span className="text-lg font-semibold text-text-primary">{tool.rating}/5.0</span>
+                      </div>
+                    </div>
+                    <p className="text-lg font-semibold text-accent-primary mb-3">{tool.price}</p>
+                    <p className="text-text-secondary leading-relaxed max-w-4xl">{tool.description}</p>
+                  </div>
+                </div>
 
-        {/* Content */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ duration: 0.4 }}
-          >
-            {activeTab === 'overview' && <OverviewTab tools={detailedTools} />}
-            {activeTab === 'pricing' && <PricingTab tools={detailedTools} />}
-            {activeTab === 'comparison' && <ComparisonTab tools={detailedTools} />}
-          </motion.div>
-        </AnimatePresence>
+                <div className="grid lg:grid-cols-2 gap-12">
+                  {/* Examples Section */}
+                  <div>
+                    <h4 className="text-2xl font-bold text-text-primary mb-6 flex items-center gap-3">
+                      <Palette className="w-6 h-6 text-accent-primary" />
+                      🎨 Примеры работ и промпты
+                    </h4>
+                    
+                    <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl overflow-hidden shadow-xl">
+                      <div className="relative h-80">
+                        <Image
+                          src={tool.examples[activeImageIndex[tool.id] || 0]?.image || '/images/placeholder.jpg'}
+                          alt={tool.examples[activeImageIndex[tool.id] || 0]?.title || 'Example'}
+                          fill
+                          className="object-cover"
+                        />
+                        
+                        {/* Navigation buttons */}
+                        <button
+                          onClick={() => handleImagePrev(tool.id)}
+                          className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
+                        >
+                          <ChevronLeft className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={() => handleImageNext(tool.id)}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
+                        >
+                          <ChevronRight className="w-5 h-5" />
+                        </button>
+
+                        {/* Image info */}
+                        <div className="absolute bottom-4 left-4 bg-black/70 text-white px-4 py-2 rounded-lg backdrop-blur-sm">
+                          <div className="font-semibold">{tool.examples[activeImageIndex[tool.id] || 0]?.title}</div>
+                          <div className="text-sm text-gray-300">
+                            {(activeImageIndex[tool.id] || 0) + 1} из {tool.examples.length}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Prompt */}
+                      <div className="p-6">
+                        <p className="text-sm text-text-secondary mb-2">Промпт:</p>
+                        <code className="block bg-gray-100 p-4 rounded-lg text-sm text-text-primary break-all">
+                          "{tool.examples[activeImageIndex[tool.id] || 0]?.prompt}"
+                        </code>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Characteristics Section */}
+                  <div>
+                    <h4 className="text-2xl font-bold text-text-primary mb-6 flex items-center gap-3">
+                      <Settings className="w-6 h-6 text-accent-primary" />
+                      📊 Характеристики и оценка
+                    </h4>
+                    
+                    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl mb-6">
+                      <h5 className="text-lg font-bold text-text-primary mb-4">Ключевые характеристики</h5>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div className="flex items-center gap-2">
+                          <DollarSign className="w-4 h-4 text-accent-primary" />
+                          <span className="text-text-secondary">💰 Цена</span>
+                        </div>
+                        <div className="font-medium text-text-primary">{tool.characteristics.price}</div>
+                        
+                        <div className="flex items-center gap-2">
+                          <Globe className="w-4 h-4 text-accent-primary" />
+                          <span className="text-text-secondary">💬 Платформа</span>
+                        </div>
+                        <div className="font-medium text-text-primary">{tool.characteristics.platform}</div>
+                        
+                        <div className="flex items-center gap-2">
+                          <Cpu className="w-4 h-4 text-accent-primary" />
+                          <span className="text-text-secondary">Сложность</span>
+                        </div>
+                        <div className="font-medium text-text-primary">{tool.characteristics.complexity}</div>
+                        
+                        <div className="flex items-center gap-2">
+                          <Target className="w-4 h-4 text-accent-primary" />
+                          <span className="text-text-secondary">🎯 Лучше для</span>
+                        </div>
+                        <div className="font-medium text-text-primary">{tool.characteristics.bestFor}</div>
+                        
+                        <div className="flex items-center gap-2">
+                          <Star className="w-4 h-4 text-accent-primary" />
+                          <span className="text-text-secondary">Рейтинг</span>
+                        </div>
+                        <div className="font-medium text-text-primary">{tool.characteristics.rating}</div>
+                      </div>
+                      
+                      <div className="mt-4 pt-4 border-t border-gray-200">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Languages className="w-4 h-4 text-accent-primary" />
+                          <span className="text-text-secondary font-medium">🌍 Поддерживаемые языки:</span>
+                        </div>
+                        <div className="text-sm text-text-primary">
+                          {tool.characteristics.languages.join(', ')}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Objective Assessment */}
+                    <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl">
+                      <h5 className="text-lg font-bold text-text-primary mb-4">⚖️ Объективная оценка</h5>
+                      
+                      <div className="grid md:grid-cols-2 gap-6">
+                        {/* Pros */}
+                        <div>
+                          <h6 className="font-semibold text-green-600 mb-3">Преимущества</h6>
+                          <ul className="space-y-2">
+                            {tool.pros.map((pro, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm">
+                                <span className="text-green-500 font-bold">+</span>
+                                <span className="text-text-secondary">{pro}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Cons */}
+                        <div>
+                          <h6 className="font-semibold text-red-600 mb-3">Недостатки</h6>
+                          <ul className="space-y-2">
+                            {tool.cons.map((con, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm">
+                                <span className="text-red-500 font-bold">−</span>
+                                <span className="text-text-secondary">{con}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+
+                      {/* Try Button */}
+                      <div className="mt-6 pt-6 border-t border-gray-200">
+                        <a
+                          href={tool.tryLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${tool.gradient} text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105`}
+                        >
+                          Попробовать {tool.name}
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   )
 }
 
-// Overview Tab Component
-const OverviewTab = ({ tools }: { tools: DetailedTool[] }) => (
-  <div className="space-y-12">
-    {tools.map((tool, index) => (
-      <motion.div
-        key={tool.id}
-        className="bg-white/80 backdrop-blur-sm rounded-3xl border border-gray-200/50 overflow-hidden shadow-2xl hover:shadow-accent-primary/20 transition-all duration-300"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: index * 0.2 }}
-      >
-        <div className="grid lg:grid-cols-2 gap-0">
-          {/* Image Section */}
-          <div className="relative h-80 lg:h-auto">
-            <div className={`absolute inset-0 bg-gradient-to-br ${tool.gradient} opacity-90`} />
-            <Image
-              src={tool.logo}
-              alt={`${tool.name} showcase`}
-              fill
-              className="object-cover"
-            />
-            
-            {/* Overlays */}
-            <div className="absolute top-6 left-6">
-              <div className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full">
-                <Crown className="w-5 h-5 text-accent-primary" />
-                <span className="font-bold text-accent-primary">TOP {index + 1}</span>
-              </div>
-            </div>
-
-            <div className="absolute bottom-6 left-6 right-6">
-              <div className="flex items-end justify-between">
-                <div className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full">
-                  <Users className="w-5 h-5 text-accent-primary" />
-                  <span className="font-bold text-text-primary">{tool.userCount} пользователей</span>
-                </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full">
-                  <TrendingUp className="w-5 h-5 text-green-500" />
-                  <span className="font-bold text-green-600">{tool.monthlyGrowth}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Content Section */}
-          <div className="p-8 lg:p-12">
-            {/* Header */}
-            <div className="mb-8">
-              <div className="flex items-center gap-4 mb-4">
-                <h3 className="text-3xl font-bold text-text-primary">{tool.name}</h3>
-                <div className="flex items-center gap-2 px-3 py-1 bg-yellow-50 rounded-xl border border-yellow-200">
-                  <Star className="w-5 h-5 text-yellow-500 fill-current" />
-                  <span className="font-bold text-yellow-700">{tool.rating}</span>
-                </div>
-              </div>
-              
-              <p className="text-accent-primary font-semibold mb-4">{tool.shortDescription}</p>
-              <p className="text-text-secondary leading-relaxed">{tool.description}</p>
-            </div>
-
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="p-4 bg-gradient-to-br from-accent-primary/10 to-accent-secondary/10 rounded-xl border border-accent-primary/20">
-                <div className="flex items-center gap-2 mb-2">
-                  <Clock className="w-5 h-5 text-accent-primary" />
-                  <span className="text-sm font-semibold text-text-secondary">Скорость</span>
-                </div>
-                <span className="font-bold text-text-primary">{tool.generationTime}</span>
-              </div>
-              
-              <div className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <Shield className="w-5 h-5 text-green-600" />
-                  <span className="text-sm font-semibold text-text-secondary">Надёжность</span>
-                </div>
-                <span className="font-bold text-green-600">{tool.trustScore}%</span>
-              </div>
-            </div>
-
-            {/* Key Features */}
-            <div className="mb-8">
-              <h4 className="text-xl font-bold text-text-primary mb-4 flex items-center gap-2">
-                <Zap className="w-6 h-6 text-accent-primary" />
-                Ключевые возможности
-              </h4>
-              <div className="grid grid-cols-1 gap-3">
-                {tool.features.slice(0, 4).map((feature, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-3 bg-gray-50/50 rounded-xl">
-                    <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
-                    <span className="text-text-secondary">{feature}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Price & CTA */}
-            <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-              <div>
-                <div className="text-3xl font-bold text-accent-primary mb-1">{tool.price}</div>
-                {tool.isFree && (
-                  <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-lg text-sm font-medium border border-green-200">
-                    <CheckCircle2 className="w-4 h-4" />
-                    Есть бесплатно
-                  </span>
-                )}
-              </div>
-              
-              <motion.button
-                className="px-8 py-4 bg-gradient-to-r from-accent-primary to-accent-secondary text-white rounded-xl font-semibold hover:from-accent-primary/90 hover:to-accent-secondary/90 transition-all duration-300 shadow-lg hover:shadow-xl group flex items-center gap-3"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Попробовать сейчас
-                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    ))}
-  </div>
-)
-
-// Pricing Tab Component  
-const PricingTab = ({ tools }: { tools: DetailedTool[] }) => (
-  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-    {tools.map((tool, index) => (
-      <motion.div
-        key={tool.id}
-        className="bg-white/80 backdrop-blur-sm rounded-3xl border border-gray-200/50 overflow-hidden shadow-xl"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: index * 0.2 }}
-      >
-        {/* Header */}
-        <div className={`p-6 bg-gradient-to-br ${tool.gradient} text-white`}>
-          <h3 className="text-2xl font-bold mb-2">{tool.name}</h3>
-          <p className="opacity-90">{tool.shortDescription}</p>
-        </div>
-
-        {/* Pricing Options */}
-        <div className="p-6 space-y-4">
-          {tool.pricing.map((plan, idx) => (
-            <div key={idx} className="p-4 border border-gray-200 rounded-xl hover:border-accent-primary/30 transition-colors">
-              <div className="flex justify-between items-center mb-3">
-                <span className="font-semibold text-text-primary">{plan.plan}</span>
-                <span className="text-xl font-bold text-accent-primary">{plan.price}</span>
-              </div>
-              <div className="space-y-2">
-                {plan.features.map((feature, featureIdx) => (
-                  <div key={featureIdx} className="flex items-center gap-2 text-sm text-text-secondary">
-                    <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {feature}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </motion.div>
-    ))}
-  </div>
-)
-
-// Comparison Tab Component
-const ComparisonTab = ({ tools }: { tools: DetailedTool[] }) => (
-  <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-gray-200/50 overflow-hidden shadow-xl">
-    <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead>
-          <tr className="bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 border-b border-gray-200">
-            <th className="p-6 text-left font-bold text-text-primary">Характеристика</th>
-            {tools.map((tool) => (
-              <th key={tool.id} className="p-6 text-center font-bold text-text-primary min-w-[200px]">
-                {tool.name}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
-          {[
-            { label: 'Рейтинг', key: 'rating' },
-            { label: 'Цена', key: 'price' },
-            { label: 'Бесплатно', key: 'isFree' },
-            { label: 'Пользователи', key: 'userCount' },
-            { label: 'Время генерации', key: 'generationTime' },
-            { label: 'Специализация', key: 'specialty' },
-            { label: 'Надёжность', key: 'trustScore' }
-          ].map((row, idx) => (
-            <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
-              <td className="p-6 font-semibold text-text-primary">{row.label}</td>
-              {tools.map((tool) => (
-                <td key={tool.id} className="p-6 text-center">
-                  {row.key === 'rating' && (
-                    <div className="flex items-center justify-center gap-1">
-                      <Star className="w-5 h-5 text-yellow-500 fill-current" />
-                      <span className="font-bold">{tool.rating}</span>
-                    </div>
-                  )}
-                  {row.key === 'isFree' && (
-                    tool.isFree ? (
-                      <CheckCircle2 className="w-6 h-6 text-green-500 mx-auto" />
-                    ) : (
-                      <XCircle className="w-6 h-6 text-red-500 mx-auto" />
-                    )
-                  )}
-                  {row.key === 'trustScore' && (
-                    <span className="font-bold text-green-600">{tool.trustScore}%</span>
-                  )}
-                  {row.key === 'price' && (
-                    <span className="text-text-secondary">{tool.price}</span>
-                  )}
-                  {row.key === 'userCount' && (
-                    <span className="text-text-secondary">{tool.userCount}</span>
-                  )}
-                  {row.key === 'generationTime' && (
-                    <span className="text-text-secondary">{tool.generationTime}</span>
-                  )}
-                  {row.key === 'specialty' && (
-                    <span className="text-text-secondary">{tool.specialty}</span>
-                  )}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </div>
-)
-
-export default DetailedAIToolsReview
+export default DetailedAIToolsReview 
