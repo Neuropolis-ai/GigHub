@@ -694,7 +694,14 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
           <select 
             value={selectedStyle} 
             onChange={(e) => setSelectedStyle(e.target.value)}
-            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm"
+            className="w-full p-4 border-2 border-accent-primary/20 rounded-xl focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+              backgroundPosition: 'right 1rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.5em 1.5em',
+              paddingRight: '3rem'
+            }}
           >
             {styles.map(style => (
               <option key={style.value} value={style.value}>
@@ -713,7 +720,14 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
           <select 
             value={selectedSubject} 
             onChange={(e) => setSelectedSubject(e.target.value)}
-            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm"
+            className="w-full p-4 border-2 border-accent-primary/20 rounded-xl focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+              backgroundPosition: 'right 1rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.5em 1.5em',
+              paddingRight: '3rem'
+            }}
           >
             {subjects.map(subject => (
               <option key={subject.value} value={subject.value}>
@@ -732,7 +746,14 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
           <select 
             value={selectedMood} 
             onChange={(e) => setSelectedMood(e.target.value)}
-            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm"
+            className="w-full p-4 border-2 border-accent-secondary/20 rounded-xl focus:ring-2 focus:ring-accent-secondary/50 focus:border-accent-secondary bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 font-medium text-text-primary hover:border-accent-secondary/40 appearance-none cursor-pointer"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a855f7' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+              backgroundPosition: 'right 1rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.5em 1.5em',
+              paddingRight: '3rem'
+            }}
           >
             {moods.map(mood => (
               <option key={mood.value} value={mood.value}>
@@ -751,7 +772,14 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
           <select 
             value={selectedQuality} 
             onChange={(e) => setSelectedQuality(e.target.value)}
-            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm"
+            className="w-full p-4 border-2 border-accent-primary/20 rounded-xl focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+              backgroundPosition: 'right 1rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.5em 1.5em',
+              paddingRight: '3rem'
+            }}
           >
             {qualities.map(quality => (
               <option key={quality.value} value={quality.value}>
@@ -770,7 +798,14 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
           <select 
             value={selectedLighting} 
             onChange={(e) => setSelectedLighting(e.target.value)}
-            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm"
+            className="w-full p-4 border-2 border-accent-secondary/20 rounded-xl focus:ring-2 focus:ring-accent-secondary/50 focus:border-accent-secondary bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 font-medium text-text-primary hover:border-accent-secondary/40 appearance-none cursor-pointer"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a855f7' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+              backgroundPosition: 'right 1rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.5em 1.5em',
+              paddingRight: '3rem'
+            }}
           >
             {lightings.map(lighting => (
               <option key={lighting.value} value={lighting.value}>
@@ -789,7 +824,14 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
           <select 
             value={selectedArtist} 
             onChange={(e) => setSelectedArtist(e.target.value)}
-            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm"
+            className="w-full p-4 border-2 border-accent-primary/20 rounded-xl focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+              backgroundPosition: 'right 1rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.5em 1.5em',
+              paddingRight: '3rem'
+            }}
           >
             {artists.map(artist => (
               <option key={artist.value} value={artist.value}>
@@ -811,7 +853,14 @@ const SmartPromptGenerator: React.FC = (): React.ReactElement => {
           <select 
             value={selectedCamera} 
             onChange={(e) => setSelectedCamera(e.target.value)}
-            className="w-full p-4 border border-accent-primary/30 rounded-xl focus:ring-2 focus:ring-accent-primary focus:border-accent-primary bg-white/80 shadow-sm hover:shadow-md transition-all backdrop-blur-sm"
+            className="w-full p-4 border-2 border-accent-primary/20 rounded-xl focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+              backgroundPosition: 'right 1rem center',
+              backgroundRepeat: 'no-repeat',
+              backgroundSize: '1.5em 1.5em',
+              paddingRight: '3rem'
+            }}
           >
             {cameras.map(camera => (
               <option key={camera.value} value={camera.value}>

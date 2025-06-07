@@ -312,18 +312,18 @@ const InteractiveComparisonTable: React.FC = () => {
         </div>
 
         {/* Панель фильтров */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-200">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div className="flex flex-col sm:flex-row gap-4 flex-1">
+        <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-xl p-8 mb-8 border-2 border-accent-primary/20 hover:border-accent-primary/30 transition-all duration-300">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div className="flex flex-col sm:flex-row gap-6 flex-1">
               {/* Поиск */}
               <div className="relative flex-1 min-w-0">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Search className="h-5 w-5 text-accent-primary" />
                 </div>
                 <input
                   type="text"
                   placeholder="Поиск по названию или назначению..."
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  className="block w-full pl-12 pr-4 py-4 border-2 border-accent-primary/20 rounded-xl focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary text-sm bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 font-medium placeholder-text-secondary/60"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -333,7 +333,14 @@ const InteractiveComparisonTable: React.FC = () => {
               <select
                 value={freeVersionFilter}
                 onChange={(e) => setFreeVersionFilter(e.target.value as any)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white min-w-[160px]"
+                className="px-4 py-3 border-2 border-accent-primary/20 rounded-xl focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary text-sm bg-white/90 backdrop-blur-sm min-w-[160px] shadow-sm hover:shadow-md transition-all duration-300 font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+                  backgroundPosition: 'right 0.5rem center',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: '1.5em 1.5em',
+                  paddingRight: '2.5rem'
+                }}
               >
                 <option value="all">Все тарифы</option>
                 <option value="да">Есть бесплатно</option>
@@ -345,7 +352,14 @@ const InteractiveComparisonTable: React.FC = () => {
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value as any)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm bg-white min-w-[160px]"
+                className="px-4 py-3 border-2 border-accent-primary/20 rounded-xl focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary text-sm bg-white/90 backdrop-blur-sm min-w-[160px] shadow-sm hover:shadow-md transition-all duration-300 font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+                  backgroundPosition: 'right 0.5rem center',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: '1.5em 1.5em',
+                  paddingRight: '2.5rem'
+                }}
               >
                 <option value="all">Все категории</option>
                 <option value="платформа">Платформы</option>
@@ -358,7 +372,7 @@ const InteractiveComparisonTable: React.FC = () => {
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="flex items-center space-x-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm font-medium"
+                className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 rounded-xl transition-all duration-300 text-sm font-medium shadow-sm hover:shadow-md transform hover:scale-105"
               >
                 <X className="w-4 h-4" />
                 <span>Сбросить</span>
@@ -367,9 +381,9 @@ const InteractiveComparisonTable: React.FC = () => {
           </div>
 
           {/* Статистика */}
-          <div className="mt-4 pt-4 border-t border-gray-200">
-            <p className="text-sm text-gray-600">
-              Показано <span className="font-semibold text-blue-600">{filteredAndSortedData.length}</span> из{' '}
+          <div className="mt-6 pt-6 border-t border-accent-primary/20">
+            <p className="text-sm text-text-secondary">
+              Показано <span className="font-semibold text-accent-primary">{filteredAndSortedData.length}</span> из{' '}
               <span className="font-semibold">{aiToolsTableData.length}</span> нейросетей
             </p>
           </div>
