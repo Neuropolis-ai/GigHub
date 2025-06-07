@@ -42,6 +42,18 @@ const aiToolsTableData: AIToolTableData[] = [
     category: 'платформа'
   },
   {
+    id: 'flux',
+    name: 'Flux.1 Pro',
+    logo: '/images/flux-logo.svg',
+    hasFreeVersion: 'триал',
+    minPrice: 5,
+    minPriceDisplay: '$5/мес',
+    rating: 4.7,
+    primaryUse: 'Высокое качество',
+    url: 'https://replicate.com/black-forest-labs/flux-pro',
+    category: 'платформа'
+  },
+  {
     id: 'stablediffusion',
     name: 'Stable Diffusion 3',
     logo: '/images/stablediffusion-logo.svg',
@@ -54,15 +66,15 @@ const aiToolsTableData: AIToolTableData[] = [
     category: 'open-source'
   },
   {
-    id: 'kandinsky',
-    name: 'Kandinsky 3.1',
-    logo: '/images/kandinsky-logo.svg',
+    id: 'ideogram',
+    name: 'Ideogram 2.0',
+    logo: '/images/ideogram-logo.svg',
     hasFreeVersion: 'да',
-    minPrice: 0,
-    minPriceDisplay: 'Бесплатно',
-    rating: 4.2,
-    primaryUse: 'Русскоязычный контент',
-    url: 'https://fusionbrain.ai',
+    minPrice: 8,
+    minPriceDisplay: '$8/мес',
+    rating: 4.5,
+    primaryUse: 'Текст в изображениях',
+    url: 'https://ideogram.ai',
     category: 'платформа'
   },
   {
@@ -90,6 +102,18 @@ const aiToolsTableData: AIToolTableData[] = [
     category: 'платформа'
   },
   {
+    id: 'kandinsky',
+    name: 'Kandinsky 3.1',
+    logo: '/images/kandinsky-logo.svg',
+    hasFreeVersion: 'да',
+    minPrice: 0,
+    minPriceDisplay: 'Бесплатно',
+    rating: 4.2,
+    primaryUse: 'Русскоязычный контент',
+    url: 'https://fusionbrain.ai',
+    category: 'платформа'
+  },
+  {
     id: 'runway',
     name: 'Runway ML',
     logo: '/images/runway-logo.svg',
@@ -111,6 +135,66 @@ const aiToolsTableData: AIToolTableData[] = [
     rating: 4.0,
     primaryUse: 'Социальные сети',
     url: 'https://playground.com',
+    category: 'платформа'
+  },
+  {
+    id: 'nightcafe',
+    name: 'NightCafe Studio',
+    logo: '/images/nightcafe-logo.svg',
+    hasFreeVersion: 'да',
+    minPrice: 5,
+    minPriceDisplay: '$5/мес',
+    rating: 3.9,
+    primaryUse: 'Художественные стили',
+    url: 'https://nightcafe.studio',
+    category: 'платформа'
+  },
+  {
+    id: 'artbreeder',
+    name: 'Artbreeder',
+    logo: '/images/artbreeder-logo.svg',
+    hasFreeVersion: 'да',
+    minPrice: 8,
+    minPriceDisplay: '$8/мес',
+    rating: 3.8,
+    primaryUse: 'Мутация изображений',
+    url: 'https://artbreeder.com',
+    category: 'специализированный'
+  },
+  {
+    id: 'craiyon',
+    name: 'Craiyon (DALL-E mini)',
+    logo: '/images/craiyon-logo.svg',
+    hasFreeVersion: 'да',
+    minPrice: 5,
+    minPriceDisplay: '$5/мес',
+    rating: 3.7,
+    primaryUse: 'Простая генерация',
+    url: 'https://craiyon.com',
+    category: 'платформа'
+  },
+  {
+    id: 'starryai',
+    name: 'StarryAI',
+    logo: '/images/starryai-logo.svg',
+    hasFreeVersion: 'да',
+    minPrice: 12,
+    minPriceDisplay: '$12/мес',
+    rating: 3.6,
+    primaryUse: 'Мобильное приложение',
+    url: 'https://starryai.com',
+    category: 'платформа'
+  },
+  {
+    id: 'wombo-dream',
+    name: 'WOMBO Dream',
+    logo: '/images/wombo-logo.svg',
+    hasFreeVersion: 'да',
+    minPrice: 10,
+    minPriceDisplay: '$10/мес',
+    rating: 3.5,
+    primaryUse: 'Быстрая генерация',
+    url: 'https://dream.ai',
     category: 'платформа'
   }
 ];
