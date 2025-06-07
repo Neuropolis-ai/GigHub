@@ -201,21 +201,21 @@ const AuthorAndCommentsSection: React.FC = () => {
   });
 
   return (
-    <section className="py-20 bg-gradient-to-br from-background via-accent-primary/8 to-accent-secondary/8 relative overflow-hidden">
+    <section className="py-20 bg-gradient-to-br from-gray-50 via-blue-50/80 to-purple-50/80 relative overflow-hidden">
       {/* Декоративные элементы фона */}
       <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-10 left-10 w-20 h-20 bg-gradient-to-br from-accent-primary/20 to-accent-secondary/20 rounded-full blur-xl"></div>
-        <div className="absolute top-32 right-16 w-32 h-32 bg-gradient-to-br from-accent-secondary/15 to-accent-primary/15 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-20 left-1/4 w-40 h-40 bg-gradient-to-br from-accent-primary/10 to-accent-secondary/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 right-10 w-24 h-24 bg-gradient-to-br from-accent-secondary/20 to-accent-primary/20 rounded-full blur-xl"></div>
+        <div className="absolute top-10 left-10 w-20 h-20 bg-gradient-to-br from-blue-200/20 to-purple-200/20 rounded-full blur-xl"></div>
+        <div className="absolute top-32 right-16 w-32 h-32 bg-gradient-to-br from-purple-200/15 to-blue-200/15 rounded-full blur-2xl"></div>
+        <div className="absolute bottom-20 left-1/4 w-40 h-40 bg-gradient-to-br from-blue-200/10 to-purple-200/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 right-10 w-24 h-24 bg-gradient-to-br from-purple-200/20 to-blue-200/20 rounded-full blur-xl"></div>
       </div>
       
       <div className="container mx-auto px-6 relative z-10">
         
         {/* Карточка автора */}
-        <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-accent-primary/30 overflow-hidden mb-12 relative">
+        <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl border border-blue-200/30 overflow-hidden mb-12 relative">
           {/* Градиентный заголовок с анимированным фоном */}
-          <div className="relative h-32 bg-gradient-to-r from-accent-primary via-accent-secondary to-accent-primary bg-size-200 animate-gradient-x overflow-hidden">
+          <div className="relative h-32 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-size-200 animate-gradient-x overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
             <div className="absolute top-4 right-4 w-16 h-16 bg-white/20 rounded-full blur-lg"></div>
             <div className="absolute bottom-4 left-8 w-20 h-20 bg-white/15 rounded-full blur-xl"></div>
@@ -252,35 +252,35 @@ const AuthorAndCommentsSection: React.FC = () => {
                 {/* Статистика автора */}
                 <div className="flex flex-wrap gap-6 mb-6">
                   <div className="flex items-center space-x-2">
-                    <Calendar className="w-5 h-5 text-accent-primary" />
-                    <span className="text-sm text-text-secondary">
-                      <span className="font-semibold text-text-primary">{authorData.stats.experience}</span> опыта
+                    <Calendar className="w-5 h-5 text-blue-600" />
+                    <span className="text-sm text-gray-600">
+                      <span className="font-semibold text-gray-900">{authorData.stats.experience}</span> опыта
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Award className="w-5 h-5 text-accent-primary" />
-                    <span className="text-sm text-text-secondary">
-                      <span className="font-semibold text-text-primary">{authorData.stats.articles}</span> статей
+                    <Award className="w-5 h-5 text-blue-600" />
+                    <span className="text-sm text-gray-600">
+                      <span className="font-semibold text-gray-900">{authorData.stats.articles}</span> статей
                     </span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Users className="w-5 h-5 text-accent-primary" />
-                    <span className="text-sm text-text-secondary">
-                      <span className="font-semibold text-text-primary">{authorData.stats.followers.toLocaleString()}</span> подписчиков
+                    <Users className="w-5 h-5 text-blue-600" />
+                    <span className="text-sm text-gray-600">
+                      <span className="font-semibold text-gray-900">{authorData.stats.followers.toLocaleString()}</span> подписчиков
                     </span>
                   </div>
                 </div>
 
                 {/* Квалификация */}
                 <div className="mb-6">
-                  <h4 className="text-sm font-semibold text-text-primary mb-3 flex items-center gap-2">
-                    <Award className="w-4 h-4 text-accent-secondary" />
+                  <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <Award className="w-4 h-4 text-purple-600" />
                     Квалификация и достижения:
                   </h4>
                   <div className="grid md:grid-cols-2 gap-3">
                     {authorData.credentials.map((credential, idx) => (
-                      <div key={idx} className="flex items-start text-sm text-text-secondary bg-gradient-to-r from-accent-primary/5 to-accent-secondary/5 p-3 rounded-lg border border-accent-primary/20">
-                        <CheckCircle className="w-4 h-4 text-accent-primary mr-2 mt-0.5 flex-shrink-0" />
+                      <div key={idx} className="flex items-start text-sm text-gray-600 bg-gradient-to-r from-blue-50 to-purple-50 p-3 rounded-lg border border-blue-200">
+                        <CheckCircle className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
                         <span>{credential}</span>
                       </div>
                     ))}
@@ -289,8 +289,8 @@ const AuthorAndCommentsSection: React.FC = () => {
 
                 {/* Социальные сети */}
                 <div>
-                  <h4 className="text-sm font-semibold text-text-primary mb-3 flex items-center gap-2">
-                    <ExternalLink className="w-4 h-4 text-accent-secondary" />
+                  <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <ExternalLink className="w-4 h-4 text-purple-600" />
                     Найти автора:
                   </h4>
                   <div className="flex flex-wrap gap-3">
@@ -300,13 +300,13 @@ const AuthorAndCommentsSection: React.FC = () => {
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 hover:from-accent-primary/20 hover:to-accent-secondary/20 rounded-lg transition-all group border border-accent-primary/20 hover:border-accent-primary/40"
+                        className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 rounded-lg transition-all group border border-blue-200 hover:border-blue-300"
                       >
                         {link.icon}
-                        <span className="text-sm font-medium text-accent-primary group-hover:text-accent-secondary">
+                        <span className="text-sm font-medium text-blue-600 group-hover:text-purple-600">
                           {link.platform}
                         </span>
-                        <ExternalLink className="w-3 h-3 text-accent-primary/60" />
+                        <ExternalLink className="w-3 h-3 text-blue-500" />
                       </a>
                     ))}
                   </div>
