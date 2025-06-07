@@ -3,74 +3,6 @@
 import { useState, useMemo, useCallback, memo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
-import { NextSeo, ArticleJsonLd, FAQPageJsonLd } from 'next-seo'
-
-// SEO конфигурация
-const seoConfig = {
-  title: "Лучшие нейросети для изображений 2025 — ТОП-15 ИИ-генераторов картинок",
-  description: "Полный обзор ТОП-15 ИИ-генераторов картинок: Midjourney, DALL-E 3, Stable Diffusion и другие. Сравнение возможностей, цен, примеры работ. Бесплатные и платные варианты для создания уникальных изображений.",
-  canonical: "https://gighub.ru/ai-tools/image-generation",
-  additionalMetaTags: [
-    {
-      name: 'keywords',
-      content: 'нейросети для изображений, AI генератор картинок, Midjourney, DALL-E, Stable Diffusion, генерация изображений, искусственный интеллект, ИИ художник, нейросеть рисует'
-    },
-    {
-      name: 'author',
-      content: 'GigHub Team'
-    },
-    {
-      name: 'robots',
-      content: 'index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large'
-    },
-    {
-      property: 'article:published_time',
-      content: '2025-01-01T00:00:00Z'
-    },
-    {
-      property: 'article:modified_time',
-      content: '2025-01-15T12:00:00Z'
-    },
-    {
-      property: 'article:section',
-      content: 'AI Tools'
-    },
-    {
-      property: 'article:tag',
-      content: 'нейросети, генерация изображений, Midjourney, DALL-E, Stable Diffusion'
-    }
-  ],
-  openGraph: {
-    type: 'article',
-    locale: 'ru_RU',
-    url: 'https://gighub.ru/ai-tools/image-generation',
-    title: 'ТОП-15 лучших нейросетей для генерации изображений 2025',
-    description: 'Подробный обзор и сравнение AI-генераторов изображений: Midjourney, DALL-E 3, Stable Diffusion и других. Выбирайте лучший инструмент для создания уникальных картинок.',
-    images: [
-      {
-        url: 'https://gighub.ru/images/ai-image-generation-cover.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Нейросети для генерации изображений - обзор лучших AI-инструментов 2025',
-        type: 'image/jpeg'
-      }
-    ],
-    siteName: 'GigHub - Каталог ИИ-инструментов',
-    article: {
-      publishedTime: '2025-01-01T00:00:00Z',
-      modifiedTime: '2025-01-15T12:00:00Z',
-      section: 'AI Tools',
-      authors: ['https://gighub.ru/authors/gighub-team'],
-      tags: ['нейросети', 'генерация изображений', 'AI', 'Midjourney', 'DALL-E', 'Stable Diffusion']
-    }
-  },
-  twitter: {
-    handle: '@gighub_ru',
-    site: '@gighub_ru',
-    cardType: 'summary_large_image'
-  }
-};
 
 // FAQ данные для JSON-LD
 const faqData = [
@@ -736,8 +668,8 @@ const CostCalculator = () => {
   )
 }
 
-// Lazy loading для тяжелых компонентов
-const QuizComponent = dynamic(() => Promise.resolve(memo(() => {
+// Компонент теста
+const QuizComponent = () => {
   const [currentStep, setCurrentStep] = useState(0)
   const [answers, setAnswers] = useState<string[]>([])
   const [result, setResult] = useState<string | null>(null)
@@ -843,7 +775,7 @@ const QuizComponent = dynamic(() => Promise.resolve(memo(() => {
       </div>
     </div>
   )
-})), { loading: () => <div className="bg-white rounded-xl shadow-lg p-8 text-center">Загрузка теста...</div> })
+}
 
 // Главный компонент страницы
 export default function ImageGenerationPage() {
@@ -868,21 +800,6 @@ export default function ImageGenerationPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-accent-primary/5 via-background to-accent-secondary/5">
-      <NextSeo {...seoConfig} />
-      <ArticleJsonLd
-        url="https://gighub.ru/ai-tools/image-generation"
-        title="Лучшие нейросети для изображений 2025 — ТОП-15 ИИ-генераторов картинок"
-        images={['https://gighub.ru/images/ai-image-generation-cover.jpg']}
-        datePublished="2025-01-01T00:00:00Z"
-        dateModified="2025-01-15T12:00:00Z"
-        authorName="GigHub Team"
-        publisherName="GigHub"
-        publisherLogo="https://gighub.ru/logo.png"
-        description="Полный обзор лучших ИИ-инструментов для генерации изображений: Midjourney, DALL-E 3, Stable Diffusion и другие"
-        isAccessibleForFree={true}
-      />
-      <FAQPageJsonLd mainEntity={faqData} />
-
       {/* Хлебные крошки */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
