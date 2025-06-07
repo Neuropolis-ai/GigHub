@@ -241,7 +241,14 @@ function AIServicesContent() {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">Категория</label>
                 <select 
-                  className="w-full py-4 px-4 min-h-[56px] text-base bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-accent-primary outline-none transition-all touch-manipulation"
+                  className="w-full py-4 px-4 min-h-[56px] text-base border-2 border-accent-primary/20 rounded-xl focus:outline-none focus:ring-1 focus:ring-accent-primary/30 focus:border-accent-primary bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-sm transition-all duration-300 font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+                    backgroundPosition: 'right 1rem center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: '1.5em 1.5em',
+                    paddingRight: '3rem'
+                  }}
                   value={selectedCategory}
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleCategoryChange(e.target.value)}
                 >
@@ -258,7 +265,14 @@ function AIServicesContent() {
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">Сортировка</label>
                 <select 
-                  className="w-full py-4 px-4 min-h-[56px] text-base bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-accent-primary outline-none transition-all touch-manipulation"
+                  className="w-full py-4 px-4 min-h-[56px] text-base border-2 border-accent-primary/20 rounded-xl focus:outline-none focus:ring-1 focus:ring-accent-primary/30 focus:border-accent-primary bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-sm transition-all duration-300 font-medium text-text-primary hover:border-accent-primary/40 appearance-none cursor-pointer"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+                    backgroundPosition: 'right 1rem center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: '1.5em 1.5em',
+                    paddingRight: '3rem'
+                  }}
                   value={sortBy}
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleSortChange(e.target.value)}
                 >
